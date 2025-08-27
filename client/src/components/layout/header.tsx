@@ -48,31 +48,21 @@ export default function Header() {
 
           {/* Navigation Links */}
           <nav className="hidden lg:flex items-center space-x-6">
-            <Link href="/">
-              <a className="text-sm font-medium transition-colors hover:text-primary">
-                Home
-              </a>
+            <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
+              Home
             </Link>
-            <Link href="/skincare-guides">
-              <a className="text-sm font-medium transition-colors hover:text-primary">
-                Guides
-              </a>
+            <Link href="/skincare-guides" className="text-sm font-medium transition-colors hover:text-primary">
+              Guides
             </Link>
-            <Link href="/product-recommendations">
-              <a className="text-sm font-medium transition-colors hover:text-primary">
-                Products
-              </a>
+            <Link href="/product-recommendations" className="text-sm font-medium transition-colors hover:text-primary">
+              Products
             </Link>
-            <Link href="/streams">
-              <a className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
-                <Headphones className="h-4 w-4" />
-                Streams
-              </a>
+            <Link href="/streams" className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
+              <Headphones className="h-4 w-4" />
+              Streams
             </Link>
-            <Link href="/sponsored-offers">
-              <a className="text-sm font-medium transition-colors hover:text-primary">
-                Offers
-              </a>
+            <Link href="/sponsored-offers" className="text-sm font-medium transition-colors hover:text-primary">
+              Offers
             </Link>
           </nav>
 

@@ -24,6 +24,9 @@ interface StreamEpisode {
   category: string;
   isNew?: boolean;
   isTrending?: boolean;
+  playCount?: number;
+  likes?: number;
+  dislikes?: number;
 }
 
 const mockEpisodes: StreamEpisode[] = [
@@ -38,7 +41,10 @@ const mockEpisodes: StreamEpisode[] = [
     publishDate: "Today",
     category: "Platform Launch",
     isNew: true,
-    isTrending: true
+    isTrending: true,
+    playCount: 1247,
+    likes: 89,
+    dislikes: 2
   },
   {
     id: "2",
@@ -50,7 +56,10 @@ const mockEpisodes: StreamEpisode[] = [
     duration: "22:45",
     publishDate: "Coming Soon",
     category: "Expert Talks",
-    isNew: true
+    isNew: true,
+    playCount: 0,
+    likes: 0,
+    dislikes: 0
   },
   {
     id: "3",
@@ -61,7 +70,10 @@ const mockEpisodes: StreamEpisode[] = [
     thumbnailUrl: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400",
     duration: "18:20",
     publishDate: "Coming Soon",
-    category: "Beauty Trends"
+    category: "Beauty Trends",
+    playCount: 0,
+    likes: 0,
+    dislikes: 0
   },
   {
     id: "4",
@@ -72,7 +84,10 @@ const mockEpisodes: StreamEpisode[] = [
     thumbnailUrl: "https://images.unsplash.com/photo-1552046122-03184de85e08?w=400",
     duration: "20:15",
     publishDate: "Coming Soon",
-    category: "Natural Beauty"
+    category: "Natural Beauty",
+    playCount: 0,
+    likes: 0,
+    dislikes: 0
   },
   {
     id: "5",
@@ -83,7 +98,10 @@ const mockEpisodes: StreamEpisode[] = [
     thumbnailUrl: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400",
     duration: "25:00",
     publishDate: "Coming Soon",
-    category: "Community Stories"
+    category: "Community Stories",
+    playCount: 0,
+    likes: 0,
+    dislikes: 0
   }
 ];
 
@@ -108,16 +126,12 @@ export default function StreamsPage() {
         {/* Hero Section */}
         <section className="mb-8">
           <div className="glass-panel p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-primary/10 rounded-lg">
-                <Headphones className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold">SKYNN Streams</h1>
-                <p className="text-muted-foreground">
-                  Podcast-style content for your skincare journey
-                </p>
-              </div>
+            <div className="text-center mb-6">
+              <h1 className="text-4xl font-bold mb-3">THE SKINDEEP PODCAST</h1>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                A deep dive into everything skincare. Discover the latest skincare trends, 
+                viral moments and expert opinions on skincare and wellness - with a humorous edge.
+              </p>
             </div>
             
             {/* Search and Filter */}
@@ -170,6 +184,9 @@ export default function StreamsPage() {
               thumbnailUrl={filteredEpisodes[0].thumbnailUrl}
               duration={filteredEpisodes[0].duration}
               publishDate={filteredEpisodes[0].publishDate}
+              playCount={filteredEpisodes[0].playCount}
+              likes={filteredEpisodes[0].likes}
+              dislikes={filteredEpisodes[0].dislikes}
             />
           </section>
         )}
@@ -196,6 +213,9 @@ export default function StreamsPage() {
                   thumbnailUrl={episode.thumbnailUrl}
                   duration={episode.duration}
                   publishDate={episode.publishDate}
+                  playCount={episode.playCount}
+                  likes={episode.likes}
+                  dislikes={episode.dislikes}
                 />
               </div>
             ))}

@@ -2,8 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Play, Pause, Volume2, Download, Share2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Play, Pause, Volume2, Download, Share2, 
+  ThumbsUp, ThumbsDown, DollarSign, Eye, Copy, Check 
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface AudioPlayerProps {
   title: string;
@@ -13,6 +18,9 @@ interface AudioPlayerProps {
   duration?: string;
   episodeNumber?: number;
   publishDate?: string;
+  playCount?: number;
+  likes?: number;
+  dislikes?: number;
 }
 
 export function AudioPlayer({
@@ -22,13 +30,24 @@ export function AudioPlayer({
   thumbnailUrl,
   duration,
   episodeNumber,
-  publishDate
+  publishDate,
+  playCount = 0,
+  likes = 0,
+  dislikes = 0
 }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [userFeedback, setUserFeedback] = useState<'like' | 'dislike' | null>(null);
+  const [localPlayCount, setLocalPlayCount] = useState(playCount);
+  const [localLikes, setLocalLikes] = useState(likes);
+  const [localDislikes, setLocalDislikes] = useState(dislikes);
+  const [copied, setCopied] = useState(false);
+  const [showTipModal, setShowTipModal] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const hasPlayed = useRef(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -58,6 +77,11 @@ export function AudioPlayer({
       audio.pause();
     } else {
       audio.play();
+      // Track play count on first play
+      if (!hasPlayed.current) {
+        hasPlayed.current = true;
+        setLocalPlayCount(prev => prev + 1);
+      }
     }
     setIsPlaying(!isPlaying);
   };
@@ -88,6 +112,83 @@ export function AudioPlayer({
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const handleLike = () => {
+    if (userFeedback === 'like') {
+      setUserFeedback(null);
+      setLocalLikes(prev => prev - 1);
+    } else {
+      if (userFeedback === 'dislike') {
+        setLocalDislikes(prev => prev - 1);
+      }
+      setUserFeedback('like');
+      setLocalLikes(prev => prev + 1);
+    }
+  };
+
+  const handleDislike = () => {
+    if (userFeedback === 'dislike') {
+      setUserFeedback(null);
+      setLocalDislikes(prev => prev - 1);
+    } else {
+      if (userFeedback === 'like') {
+        setLocalLikes(prev => prev - 1);
+      }
+      setUserFeedback('dislike');
+      setLocalDislikes(prev => prev + 1);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!audioUrl) {
+      toast({
+        title: "Download unavailable",
+        description: "This episode is not available for download yet.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const link = document.createElement('a');
+    link.href = audioUrl;
+    link.download = `${title}.mp3`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "Download started",
+      description: "Your episode is being downloaded.",
+    });
+  };
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/streams#episode-${episodeNumber}`;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      toast({
+        title: "Link copied!",
+        description: "Episode link has been copied to your clipboard.",
+      });
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast({
+        title: "Could not copy link",
+        description: "Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleTip = () => {
+    setShowTipModal(true);
+    toast({
+      title: "Tipping coming soon!",
+      description: "We're setting up secure payment processing. Thank you for your support!",
+    });
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="flex flex-col md:flex-row">
@@ -116,24 +217,6 @@ export function AudioPlayer({
                   {title}
                 </h3>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8"
-                  data-testid={`button-share-episode-${episodeNumber}`}
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8"
-                  data-testid={`button-download-episode-${episodeNumber}`}
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-              </div>
             </div>
             
             {description && (
@@ -142,11 +225,13 @@ export function AudioPlayer({
               </p>
             )}
             
-            {publishDate && (
-              <p className="text-xs text-muted-foreground">
-                Published {publishDate}
-              </p>
-            )}
+            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+              {publishDate && <span>Published {publishDate}</span>}
+              <div className="flex items-center gap-1">
+                <Eye className="h-3 w-3" />
+                <span>{localPlayCount.toLocaleString()} plays</span>
+              </div>
+            </div>
           </div>
 
           {/* Audio Controls */}
@@ -191,6 +276,75 @@ export function AudioPlayer({
                   className="w-20"
                   data-testid={`slider-volume-episode-${episodeNumber}`}
                 />
+              </div>
+            </div>
+            
+            {/* Community Feedback & Actions */}
+            <div className="flex items-center justify-between pt-4 border-t">
+              <div className="flex items-center gap-2">
+                {/* Like Button */}
+                <Button
+                  size="sm"
+                  variant={userFeedback === 'like' ? "default" : "outline"}
+                  className="h-8 gap-1"
+                  onClick={handleLike}
+                  data-testid={`button-like-episode-${episodeNumber}`}
+                >
+                  <ThumbsUp className="h-4 w-4" />
+                  <span className="text-xs">{localLikes}</span>
+                </Button>
+                
+                {/* Dislike Button */}
+                <Button
+                  size="sm"
+                  variant={userFeedback === 'dislike' ? "default" : "outline"}
+                  className="h-8 gap-1"
+                  onClick={handleDislike}
+                  data-testid={`button-dislike-episode-${episodeNumber}`}
+                >
+                  <ThumbsDown className="h-4 w-4" />
+                  <span className="text-xs">{localDislikes}</span>
+                </Button>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                {/* Tip Button */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 gap-1 text-green-600 hover:text-green-700"
+                  onClick={handleTip}
+                  data-testid={`button-tip-episode-${episodeNumber}`}
+                >
+                  <DollarSign className="h-4 w-4" />
+                  <span className="hidden sm:inline text-xs">Tip $1+</span>
+                </Button>
+                
+                {/* Download Button */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8"
+                  onClick={handleDownload}
+                  data-testid={`button-download-episode-${episodeNumber}`}
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+                
+                {/* Share Button */}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8"
+                  onClick={handleShare}
+                  data-testid={`button-share-episode-${episodeNumber}`}
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Share2 className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
             </div>
           </div>
