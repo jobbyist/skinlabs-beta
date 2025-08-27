@@ -218,6 +218,55 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Brand Spotlight */}
+        <section className="mb-8">
+          <div className="bg-gradient-to-br from-amber-50 via-white to-yellow-50 dark:from-amber-950/20 dark:via-background dark:to-yellow-950/20 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">Brand Spotlight</h2>
+              <Badge variant="secondary">🇿🇦 Local Brands</Badge>
+            </div>
+            
+            <div className="text-sm text-muted-foreground mb-4">
+              South African skincare brands making waves in the beauty industry
+            </div>
+            
+            <AutoCarousel 
+              autoPlayInterval={5000}
+              itemsPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+              className="w-full"
+            >
+              {[
+                { id: "brand-1", name: "SKOON Skincare", tagline: "Clean beauty, conscious living", image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=400", description: "Award-winning sustainable skincare from Cape Town" },
+                { id: "brand-2", name: "Standard Beauty", tagline: "Setting new standards", image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400", description: "Premium African botanicals for modern skincare" },
+                { id: "brand-3", name: "Lumi Glo", tagline: "Your glow, amplified", image: "https://images.unsplash.com/photo-1620756235108-7d8d27d7ca43?w=400", description: "Science-backed formulations for melanin-rich skin" },
+                { id: "brand-4", name: "Beauty on TApp", tagline: "Beauty at your fingertips", image: "https://images.unsplash.com/photo-1556228852-80b2b6411f08?w=400", description: "Digital-first beauty brand revolutionizing access" },
+                { id: "brand-5", name: "Lelive", tagline: "Live beautifully", image: "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=400", description: "Natural African ingredients meet modern science" },
+                { id: "brand-6", name: "African Botanics", tagline: "Luxury from Africa", image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=400", description: "Ultra-luxury skincare with African heritage" },
+                { id: "brand-7", name: "Africology", tagline: "Naturally African", image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400", description: "Spa-quality products inspired by African wellness" },
+                { id: "brand-8", name: "Kuro", tagline: "Bold beauty", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400", description: "Innovative formulas for the modern African woman" },
+                { id: "brand-9", name: "Suki Suki Naturals", tagline: "Nature's touch", image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400", description: "100% natural ingredients sourced locally" },
+                { id: "brand-10", name: "Zuri", tagline: "Beautiful in every shade", image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400", description: "Inclusive beauty celebrating African diversity" }
+              ].map((brand) => (
+                <div key={brand.id} className="bg-white dark:bg-card rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <img
+                    src={brand.image}
+                    alt={brand.name}
+                    className="w-full h-48 object-cover rounded-t-lg"
+                  />
+                  <div className="p-4">
+                    <h3 className="font-semibold text-sm mb-1">{brand.name}</h3>
+                    <p className="text-xs text-primary mb-2">{brand.tagline}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">{brand.description}</p>
+                    <Button variant="ghost" size="sm" className="mt-3 w-full">
+                      Explore Brand →
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </AutoCarousel>
+          </div>
+        </section>
+
         {/* Mid-page Display Ad */}
         <DisplayAd className="my-8" />
 
@@ -375,35 +424,35 @@ export default function Home() {
             )}
 
             {/* Quick Actions */}
-            <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-green-950/20 dark:via-background dark:to-emerald-950/20 rounded-xl p-4 lg:p-6">
-              <h3 className="font-bold mb-4 text-center lg:text-left">Quick Actions</h3>
-              <div className="grid grid-cols-1 gap-3 max-w-sm mx-auto lg:max-w-none">
+            <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-green-950/20 dark:via-background dark:to-emerald-950/20 rounded-xl p-3 mx-2 lg:mx-0 lg:p-6">
+              <h3 className="font-bold mb-3 text-center lg:text-left text-sm lg:text-base">Quick Actions</h3>
+              <div className="grid grid-cols-1 gap-2 lg:gap-3">
                 <Button 
                   variant="outline" 
-                  className="w-full justify-start px-3 py-2 h-auto" 
+                  className="w-full justify-start px-2 py-1.5 h-auto text-xs lg:text-sm lg:px-3 lg:py-2" 
                   onClick={() => setShowAuthModal(true)}
                   data-testid="skynn-ai"
                 >
-                  <WandSparkles className="w-4 h-4 mr-3 flex-shrink-0" />
+                  <WandSparkles className="w-3 h-3 lg:w-4 lg:h-4 mr-2 flex-shrink-0" />
                   <div className="text-left min-w-0">
-                    <div className="text-sm font-medium">SKYNN AI</div>
-                    <div className="text-xs text-muted-foreground">Get personalized advice</div>
+                    <div className="font-medium text-xs lg:text-sm">SKYNN AI</div>
+                    <div className="text-[10px] lg:text-xs text-muted-foreground">Personalized advice</div>
                   </div>
                 </Button>
                 
-                <Button variant="outline" className="w-full justify-start px-3 py-2 h-auto" data-testid="routine-builder">
-                  <div className="w-4 h-4 mr-3 text-secondary flex-shrink-0">📅</div>
+                <Button variant="outline" className="w-full justify-start px-2 py-1.5 h-auto text-xs lg:text-sm lg:px-3 lg:py-2" data-testid="routine-builder">
+                  <div className="w-3 h-3 lg:w-4 lg:h-4 mr-2 text-secondary flex-shrink-0">📅</div>
                   <div className="text-left min-w-0">
-                    <div className="text-sm font-medium">Routine Builder</div>
-                    <div className="text-xs text-muted-foreground">Create custom routine</div>
+                    <div className="font-medium text-xs lg:text-sm">Routine Builder</div>
+                    <div className="text-[10px] lg:text-xs text-muted-foreground">Custom routine</div>
                   </div>
                 </Button>
                 
-                <Button variant="outline" className="w-full justify-start px-3 py-2 h-auto" data-testid="deals-offers">
-                  <ShoppingBag className="w-4 h-4 mr-3 flex-shrink-0" />
+                <Button variant="outline" className="w-full justify-start px-2 py-1.5 h-auto text-xs lg:text-sm lg:px-3 lg:py-2" data-testid="deals-offers">
+                  <ShoppingBag className="w-3 h-3 lg:w-4 lg:h-4 mr-2 flex-shrink-0" />
                   <div className="text-left min-w-0">
-                    <div className="text-sm font-medium">Deals & Offers</div>
-                    <div className="text-xs text-muted-foreground">Exclusive member deals</div>
+                    <div className="font-medium text-xs lg:text-sm">Deals & Offers</div>
+                    <div className="text-[10px] lg:text-xs text-muted-foreground">Member deals</div>
                   </div>
                 </Button>
               </div>
