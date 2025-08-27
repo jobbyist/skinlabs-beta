@@ -4,10 +4,12 @@ import { useAuth } from "@/hooks/use-auth";
 import { Link, useLocation } from "wouter";
 
 import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import ArticleCard from "@/components/content/article-card";
 import DealCard from "@/components/content/deal-card";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { ContentGuard } from "@/components/auth/content-guard";
+import { Carousel, CarouselItem } from "@/components/ui/carousel";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -110,7 +112,7 @@ export default function Home() {
                         Go to Dashboard
                       </Button>
                       {user?.subscriptionStatus === "trial" && (
-                        <Button variant="outline" onClick={() => setShowSubscription(true)} size="lg" data-testid="upgrade-button">
+                        <Button variant="outline" onClick={() => setShowAuthModal(true)} size="lg" data-testid="upgrade-button">
                           Upgrade to Premium
                         </Button>
                       )}
@@ -121,7 +123,7 @@ export default function Home() {
                         <Crown className="w-4 h-4 mr-2" />
                         Join Now
                       </Button>
-                      <Button variant="outline" onClick={() => setShowOnboarding(true)} size="lg" data-testid="profile-button">
+                      <Button variant="outline" onClick={() => setShowAuthModal(true)} size="lg" data-testid="profile-button">
                         <WandSparkles className="w-4 h-4 mr-2" />
                         Complete Skin Profile
                       </Button>
@@ -184,15 +186,13 @@ export default function Home() {
                   {isAuthenticated ? "Based on your skin profile and reading history" : "Popular content from our community"}
                 </div>
                 
-                <div className="slide-container">
-                  <div className="flex gap-4 pb-2">
-                    {featuredArticles.slice(0, 6).map((article) => (
-                      <div key={article.id} className="flex-none w-80">
-                        <ArticleCard article={article} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <Carousel itemWidth="320px" className="w-full">
+                  {featuredArticles.slice(0, 6).map((article) => (
+                    <CarouselItem key={article.id} width="320px">
+                      <ArticleCard article={article} />
+                    </CarouselItem>
+                  ))}
+                </Carousel>
               </section>
             )}
 
@@ -229,7 +229,7 @@ export default function Home() {
                   ))}
                 </div>
               ) : filteredArticles.length > 0 ? (
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredArticles.map((article) => (
                     <ArticleCard key={article.id} article={article} />
                   ))}
@@ -371,6 +371,8 @@ export default function Home() {
           onClose={() => setShowAuthModal(false)} 
         />
       )}
+      
+      <Footer />
     </div>
   );
 }

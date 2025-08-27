@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Crown, User, LogOut, Settings, Heart } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Header() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -45,7 +46,8 @@ export default function Header() {
           </div>
 
           {/* Navigation & Auth */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            <ThemeToggle />
             {isAuthenticated ? (
               <>
                 {/* User Badge for Founding Members */}
