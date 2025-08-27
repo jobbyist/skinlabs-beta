@@ -14,6 +14,7 @@ import MobileHeader from "@/components/mobile/mobile-header";
 import OfflineIndicator from "@/components/mobile/offline-indicator";
 import LaunchPromotionPopup from "@/components/launch-promotion-popup";
 import LaunchBanner from "@/components/mobile/launch-banner";
+import CookieConsent from "@/components/cookie-consent";
 
 import Home from "@/pages/home";
 import Auth from "@/pages/auth";
@@ -25,6 +26,9 @@ import DiyRecipes from "@/pages/diy-recipes";
 import WebStories from "@/pages/web-stories";
 import CommunityForum from "@/pages/community-forum";
 import SponsoredOffers from "@/pages/sponsored-offers";
+import TermsOfService from "@/pages/terms-of-service";
+import PrivacyPolicy from "@/pages/privacy-policy";
+import CookiePolicy from "@/pages/cookie-policy";
 
 function Router() {
   return (
@@ -38,6 +42,9 @@ function Router() {
       <Route path="/web-stories" component={WebStories} />
       <Route path="/community-forum" component={CommunityForum} />
       <Route path="/sponsored-offers" component={SponsoredOffers} />
+      <Route path="/terms-of-service" component={TermsOfService} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/cookie-policy" component={CookiePolicy} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -60,6 +67,7 @@ function App() {
             <MobileNavigation />
             <OfflineIndicator />
             <LaunchPromotionPopup />
+            <CookieConsent />
           </TooltipProvider>
         </AuthProvider>
       </ThemeProvider>

@@ -23,10 +23,10 @@ export default function LaunchPromotionPopup() {
       (popupLastShown && parseInt(popupLastShown) < oneWeekAgo);
 
     if (shouldShow) {
-      // Delay popup appearance to avoid being intrusive
+      // Delay popup appearance for first-time visitors
       const timer = setTimeout(() => {
         setIsOpen(true);
-      }, 2000);
+      }, 30000); // 30 seconds
 
       return () => clearTimeout(timer);
     }
