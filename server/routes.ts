@@ -485,6 +485,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get founding member statistics for popup
+  app.get('/api/founding-members/stats', async (req: Request, res: Response) => {
+    try {
+      const foundingMemberCount = await storage.getFoundingMemberCount();
+      const totalSignups = await storage.getUserCount();
+      const spotsRemaining = Math.max(0, 100 - foundingMemberCount);
+      const contestProgress = Math.min(100, (totalSignups / 250) * 100);
+
+      res.json({
+        foundingMemberCount,
+        totalSignups,
+        spotsRemaining,
+        contestProgress
+      });
+    } catch (error) {
+      console.error('Error getting founding member stats:', error);
+      res.status(500).json({ message: 'Failed to get founding member stats' });
+    }
+  });
+
   // =====================
   // CONTENT MANAGEMENT API
   // Secure endpoints for external automation (Zapier/Make)
