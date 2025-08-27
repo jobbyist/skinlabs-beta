@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/hooks/use-auth";
 import AIChatbot from "@/components/ai-chatbot";
-import { AdSenseScript } from "@/components/google-adsense";
 import PWAProvider from "@/components/pwa-provider";
 import InstallPrompt from "@/components/mobile/install-prompt";
 import MobileNavigation from "@/components/mobile/mobile-navigation";
@@ -57,7 +56,6 @@ function App() {
         <AuthProvider>
           <TooltipProvider>
             <PWAProvider />
-            <AdSenseScript />
             <Toaster />
             <LaunchBanner />
             <MobileHeader />

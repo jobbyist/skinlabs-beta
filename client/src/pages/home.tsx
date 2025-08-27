@@ -10,12 +10,12 @@ import DealCard from "@/components/content/deal-card";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { ContentGuard } from "@/components/auth/content-guard";
 import { AutoCarousel } from "@/components/ui/auto-carousel";
+import { BannerAd, DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { BannerAd } from "@/components/google-adsense";
 
 import { Search, Crown, WandSparkles, ShoppingBag, Star, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -31,7 +31,9 @@ export default function Home() {
 
   // Fetch articles
   const { data: articles = [], isLoading: articlesLoading } = useQuery<Article[]>({
-    queryKey: ["/api/articles", { category: selectedCategory === "all" ? undefined : selectedCategory }],
+    queryKey: selectedCategory === "all" 
+      ? ["/api/articles"]
+      : [`/api/articles?category=${selectedCategory}`],
   });
 
   // Fetch featured articles
@@ -164,7 +166,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Banner Advertisement */}
+        {/* Top Banner Advertisement */}
         <BannerAd className="mb-8" />
 
         {/* Sponsored Offers */}
@@ -189,6 +191,9 @@ export default function Home() {
           </section>
         )}
 
+        {/* Mid-page Display Ad */}
+        <DisplayAd className="my-8" />
+
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -210,11 +215,14 @@ export default function Home() {
                   className="w-full"
                 >
                   {featuredArticles.slice(0, 6).map((article) => (
-                    <ArticleCard article={article} />
+                    <ArticleCard key={article.id} article={article} />
                   ))}
                 </AutoCarousel>
               </section>
             )}
+
+            {/* In-feed Advertisement */}
+            <InArticleAd className="my-6" />
 
             {/* Latest Articles */}
             <section>

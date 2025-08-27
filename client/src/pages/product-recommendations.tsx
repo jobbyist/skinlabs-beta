@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Star, ExternalLink, Heart } from "lucide-react";
 import { ProductRecommendation } from "@shared/schema";
+import { DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
 
 export default function ProductRecommendationsPage() {
   const { data: recommendations, isLoading } = useQuery<ProductRecommendation[]>({
@@ -33,6 +34,9 @@ export default function ProductRecommendationsPage() {
           Expertly curated skincare products tailored for South African skin
         </p>
       </div>
+
+      {/* Top Display Ad */}
+      <DisplayAd className="mb-6" />
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {recommendations?.map((product) => (
