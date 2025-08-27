@@ -160,17 +160,17 @@ export default function Footer() {
           </div>
           
           <div className="flex flex-wrap justify-center md:justify-end gap-4 text-sm">
-            <Link to="/privacy" data-testid="footer-privacy">
+            <Link to="/privacy-policy" data-testid="footer-privacy">
               <button className="text-muted-foreground hover:text-foreground transition-colors">
                 Privacy Policy
               </button>
             </Link>
-            <Link to="/terms" data-testid="footer-terms">
+            <Link to="/terms-of-service" data-testid="footer-terms">
               <button className="text-muted-foreground hover:text-foreground transition-colors">
                 Terms of Service
               </button>
             </Link>
-            <Link to="/cookies" data-testid="footer-cookies">
+            <Link to="/cookie-policy" data-testid="footer-cookies">
               <button className="text-muted-foreground hover:text-foreground transition-colors">
                 Cookie Policy
               </button>

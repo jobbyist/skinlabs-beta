@@ -9,7 +9,7 @@ import ArticleCard from "@/components/content/article-card";
 import DealCard from "@/components/content/deal-card";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { ContentGuard } from "@/components/auth/content-guard";
-import { Carousel, CarouselItem } from "@/components/ui/carousel";
+import { AutoCarousel } from "@/components/ui/auto-carousel";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -176,13 +176,15 @@ export default function Home() {
                 <Button variant="ghost" size="sm">See all</Button>
               </div>
               
-              <div className="slide-container">
-                <div className="flex gap-4 pb-2">
-                  {deals.map((deal) => (
-                    <DealCard key={deal.id} deal={deal} />
-                  ))}
-                </div>
-              </div>
+              <AutoCarousel 
+                autoPlayInterval={4000}
+                itemsPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+                className="w-full"
+              >
+                {deals.map((deal) => (
+                  <DealCard key={deal.id} deal={deal} />
+                ))}
+              </AutoCarousel>
             </div>
           </section>
         )}
@@ -202,13 +204,15 @@ export default function Home() {
                   {isAuthenticated ? "Based on your skin profile and reading history" : "Popular content from our community"}
                 </div>
                 
-                <Carousel itemWidth="320px" className="w-full">
+                <AutoCarousel 
+                  autoPlayInterval={5000}
+                  itemsPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+                  className="w-full"
+                >
                   {featuredArticles.slice(0, 6).map((article) => (
-                    <CarouselItem key={article.id} width="320px">
-                      <ArticleCard article={article} />
-                    </CarouselItem>
+                    <ArticleCard article={article} />
                   ))}
-                </Carousel>
+                </AutoCarousel>
               </section>
             )}
 
