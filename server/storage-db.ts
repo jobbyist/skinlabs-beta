@@ -1,7 +1,7 @@
-import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle } from "@shared/schema";
+import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle, type WebStory, type InsertWebStory, type DiyRecipe, type InsertDiyRecipe, type ForumPost, type InsertForumPost, type ForumReply, type InsertForumReply, type ProductRecommendation, type InsertProductRecommendation } from "@shared/schema";
 import bcrypt from "bcrypt";
 import { db } from "./db";
-import { users, userSkinProfiles, articles, deals, savedArticles } from "../shared/schema";
+import { users, userSkinProfiles, articles, deals, savedArticles, webStories, diyRecipes, forumPosts, forumReplies, productRecommendations } from "../shared/schema";
 import { eq, and, desc, like, inArray, count } from "drizzle-orm";
 
 export interface IStorage {
@@ -35,6 +35,31 @@ export interface IStorage {
   // Founding member tracking
   getFoundingMemberCount(): Promise<number>;
   getUserCount(): Promise<number>;
+
+  // Content Management for Automation
+  // Articles
+  getAllArticles(): Promise<Article[]>;
+  createArticle(article: any): Promise<Article>;
+  updateArticle(id: string, updates: any): Promise<Article | undefined>;
+  deleteArticle(id: string): Promise<void>;
+
+  // Web Stories
+  getAllWebStories(): Promise<WebStory[]>;
+  createWebStory(story: any): Promise<WebStory>;
+  updateWebStory(id: string, updates: any): Promise<WebStory | undefined>;
+  deleteWebStory(id: string): Promise<void>;
+
+  // DIY Recipes
+  getAllDiyRecipes(): Promise<DiyRecipe[]>;
+  createDiyRecipe(recipe: any): Promise<DiyRecipe>;
+
+  // Forum Posts
+  getAllForumPosts(): Promise<ForumPost[]>;
+  createForumPost(post: any): Promise<ForumPost>;
+
+  // Product Recommendations
+  getAllProductRecommendations(): Promise<ProductRecommendation[]>;
+  createProductRecommendation(product: any): Promise<ProductRecommendation>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -412,6 +437,185 @@ export class DatabaseStorage implements IStorage {
 
     } catch (error) {
       console.error("Error initializing sample data:", error);
+    }
+  }
+
+  // =====================
+  // CONTENT MANAGEMENT METHODS
+  // =====================
+
+  // Articles
+  async getAllArticles(): Promise<Article[]> {
+    try {
+      return await db.select().from(articles).orderBy(desc(articles.publishedAt));
+    } catch (error) {
+      console.error("Error getting all articles:", error);
+      return [];
+    }
+  }
+
+  async createArticle(articleData: any): Promise<Article> {
+    try {
+      const [article] = await db.insert(articles).values({
+        ...articleData,
+        publishedAt: articleData.publishedAt || new Date(),
+        createdAt: new Date(),
+      }).returning();
+      return article;
+    } catch (error) {
+      console.error("Error creating article:", error);
+      throw error;
+    }
+  }
+
+  async updateArticle(id: string, updates: any): Promise<Article | undefined> {
+    try {
+      const [article] = await db
+        .update(articles)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(articles.id, id))
+        .returning();
+      return article;
+    } catch (error) {
+      console.error("Error updating article:", error);
+      return undefined;
+    }
+  }
+
+  async deleteArticle(id: string): Promise<void> {
+    try {
+      await db.delete(articles).where(eq(articles.id, id));
+    } catch (error) {
+      console.error("Error deleting article:", error);
+      throw error;
+    }
+  }
+
+  // Web Stories
+  async getAllWebStories(): Promise<WebStory[]> {
+    try {
+      return await db.select().from(webStories)
+        .where(eq(webStories.isPublished, true))
+        .orderBy(desc(webStories.publishedAt));
+    } catch (error) {
+      console.error("Error getting web stories:", error);
+      return [];
+    }
+  }
+
+  async createWebStory(storyData: any): Promise<WebStory> {
+    try {
+      const [story] = await db.insert(webStories).values({
+        ...storyData,
+        publishedAt: storyData.publishedAt || new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).returning();
+      return story;
+    } catch (error) {
+      console.error("Error creating web story:", error);
+      throw error;
+    }
+  }
+
+  async updateWebStory(id: string, updates: any): Promise<WebStory | undefined> {
+    try {
+      const [story] = await db
+        .update(webStories)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(webStories.id, id))
+        .returning();
+      return story;
+    } catch (error) {
+      console.error("Error updating web story:", error);
+      return undefined;
+    }
+  }
+
+  async deleteWebStory(id: string): Promise<void> {
+    try {
+      await db.delete(webStories).where(eq(webStories.id, id));
+    } catch (error) {
+      console.error("Error deleting web story:", error);
+      throw error;
+    }
+  }
+
+  // DIY Recipes
+  async getAllDiyRecipes(): Promise<DiyRecipe[]> {
+    try {
+      return await db.select().from(diyRecipes)
+        .where(eq(diyRecipes.isPublished, true))
+        .orderBy(desc(diyRecipes.publishedAt));
+    } catch (error) {
+      console.error("Error getting DIY recipes:", error);
+      return [];
+    }
+  }
+
+  async createDiyRecipe(recipeData: any): Promise<DiyRecipe> {
+    try {
+      const [recipe] = await db.insert(diyRecipes).values({
+        ...recipeData,
+        publishedAt: recipeData.publishedAt || new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).returning();
+      return recipe;
+    } catch (error) {
+      console.error("Error creating DIY recipe:", error);
+      throw error;
+    }
+  }
+
+  // Forum Posts
+  async getAllForumPosts(): Promise<ForumPost[]> {
+    try {
+      return await db.select().from(forumPosts)
+        .orderBy(desc(forumPosts.isPinned), desc(forumPosts.lastReplyAt), desc(forumPosts.createdAt));
+    } catch (error) {
+      console.error("Error getting forum posts:", error);
+      return [];
+    }
+  }
+
+  async createForumPost(postData: any): Promise<ForumPost> {
+    try {
+      const [post] = await db.insert(forumPosts).values({
+        ...postData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).returning();
+      return post;
+    } catch (error) {
+      console.error("Error creating forum post:", error);
+      throw error;
+    }
+  }
+
+  // Product Recommendations
+  async getAllProductRecommendations(): Promise<ProductRecommendation[]> {
+    try {
+      return await db.select().from(productRecommendations)
+        .where(eq(productRecommendations.isRecommended, true))
+        .orderBy(desc(productRecommendations.createdAt));
+    } catch (error) {
+      console.error("Error getting product recommendations:", error);
+      return [];
+    }
+  }
+
+  async createProductRecommendation(productData: any): Promise<ProductRecommendation> {
+    try {
+      const [product] = await db.insert(productRecommendations).values({
+        ...productData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }).returning();
+      return product;
+    } catch (error) {
+      console.error("Error creating product recommendation:", error);
+      throw error;
     }
   }
 }

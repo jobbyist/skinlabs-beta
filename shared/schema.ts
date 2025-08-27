@@ -99,6 +99,89 @@ export const deals = pgTable("deals", {
   createdAt: timestamp("created_at").notNull().default(sql`now()`),
 });
 
+// Additional Content Management Tables
+export const webStories = pgTable("web_stories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  slug: varchar("slug", { length: 255 }).unique().notNull(),
+  coverImage: text("cover_image").notNull(),
+  slides: jsonb("slides").notNull(), // Array of slide objects with text, images, etc.
+  category: text("category"),
+  author: text("author"),
+  isPublished: boolean("is_published").default(false),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const diyRecipes = pgTable("diy_recipes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  slug: varchar("slug", { length: 255 }).unique().notNull(),
+  description: text("description"),
+  ingredients: jsonb("ingredients").notNull(), // Array of ingredient objects
+  instructions: text("instructions").array().notNull(),
+  skinTypes: text("skin_types").array(), // Which skin types this recipe is for
+  prepTime: integer("prep_time"), // Minutes
+  difficulty: varchar("difficulty", { enum: ["easy", "medium", "hard"] }),
+  featuredImage: text("featured_image"),
+  images: text("images").array(),
+  author: text("author"),
+  isPublished: boolean("is_published").default(false),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const forumPosts = pgTable("forum_posts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  userId: varchar("user_id").references(() => users.id),
+  category: text("category"),
+  tags: text("tags").array(),
+  images: text("images").array(),
+  isLocked: boolean("is_locked").default(false),
+  isPinned: boolean("is_pinned").default(false),
+  viewCount: integer("view_count").default(0),
+  replyCount: integer("reply_count").default(0),
+  lastReplyAt: timestamp("last_reply_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const forumReplies = pgTable("forum_replies", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  postId: varchar("post_id").notNull().references(() => forumPosts.id),
+  userId: varchar("user_id").references(() => users.id),
+  content: text("content").notNull(),
+  images: text("images").array(),
+  parentReplyId: varchar("parent_reply_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const productRecommendations = pgTable("product_recommendations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description"),
+  productName: text("product_name").notNull(),
+  brand: text("brand").notNull(),
+  category: text("category"),
+  skinTypes: text("skin_types").array(),
+  skinConcerns: text("skin_concerns").array(),
+  price: integer("price"), // Price in cents
+  affiliateUrl: text("affiliate_url"),
+  featuredImage: text("featured_image"),
+  images: text("images").array(),
+  rating: integer("rating"), // 1-5 stars
+  pros: text("pros").array(),
+  cons: text("cons").array(),
+  isRecommended: boolean("is_recommended").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -123,6 +206,39 @@ export const insertSavedArticleSchema = createInsertSchema(savedArticles).omit({
 export const insertDealSchema = createInsertSchema(deals).omit({
   id: true,
   createdAt: true,
+});
+
+// New content insert schemas
+export const insertWebStorySchema = createInsertSchema(webStories).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertDiyRecipeSchema = createInsertSchema(diyRecipes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertForumPostSchema = createInsertSchema(forumPosts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  viewCount: true,
+  replyCount: true,
+});
+
+export const insertForumReplySchema = createInsertSchema(forumReplies).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertProductRecommendationSchema = createInsertSchema(productRecommendations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 // Auth schemas
@@ -170,6 +286,18 @@ export type SavedArticle = typeof savedArticles.$inferSelect;
 export type InsertSavedArticle = z.infer<typeof insertSavedArticleSchema>;
 export type Deal = typeof deals.$inferSelect;
 export type InsertDeal = z.infer<typeof insertDealSchema>;
+
+// New content types
+export type WebStory = typeof webStories.$inferSelect;
+export type InsertWebStory = z.infer<typeof insertWebStorySchema>;
+export type DiyRecipe = typeof diyRecipes.$inferSelect;
+export type InsertDiyRecipe = z.infer<typeof insertDiyRecipeSchema>;
+export type ForumPost = typeof forumPosts.$inferSelect;
+export type InsertForumPost = z.infer<typeof insertForumPostSchema>;
+export type ForumReply = typeof forumReplies.$inferSelect;
+export type InsertForumReply = z.infer<typeof insertForumReplySchema>;
+export type ProductRecommendation = typeof productRecommendations.$inferSelect;
+export type InsertProductRecommendation = z.infer<typeof insertProductRecommendationSchema>;
 
 export type LoginRequest = z.infer<typeof loginSchema>;
 export type RegisterRequest = z.infer<typeof registerSchema>;

@@ -485,6 +485,217 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // =====================
+  // CONTENT MANAGEMENT API
+  // Secure endpoints for external automation (Zapier/Make)
+  // =====================
+
+  // API key middleware for content automation
+  const requireApiKey = (req: Request, res: Response, next: any) => {
+    const apiKey = req.headers['x-api-key'];
+    const validApiKey = process.env.CONTENT_API_KEY || 'your-secure-api-key-change-in-production';
+    
+    if (!apiKey || apiKey !== validApiKey) {
+      return res.status(401).json({ message: 'Invalid or missing API key' });
+    }
+    next();
+  };
+
+  // ====================
+  // ARTICLES ENDPOINTS
+  // ====================
+  
+  // Get all articles (public)
+  app.get('/api/articles', async (req: Request, res: Response) => {
+    try {
+      const articles = await storage.getAllArticles();
+      res.json(articles);
+    } catch (error) {
+      console.error('Get articles error:', error);
+      res.status(500).json({ message: 'Failed to fetch articles' });
+    }
+  });
+
+  // Create new article (automation)
+  app.post('/api/articles', requireApiKey, async (req: Request, res: Response) => {
+    try {
+      const articleData = req.body;
+      const article = await storage.createArticle(articleData);
+      res.status(201).json(article);
+    } catch (error) {
+      console.error('Create article error:', error);
+      res.status(500).json({ message: 'Failed to create article' });
+    }
+  });
+
+  // Update article (automation)
+  app.put('/api/articles/:id', requireApiKey, async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      const article = await storage.updateArticle(id, updates);
+      
+      if (!article) {
+        return res.status(404).json({ message: 'Article not found' });
+      }
+      
+      res.json(article);
+    } catch (error) {
+      console.error('Update article error:', error);
+      res.status(500).json({ message: 'Failed to update article' });
+    }
+  });
+
+  // Delete article (automation)
+  app.delete('/api/articles/:id', requireApiKey, async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteArticle(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error('Delete article error:', error);
+      res.status(500).json({ message: 'Failed to delete article' });
+    }
+  });
+
+  // ====================
+  // WEB STORIES ENDPOINTS
+  // ====================
+  
+  // Get all web stories (public)
+  app.get('/api/web-stories', async (req: Request, res: Response) => {
+    try {
+      const stories = await storage.getAllWebStories();
+      res.json(stories);
+    } catch (error) {
+      console.error('Get web stories error:', error);
+      res.status(500).json({ message: 'Failed to fetch web stories' });
+    }
+  });
+
+  // Create new web story (automation)
+  app.post('/api/web-stories', requireApiKey, async (req: Request, res: Response) => {
+    try {
+      const storyData = req.body;
+      const story = await storage.createWebStory(storyData);
+      res.status(201).json(story);
+    } catch (error) {
+      console.error('Create web story error:', error);
+      res.status(500).json({ message: 'Failed to create web story' });
+    }
+  });
+
+  // Update web story (automation)
+  app.put('/api/web-stories/:id', requireApiKey, async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      const story = await storage.updateWebStory(id, updates);
+      
+      if (!story) {
+        return res.status(404).json({ message: 'Web story not found' });
+      }
+      
+      res.json(story);
+    } catch (error) {
+      console.error('Update web story error:', error);
+      res.status(500).json({ message: 'Failed to update web story' });
+    }
+  });
+
+  // Delete web story (automation)
+  app.delete('/api/web-stories/:id', requireApiKey, async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteWebStory(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error('Delete web story error:', error);
+      res.status(500).json({ message: 'Failed to delete web story' });
+    }
+  });
+
+  // ====================
+  // DIY RECIPES ENDPOINTS
+  // ====================
+  
+  // Get all DIY recipes (public)
+  app.get('/api/diy-recipes', async (req: Request, res: Response) => {
+    try {
+      const recipes = await storage.getAllDiyRecipes();
+      res.json(recipes);
+    } catch (error) {
+      console.error('Get DIY recipes error:', error);
+      res.status(500).json({ message: 'Failed to fetch DIY recipes' });
+    }
+  });
+
+  // Create new DIY recipe (automation)
+  app.post('/api/diy-recipes', requireApiKey, async (req: Request, res: Response) => {
+    try {
+      const recipeData = req.body;
+      const recipe = await storage.createDiyRecipe(recipeData);
+      res.status(201).json(recipe);
+    } catch (error) {
+      console.error('Create DIY recipe error:', error);
+      res.status(500).json({ message: 'Failed to create DIY recipe' });
+    }
+  });
+
+  // ====================
+  // FORUM ENDPOINTS
+  // ====================
+  
+  // Get all forum posts (public)
+  app.get('/api/forum/posts', async (req: Request, res: Response) => {
+    try {
+      const posts = await storage.getAllForumPosts();
+      res.json(posts);
+    } catch (error) {
+      console.error('Get forum posts error:', error);
+      res.status(500).json({ message: 'Failed to fetch forum posts' });
+    }
+  });
+
+  // Create new forum post (authenticated users)
+  app.post('/api/forum/posts', authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const postData = { ...req.body, userId: req.user.userId };
+      const post = await storage.createForumPost(postData);
+      res.status(201).json(post);
+    } catch (error) {
+      console.error('Create forum post error:', error);
+      res.status(500).json({ message: 'Failed to create forum post' });
+    }
+  });
+
+  // ====================
+  // PRODUCT RECOMMENDATIONS ENDPOINTS
+  // ====================
+  
+  // Get all product recommendations (public)
+  app.get('/api/product-recommendations', async (req: Request, res: Response) => {
+    try {
+      const recommendations = await storage.getAllProductRecommendations();
+      res.json(recommendations);
+    } catch (error) {
+      console.error('Get product recommendations error:', error);
+      res.status(500).json({ message: 'Failed to fetch product recommendations' });
+    }
+  });
+
+  // Create new product recommendation (automation)
+  app.post('/api/product-recommendations', requireApiKey, async (req: Request, res: Response) => {
+    try {
+      const productData = req.body;
+      const product = await storage.createProductRecommendation(productData);
+      res.status(201).json(product);
+    } catch (error) {
+      console.error('Create product recommendation error:', error);
+      res.status(500).json({ message: 'Failed to create product recommendation' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

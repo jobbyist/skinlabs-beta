@@ -10,6 +10,12 @@ import Home from "@/pages/home";
 import Auth from "@/pages/auth";
 import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/not-found";
+import ProductRecommendations from "@/pages/product-recommendations";
+import SkincareGuides from "@/pages/skincare-guides";
+import DiyRecipes from "@/pages/diy-recipes";
+import WebStories from "@/pages/web-stories";
+import CommunityForum from "@/pages/community-forum";
+import SponsoredOffers from "@/pages/sponsored-offers";
 
 function Router() {
   return (
@@ -17,6 +23,12 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/auth" component={Auth} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/product-recommendations" component={ProductRecommendations} />
+      <Route path="/skincare-guides" component={SkincareGuides} />
+      <Route path="/diy-recipes" component={DiyRecipes} />
+      <Route path="/web-stories" component={WebStories} />
+      <Route path="/community-forum" component={CommunityForum} />
+      <Route path="/sponsored-offers" component={SponsoredOffers} />
       <Route component={NotFound} />
     </Switch>
   );
