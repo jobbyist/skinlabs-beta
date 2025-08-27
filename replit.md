@@ -2,7 +2,7 @@
 
 This is SKYNN (SKINLABS), a South African skincare platform that provides expertly curated, derm-informed content about skincare. The platform combines content management with personalized user experiences, offering skincare guides, product reviews, ingredient explanations, deals, and personalized routines tailored for South African users.
 
-The application is built as a full-stack web platform with a React frontend and Express.js backend, featuring user authentication, skin profiling, content management, and subscription functionality.
+The application is built as a full-stack web platform with a React frontend and Express.js backend, featuring user authentication, skin profiling, content management, subscription functionality, and Progressive Web App (PWA) capabilities for mobile iOS and Android deployment.
 
 # User Preferences
 
@@ -51,6 +51,17 @@ Preferred communication style: Simple, everyday language.
 - **Tiers**: Free lifetime (founding members), Free trial, Premium subscription
 - **Founding Member Benefits**: Special recognition and permanent free access
 - **Trial Management**: Time-limited premium feature access
+
+## Mobile App Development (PWA)
+- **Progressive Web App**: Native-like mobile experience for iOS and Android
+- **Installation**: App can be installed directly from browser on mobile devices
+- **Offline Support**: Service worker provides offline functionality and caching
+- **Mobile Navigation**: Bottom tab navigation optimized for touch interaction
+- **Touch Gestures**: Swipe gestures for web stories and mobile interactions
+- **App Icons**: Complete icon set (72x72 to 512x512) for various device sizes
+- **Mobile Header**: Collapsible mobile header with menu and search functionality
+- **Safe Area Support**: Handles device notches and safe areas (iPhone X+)
+- **Install Prompts**: Smart install prompts that respect user preferences
 
 # External Dependencies
 
