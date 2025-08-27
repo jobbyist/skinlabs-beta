@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Clock, Percent } from "lucide-react";
 import { Deal } from "@shared/schema";
+import { BannerAd, DisplayAd } from "@/components/ads/adsense-block";
 
 export default function SponsoredOffersPage() {
   const { data: offers, isLoading } = useQuery<Deal[]>({
@@ -30,9 +31,9 @@ export default function SponsoredOffersPage() {
     return `R${(price / 100).toFixed(2)}`;
   };
 
-  const isExpiringSoon = (expiresAt: string | null) => {
+  const isExpiringSoon = (expiresAt: Date | null) => {
     if (!expiresAt) return false;
-    const expiry = new Date(expiresAt);
+    const expiry = typeof expiresAt === 'string' ? new Date(expiresAt) : expiresAt;
     const now = new Date();
     const daysUntilExpiry = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     return daysUntilExpiry <= 3;
@@ -40,6 +41,9 @@ export default function SponsoredOffersPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Top Banner Ad */}
+      <BannerAd className="mb-6" />
+      
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Sponsored Offers & Deals</h1>
         <p className="text-muted-foreground">

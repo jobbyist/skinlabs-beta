@@ -7,6 +7,7 @@ import Header from "@/components/layout/header";
 import ArticleCard from "@/components/content/article-card";
 import OnboardingModal from "@/components/auth/onboarding-modal";
 import SubscriptionModal from "@/components/auth/subscription-modal";
+import { DisplayAd } from "@/components/ads/adsense-block";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
