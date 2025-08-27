@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/hooks/use-auth";
+import AIChatbot from "@/components/ai-chatbot";
+import { AdSenseScript } from "@/components/google-adsense";
 
 import Home from "@/pages/home";
 import Auth from "@/pages/auth";
@@ -40,8 +42,10 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="skynn-theme">
         <AuthProvider>
           <TooltipProvider>
+            <AdSenseScript />
             <Toaster />
             <Router />
+            <AIChatbot />
           </TooltipProvider>
         </AuthProvider>
       </ThemeProvider>

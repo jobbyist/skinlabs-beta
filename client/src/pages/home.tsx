@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { BannerAd } from "@/components/google-adsense";
 
 import { Search, Crown, WandSparkles, ShoppingBag, Star, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -133,23 +134,38 @@ export default function Home() {
               </div>
               
               <div className="relative">
-                {/* Skincare routine visual */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg p-4 text-center">
-                    <div className="text-2xl mb-2">☀️</div>
-                    <div className="text-sm font-medium">Morning Routine</div>
-                    <div className="text-xs text-muted-foreground">Vitamin C + SPF</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-secondary/20 to-primary/20 rounded-lg p-4 text-center">
-                    <div className="text-2xl mb-2">🌙</div>
-                    <div className="text-sm font-medium">Evening Routine</div>
-                    <div className="text-xs text-muted-foreground">Retinol + Hydration</div>
+                {/* Hero Image - High-quality skincare visual */}
+                <div className="relative rounded-lg overflow-hidden shadow-xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+                    alt="Beautiful woman applying skincare products with glowing healthy skin"
+                    className="w-full h-80 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  
+                  {/* Floating elements */}
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
+                        <div className="text-xl mb-1">☀️</div>
+                        <div className="text-xs font-medium text-white">Morning Routine</div>
+                        <div className="text-xs text-white/80">Vitamin C + SPF</div>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
+                        <div className="text-xl mb-1">🌙</div>
+                        <div className="text-xs font-medium text-white">Evening Routine</div>
+                        <div className="text-xs text-white/80">Retinol + Hydration</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
+
+        {/* Banner Advertisement */}
+        <BannerAd className="mb-8" />
 
         {/* Sponsored Offers */}
         {deals.length > 0 && (
