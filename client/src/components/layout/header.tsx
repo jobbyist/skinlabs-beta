@@ -11,8 +11,9 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Crown, User, LogOut, Settings, Heart } from "lucide-react";
+import { Crown, User, LogOut, Settings, Heart, Headphones } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Link } from "wouter";
 
 export default function Header() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -44,6 +45,36 @@ export default function Header() {
               </div>
             </div>
           </div>
+
+          {/* Navigation Links */}
+          <nav className="hidden lg:flex items-center space-x-6">
+            <Link href="/">
+              <a className="text-sm font-medium transition-colors hover:text-primary">
+                Home
+              </a>
+            </Link>
+            <Link href="/skincare-guides">
+              <a className="text-sm font-medium transition-colors hover:text-primary">
+                Guides
+              </a>
+            </Link>
+            <Link href="/product-recommendations">
+              <a className="text-sm font-medium transition-colors hover:text-primary">
+                Products
+              </a>
+            </Link>
+            <Link href="/streams">
+              <a className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
+                <Headphones className="h-4 w-4" />
+                Streams
+              </a>
+            </Link>
+            <Link href="/sponsored-offers">
+              <a className="text-sm font-medium transition-colors hover:text-primary">
+                Offers
+              </a>
+            </Link>
+          </nav>
 
           {/* Navigation & Auth */}
           <div className="flex items-center space-x-3">
