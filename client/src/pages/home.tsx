@@ -54,11 +54,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
       <main className="max-w-skynn mx-auto px-4 py-6">
         {/* Hero Section */}
         <section className="mb-8">
-          <div className="glass-panel p-6">
+          <div className="glass-panel p-6 bg-[#333333b8]">
             <div className="grid md:grid-cols-2 gap-6 items-center">
               <div>
                 <Badge variant="secondary" className="mb-4">
@@ -170,26 +169,54 @@ export default function Home() {
         <BannerAd className="mb-8" />
 
         {/* Sponsored Offers */}
-        {deals.length > 0 && (
-          <section className="mb-8">
-            <div className="glass-panel p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold">Sponsored Offers</h2>
-                <Button variant="ghost" size="sm">See all</Button>
-              </div>
-              
-              <AutoCarousel 
-                autoPlayInterval={4000}
-                itemsPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
-                className="w-full"
-              >
-                {deals.map((deal) => (
-                  <DealCard key={deal.id} deal={deal} />
-                ))}
-              </AutoCarousel>
+        <section className="mb-8">
+          <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-purple-950/20 dark:via-background dark:to-pink-950/20 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">Sponsored Offers</h2>
+              <Badge variant="secondary">Limited Time</Badge>
             </div>
-          </section>
-        )}
+            
+            <AutoCarousel 
+              autoPlayInterval={5000}
+              itemsPerView={{ mobile: 1, tablet: 2, desktop: 4 }}
+              className="w-full"
+            >
+              {[
+                { id: "offer-1", brand: "CeraVe", discount: 30, title: "Hydrating Cleanser", description: "Gentle daily face wash with ceramides", price: "R189", originalPrice: "R270" },
+                { id: "offer-2", brand: "Eucerin", discount: 25, title: "Sun Protection SPF 50", description: "Advanced UVA/UVB protection for face", price: "R225", originalPrice: "R300" },
+                { id: "offer-3", brand: "Cetaphil", discount: 40, title: "Daily Moisturizer", description: "Lightweight non-comedogenic formula", price: "R150", originalPrice: "R250" },
+                { id: "offer-4", brand: "La Roche-Posay", discount: 20, title: "Effaclar Duo", description: "Anti-acne treatment cream", price: "R320", originalPrice: "R400" },
+                { id: "offer-5", brand: "Neutrogena", discount: 35, title: "Hydro Boost Gel", description: "Water gel with hyaluronic acid", price: "R195", originalPrice: "R300" },
+                { id: "offer-6", brand: "Nivea", discount: 50, title: "Q10 Anti-Wrinkle", description: "Anti-aging night cream", price: "R125", originalPrice: "R250" },
+                { id: "offer-7", brand: "The Ordinary", discount: 15, title: "Niacinamide 10%", description: "Zinc 1% serum for blemishes", price: "R170", originalPrice: "R200" },
+                { id: "offer-8", brand: "Vichy", discount: 30, title: "Mineral 89", description: "Daily booster with thermal water", price: "R350", originalPrice: "R500" },
+                { id: "offer-9", brand: "Bioderma", discount: 25, title: "Sensibio Micellar", description: "Sensitive skin makeup remover", price: "R225", originalPrice: "R300" },
+                { id: "offer-10", brand: "Avene", discount: 20, title: "Thermal Spring Water", description: "Soothing and anti-irritating spray", price: "R160", originalPrice: "R200" }
+              ].map((offer) => (
+                <div key={offer.id} className="bg-white dark:bg-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-4">
+                  <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg mb-3 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary">{offer.discount}%</div>
+                      <div className="text-sm text-muted-foreground">OFF</div>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="mb-2 text-xs">{offer.brand}</Badge>
+                  <h3 className="font-semibold text-sm mb-1 line-clamp-1">{offer.title}</h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{offer.description}</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-lg font-bold text-primary">{offer.price}</div>
+                      <div className="text-xs text-muted-foreground line-through">{offer.originalPrice}</div>
+                    </div>
+                    <Button size="sm" variant="outline">
+                      <ShoppingBag className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </AutoCarousel>
+          </div>
+        </section>
 
         {/* Mid-page Display Ad */}
         <DisplayAd className="my-8" />
@@ -198,8 +225,8 @@ export default function Home() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Featured Content */}
-            {featuredArticles.length > 0 && (
-              <section>
+            <section className="mb-8">
+              <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/20 dark:via-background dark:to-indigo-950/20 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold">Recommended for You</h2>
                   <Button variant="ghost" size="sm">View All</Button>
@@ -214,20 +241,44 @@ export default function Home() {
                   itemsPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
                   className="w-full"
                 >
-                  {featuredArticles.slice(0, 6).map((article) => (
-                    <ArticleCard key={article.id} article={article} />
+                  {[
+                    { id: "rec-1", title: "Morning Skincare Routine", category: "Guides", image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400", description: "Start your day with the perfect morning routine" },
+                    { id: "rec-2", title: "Understanding Retinol", category: "Ingredients", image: "https://images.unsplash.com/photo-1570194065650-d99fb4b38e39?w=400", description: "Everything you need to know about retinol usage" },
+                    { id: "rec-3", title: "Best SPF for Dark Skin", category: "Reviews", image: "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400", description: "Top sunscreens that don't leave white cast" },
+                    { id: "rec-4", title: "Acne Treatment Guide", category: "Guides", image: "https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=400", description: "Complete guide to treating different types of acne" },
+                    { id: "rec-5", title: "Vitamin C Benefits", category: "Ingredients", image: "https://images.unsplash.com/photo-1609097162027-cd6dba5accef?w=400", description: "How Vitamin C brightens and protects your skin" },
+                    { id: "rec-6", title: "Winter Skin Care", category: "Seasonal", image: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=400", description: "Keep your skin hydrated during cold months" },
+                    { id: "rec-7", title: "K-Beauty Essentials", category: "Trends", image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400", description: "Must-have products from Korean skincare" },
+                    { id: "rec-8", title: "Natural Ingredients", category: "Natural", image: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=400", description: "Powerful natural ingredients for your skin" }
+                  ].map((item) => (
+                    <div key={item.id} className="bg-white dark:bg-card rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-48 object-cover rounded-t-lg"
+                      />
+                      <div className="p-4">
+                        <Badge variant="outline" className="mb-2 text-xs">{item.category}</Badge>
+                        <h3 className="font-semibold text-sm mb-2 line-clamp-2 min-h-[2.5rem]">{item.title}</h3>
+                        <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">{item.description}</p>
+                        <Button variant="ghost" size="sm" className="mt-3 w-full">
+                          Read More →
+                        </Button>
+                      </div>
+                    </div>
                   ))}
                 </AutoCarousel>
-              </section>
-            )}
+              </div>
+            </section>
 
             {/* In-feed Advertisement */}
             <InArticleAd className="my-6" />
 
             {/* Latest Articles */}
-            <section>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold">Latest Curations</h2>
+            <section className="mb-8">
+              <div className="bg-gradient-to-br from-teal-50 via-white to-cyan-50 dark:from-teal-950/20 dark:via-background dark:to-cyan-950/20 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold">Latest Curations</h2>
                 <div className="flex items-center gap-2">
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                     <SelectTrigger className="w-40" data-testid="category-select">
@@ -270,6 +321,7 @@ export default function Home() {
                   </p>
                 </div>
               )}
+              </div>
             </section>
           </div>
 
@@ -277,7 +329,7 @@ export default function Home() {
           <div className="space-y-6">
             {/* User Status */}
             {isAuthenticated && user && (
-              <div className="glass-panel p-6">
+              <div className="bg-gradient-to-br from-orange-50 via-white to-amber-50 dark:from-orange-950/20 dark:via-background dark:to-amber-950/20 rounded-xl p-4 lg:p-6">
                 <h3 className="font-bold mb-4">Your Progress</h3>
                 
                 <div className="space-y-4">
@@ -323,33 +375,33 @@ export default function Home() {
             )}
 
             {/* Quick Actions */}
-            <div className="glass-panel p-6">
-              <h3 className="font-bold mb-4">Quick Actions</h3>
-              <div className="space-y-3">
+            <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-green-950/20 dark:via-background dark:to-emerald-950/20 rounded-xl p-4 lg:p-6">
+              <h3 className="font-bold mb-4 text-center lg:text-left">Quick Actions</h3>
+              <div className="grid grid-cols-1 gap-3 max-w-sm mx-auto lg:max-w-none">
                 <Button 
                   variant="outline" 
-                  className="w-full justify-start" 
+                  className="w-full justify-start px-3 py-2 h-auto" 
                   onClick={() => setShowAuthModal(true)}
                   data-testid="skynn-ai"
                 >
-                  <WandSparkles className="w-4 h-4 mr-3" />
-                  <div className="text-left">
+                  <WandSparkles className="w-4 h-4 mr-3 flex-shrink-0" />
+                  <div className="text-left min-w-0">
                     <div className="text-sm font-medium">SKYNN AI</div>
                     <div className="text-xs text-muted-foreground">Get personalized advice</div>
                   </div>
                 </Button>
                 
-                <Button variant="outline" className="w-full justify-start" data-testid="routine-builder">
-                  <div className="w-4 h-4 mr-3 text-secondary">📅</div>
-                  <div className="text-left">
+                <Button variant="outline" className="w-full justify-start px-3 py-2 h-auto" data-testid="routine-builder">
+                  <div className="w-4 h-4 mr-3 text-secondary flex-shrink-0">📅</div>
+                  <div className="text-left min-w-0">
                     <div className="text-sm font-medium">Routine Builder</div>
                     <div className="text-xs text-muted-foreground">Create custom routine</div>
                   </div>
                 </Button>
                 
-                <Button variant="outline" className="w-full justify-start" data-testid="deals-offers">
-                  <ShoppingBag className="w-4 h-4 mr-3" />
-                  <div className="text-left">
+                <Button variant="outline" className="w-full justify-start px-3 py-2 h-auto" data-testid="deals-offers">
+                  <ShoppingBag className="w-4 h-4 mr-3 flex-shrink-0" />
+                  <div className="text-left min-w-0">
                     <div className="text-sm font-medium">Deals & Offers</div>
                     <div className="text-xs text-muted-foreground">Exclusive member deals</div>
                   </div>
@@ -359,7 +411,7 @@ export default function Home() {
 
             {/* Member Deals */}
             {deals.length > 0 && (
-              <div className="glass-panel p-6">
+              <div className="bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-rose-950/20 dark:via-background dark:to-pink-950/20 rounded-xl p-4 lg:p-6">
                 <h3 className="font-bold mb-4">Member Deals</h3>
                 <div className="space-y-3">
                   {deals.slice(0, 3).map((deal) => (
@@ -391,7 +443,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
       {/* Auth Modal */}
       {showAuthModal && (
         <AuthModal 
@@ -399,7 +450,6 @@ export default function Home() {
           onClose={() => setShowAuthModal(false)} 
         />
       )}
-      
       <Footer />
     </div>
   );

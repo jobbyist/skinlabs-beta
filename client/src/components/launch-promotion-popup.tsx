@@ -53,7 +53,7 @@ export default function LaunchPromotionPopup() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-md mx-4 rounded-2xl border-0 p-0 overflow-hidden">
+      <DialogContent className="max-w-sm sm:max-w-md mx-4 rounded-2xl border-0 p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="relative">
           {/* Close button */}
           <Button
@@ -67,13 +67,13 @@ export default function LaunchPromotionPopup() {
           </Button>
 
           {/* Header with gradient background */}
-          <div className="relative bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground p-6 text-center">
+          <div className="relative bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground p-4 sm:p-6 text-center">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMS41IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjEiLz4KPC9zdmc+')] opacity-20"></div>
             
             <div className="relative z-10">
               <div className="flex justify-center mb-3">
-                <div className="p-3 bg-white/20 rounded-full">
-                  <Crown className="h-8 w-8" />
+                <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+                  <Crown className="h-6 w-6 sm:h-8 sm:w-8" />
                 </div>
               </div>
               
@@ -82,7 +82,7 @@ export default function LaunchPromotionPopup() {
               </Badge>
               
               <DialogHeader>
-                <DialogTitle className="text-2xl font-bold text-center text-white mb-2">
+                <DialogTitle className="text-xl sm:text-2xl font-bold text-center text-white mb-2">
                   Join Our Founding Members!
                 </DialogTitle>
               </DialogHeader>
@@ -94,7 +94,7 @@ export default function LaunchPromotionPopup() {
           </div>
 
           {/* Content */}
-          <div className="p-6 space-y-4">
+          <div className="p-4 sm:p-6 space-y-4">
             {/* Founding Member Benefits */}
             <Card className="border-primary/20">
               <CardContent className="p-4">
