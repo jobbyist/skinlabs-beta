@@ -1,11 +1,16 @@
 import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle } from "@shared/schema";
 import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
+import { db } from "./db";
+import { users, userSkinProfiles, articles, deals, savedArticles } from "../shared/schema";
+import { eq, and, desc, like, inArray, count } from "drizzle-orm";
 
 export interface IStorage {
   // User management
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByGoogleId(googleId: string): Promise<User | undefined>;
+  getUserByAppleId(appleId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
   verifyPassword(email: string, password: string): Promise<User | null>;
@@ -27,9 +32,12 @@ export interface IStorage {
   getSavedArticles(userId: string): Promise<Article[]>;
   saveArticle(data: InsertSavedArticle): Promise<SavedArticle>;
   unsaveArticle(userId: string, articleId: string): Promise<boolean>;
+  
+  // Founding member tracking
+  getFoundingMemberCount(): Promise<number>;
 }
 
-export class MemStorage implements IStorage {
+export class DatabaseStorage implements IStorage {
   private users: Map<string, User>;
   private userSkinProfiles: Map<string, UserSkinProfile>;
   private articles: Map<string, Article>;
@@ -320,4 +328,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

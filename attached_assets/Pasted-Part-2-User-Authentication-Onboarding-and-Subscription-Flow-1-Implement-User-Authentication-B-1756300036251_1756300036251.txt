@@ -1,0 +1,20 @@
+Part 2: User Authentication, Onboarding, and Subscription Flow
+1. Implement User Authentication:
+• Build a complete user authentication system with secure user registration (email/password) and login functionality.[4] All passwords must be hashed using bcrypt.
+• Integrate third-party login options for Google and Apple (OAuth 2.0).
+• Create API endpoints for signup, login, logout, and password reset.
+2. Create Frontend Modals:
+• Develop two distinct, responsive popup modals: one for "Sign Up" and one for "Log In".
+• The "Sign Up" modal must be a multi-step form.
+• Step 1: Collect email, password, and consent to Terms of Service/Privacy Policy.
+• Step 2: Ask a series of skincare questions to build the user's skin profile (e.g., "What is your skin type?", "What are your main concerns?"). Store these answers in the user_skin_profile table.
+• The "Log In" modal should provide fields for email/password and prominent buttons for "Log in with Google" and "Log in with Apple".
+3. Content Restriction and Modal Trigger:
+• The main content on the homepage (articles, guides, etc.) should be restricted. When a non-logged-in user clicks on or attempts to interact with any restricted content, trigger the appearance of the Sign Up/Log In modal.
+4. Payment and Subscription Logic:
+• Integrate the PayPal API for payment processing.
+• Implement the following user sign-up and payment flow based on the total number of registered users:
+• For the first 100 users (user count 1-100): Upon completing the sign-up form, create their account immediately. Set their subscription_status to 'trial' and trial_end_date to 30 days from the current date. Do NOT redirect to PayPal.
+• For users 101 to 1000: Upon completing the sign-up form, create their account immediately. Set their subscription_status to 'free_lifetime' and is_founding_member to true. Do NOT redirect to PayPal.
+• For all subsequent users (user count > 1000): After submitting the sign-up form, redirect them to PayPal to complete the payment of a $9.99 annual subscription. Only after a successful payment confirmation from PayPal should the user account be created and subscription_status set to 'active'.
+• Create a scheduled task (e.g., a cron job) that runs daily to check for users whose trial_end_date is approaching (e.g., 3 days left) and sends them an email notification to subscribe.

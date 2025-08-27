@@ -25,6 +25,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const queryClient = useQueryClient();
 
+  // Handle OAuth callback tokens
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get('token');
+    
+    if (urlToken && urlParams.get('auth') === 'success') {
+      localStorage.setItem("skynn-auth-token", urlToken);
+      setToken(urlToken);
+      
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Refetch user data
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+    }
+  }, [queryClient]);
+
   // Query to get current user if token exists
   const { data: currentUser, isLoading } = useQuery<User>({
     queryKey: ["/api/auth/me"],

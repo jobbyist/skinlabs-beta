@@ -1,18 +1,38 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, boolean, timestamp, integer, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, boolean, timestamp, integer, jsonb, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+// Session storage table for authentication
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  passwordHash: text("password_hash"),
   authProvider: text("auth_provider").notNull().default("local"),
-  providerId: text("provider_id"),
+  googleId: text("google_id"),
+  appleId: text("apple_id"),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  profileImageUrl: text("profile_image_url"),
   subscriptionStatus: text("subscription_status").notNull().default("free_lifetime"),
   trialEndDate: timestamp("trial_end_date"),
   signupDate: timestamp("signup_date").notNull().default(sql`now()`),
   isFoundingMember: boolean("is_founding_member").notNull().default(false),
+  emailVerified: boolean("email_verified").notNull().default(false),
+  resetPasswordToken: text("reset_password_token"),
+  resetPasswordExpires: timestamp("reset_password_expires"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+  updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
 });
 
 export const userSkinProfiles = pgTable("user_skin_profiles", {
@@ -39,10 +59,15 @@ export const articles = pgTable("articles", {
   tags: text("tags").array(),
   rating: integer("rating").default(0),
   readTime: integer("read_time"), // in minutes
+  readTimeMinutes: integer("read_time_minutes"), // alias for readTime
   imageUrl: text("image_url"),
+  featuredImageUrl: text("featured_image_url"),
   authorId: varchar("author_id"),
   isPublished: boolean("is_published").notNull().default(false),
   isFeatured: boolean("is_featured").notNull().default(false),
+  isPremium: boolean("is_premium").notNull().default(false),
+  views: integer("views").default(0),
+  publishedAt: timestamp("published_at").default(sql`now()`),
   createdAt: timestamp("created_at").notNull().default(sql`now()`),
 });
 
@@ -59,11 +84,17 @@ export const deals = pgTable("deals", {
   title: text("title").notNull(),
   description: text("description"),
   discountPercentage: integer("discount_percentage"),
+  originalPrice: integer("original_price"),
+  discountedPrice: integer("discounted_price"),
   code: text("code"),
   url: text("url").notNull(),
+  affiliateUrl: text("affiliate_url"),
+  imageUrl: text("image_url"),
   category: text("category"), // clean_beauty, pharmacy, organic, local_brand, etc.
   isActive: boolean("is_active").notNull().default(true),
+  isPremium: boolean("is_premium").notNull().default(false),
   validUntil: timestamp("valid_until"),
+  expiresAt: timestamp("expires_at"), // alias for validUntil
   createdAt: timestamp("created_at").notNull().default(sql`now()`),
 });
 
@@ -102,6 +133,16 @@ export const loginSchema = z.object({
 export const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  acceptTerms: z.boolean().refine(val => val === true, "You must accept the Terms of Service"),
+});
+
+export const resetPasswordSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+export const changePasswordSchema = z.object({
+  token: z.string().min(1, "Reset token is required"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export const onboardingStepSchema = z.object({
@@ -120,7 +161,9 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type UserSkinProfile = typeof userSkinProfiles.$inferSelect;
 export type InsertUserSkinProfile = z.infer<typeof insertUserSkinProfileSchema>;
-export type Article = typeof articles.$inferSelect;
+export type Article = typeof articles.$inferSelect & {
+  isSaved?: boolean; // computed property for frontend
+};
 export type InsertArticle = z.infer<typeof insertArticleSchema>;
 export type SavedArticle = typeof savedArticles.$inferSelect;
 export type InsertSavedArticle = z.infer<typeof insertSavedArticleSchema>;
