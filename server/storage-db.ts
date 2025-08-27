@@ -34,6 +34,7 @@ export interface IStorage {
   
   // Founding member tracking
   getFoundingMemberCount(): Promise<number>;
+  getUserCount(): Promise<number>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -84,23 +85,18 @@ export class DatabaseStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     try {
-      // Check if this would be a founding member
-      const foundingCount = await this.getFoundingMemberCount();
-      const isFoundingMember = foundingCount < 1000;
-
       // Hash password if provided
       let passwordHash = insertUser.passwordHash;
       if (passwordHash && !passwordHash.startsWith('$2b$')) {
         passwordHash = await bcrypt.hash(passwordHash, 10);
       }
 
+      // Use the subscription logic from the routes, don't override it here
       const [user] = await db
         .insert(users)
         .values({
           ...insertUser,
           passwordHash,
-          isFoundingMember,
-          subscriptionStatus: isFoundingMember ? "free_lifetime" : "free_lifetime",
         })
         .returning();
 
@@ -147,6 +143,18 @@ export class DatabaseStorage implements IStorage {
       return result.count;
     } catch (error) {
       console.error("Error getting founding member count:", error);
+      return 0;
+    }
+  }
+
+  async getUserCount(): Promise<number> {
+    try {
+      const [result] = await db
+        .select({ count: count() })
+        .from(users);
+      return result.count;
+    } catch (error) {
+      console.error("Error getting user count:", error);
       return 0;
     }
   }
@@ -198,13 +206,16 @@ export class DatabaseStorage implements IStorage {
   // Articles
   async getArticles(limit: number = 20, category?: string): Promise<Article[]> {
     try {
-      let query = db.select().from(articles).where(eq(articles.isPublished, true));
+      let whereConditions = [eq(articles.isPublished, true)];
       
       if (category && category !== "all") {
-        query = query.where(eq(articles.category, category));
+        whereConditions.push(eq(articles.category, category));
       }
       
-      const result = await query
+      const result = await db
+        .select()
+        .from(articles)
+        .where(and(...whereConditions))
         .orderBy(desc(articles.createdAt))
         .limit(limit);
       
@@ -268,10 +279,15 @@ export class DatabaseStorage implements IStorage {
           tags: articles.tags,
           rating: articles.rating,
           readTime: articles.readTime,
+          readTimeMinutes: articles.readTimeMinutes,
           imageUrl: articles.imageUrl,
+          featuredImageUrl: articles.featuredImageUrl,
           authorId: articles.authorId,
           isPublished: articles.isPublished,
           isFeatured: articles.isFeatured,
+          isPremium: articles.isPremium,
+          views: articles.views,
+          publishedAt: articles.publishedAt,
           createdAt: articles.createdAt,
         })
         .from(savedArticles)

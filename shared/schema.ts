@@ -29,6 +29,7 @@ export const users = pgTable("users", {
   signupDate: timestamp("signup_date").notNull().default(sql`now()`),
   isFoundingMember: boolean("is_founding_member").notNull().default(false),
   emailVerified: boolean("email_verified").notNull().default(false),
+  registrationNumber: integer("registration_number"),
   resetPasswordToken: text("reset_password_token"),
   resetPasswordExpires: timestamp("reset_password_expires"),
   createdAt: timestamp("created_at").notNull().default(sql`now()`),

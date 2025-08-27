@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import passport from "passport";
 import { loginSchema, registerSchema, resetPasswordSchema, changePasswordSchema, onboardingStepSchema } from "@shared/schema";
 import { z } from "zod";
+import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
+import { sendTrialExpirationNotification } from "./sendgrid";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-jwt-secret-change-in-production";
 
@@ -31,7 +33,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication middleware
   setupAuth(app);
 
-  // Local registration
+  // Local registration with user count-based subscription logic
   app.post('/api/auth/register', async (req: Request, res: Response) => {
     try {
       const { email, password, acceptTerms } = registerSchema.parse(req.body);
@@ -42,10 +44,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'User already exists' });
       }
       
+      // Get current user count to determine subscription logic
+      const userCount = await storage.getUserCount();
+      const registrationNumber = userCount + 1;
+      
+      let subscriptionStatus = "free";
+      let isFoundingMember = false;
+      let trialEndDate = null;
+      let requiresPayment = false;
+      
+      if (registrationNumber <= 100) {
+        // First 100 users get 30-day trial
+        subscriptionStatus = "trial";
+        trialEndDate = new Date();
+        trialEndDate.setDate(trialEndDate.getDate() + 30);
+      } else if (registrationNumber <= 1000) {
+        // Users 101-1000 get free lifetime access as founding members
+        subscriptionStatus = "free_lifetime";
+        isFoundingMember = true;
+      } else {
+        // Users 1001+ must pay before account creation
+        requiresPayment = true;
+        subscriptionStatus = "pending_payment";
+      }
+      
+      // If payment is required, don't create the user yet - return payment info
+      if (requiresPayment) {
+        return res.status(402).json({
+          message: 'Payment required',
+          requiresPayment: true,
+          amount: '9.99',
+          currency: 'USD',
+          registrationNumber
+        });
+      }
+      
+      // Create user with appropriate subscription status
       const user = await storage.createUser({
         email,
         passwordHash: password, // This will be hashed in storage
         authProvider: "local",
+        subscriptionStatus,
+        trialEndDate,
+        isFoundingMember,
+        registrationNumber
       });
       
       const token = jwt.sign(
@@ -60,6 +102,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           email: user.email,
           subscriptionStatus: user.subscriptionStatus,
           isFoundingMember: user.isFoundingMember,
+          trialEndDate: user.trialEndDate,
+          registrationNumber: user.registrationNumber
         },
         token
       });
@@ -313,16 +357,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Subscription routes
-  app.post('/api/subscription/upgrade', authenticateToken, async (req: Request, res: Response) => {
+  // PayPal routes for subscription management
+  app.get("/api/paypal/setup", async (req, res) => {
+    await loadPaypalDefault(req, res);
+  });
+
+  app.post("/api/paypal/order", async (req, res) => {
+    // Request body should contain: { intent, amount, currency }
+    await createPaypalOrder(req, res);
+  });
+
+  app.post("/api/paypal/order/:orderID/capture", async (req, res) => {
+    await capturePaypalOrder(req, res);
+  });
+
+  // Complete registration with payment
+  app.post('/api/auth/register-with-payment', async (req: Request, res: Response) => {
     try {
-      const { plan } = req.body;
+      const { email, password, acceptTerms, paypalOrderId } = req.body;
       
-      if (plan !== 'premium') {
-        return res.status(400).json({ message: 'Invalid plan' });
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ message: 'User already exists' });
       }
       
-      // In a real implementation, this would integrate with a payment provider
+      // Verify PayPal payment was captured successfully
+      // In production, you would verify the order status with PayPal
+      
+      // Get current user count
+      const userCount = await storage.getUserCount();
+      const registrationNumber = userCount + 1;
+      
+      // Create user with active subscription (payment completed)
+      const user = await storage.createUser({
+        email,
+        passwordHash: password,
+        authProvider: "local",
+        subscriptionStatus: "active",
+        isFoundingMember: false,
+        registrationNumber
+      });
+      
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+      
+      res.status(201).json({
+        user: {
+          id: user.id,
+          email: user.email,
+          subscriptionStatus: user.subscriptionStatus,
+          isFoundingMember: user.isFoundingMember,
+          registrationNumber: user.registrationNumber
+        },
+        token
+      });
+    } catch (error) {
+      console.error('Registration with payment error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Subscription upgrade for trial users
+  app.post('/api/subscription/upgrade', authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const { paypalOrderId } = req.body;
+      
+      // Verify payment was completed successfully
+      // In production, verify the PayPal order status
+      
       const user = await storage.updateUser(req.user.userId, {
         subscriptionStatus: "active",
         trialEndDate: null,
@@ -334,6 +440,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error('Upgrade subscription error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Get user registration count (for frontend display)
+  app.get('/api/user/registration-info', async (req: Request, res: Response) => {
+    try {
+      const userCount = await storage.getUserCount();
+      const nextRegistrationNumber = userCount + 1;
+      
+      let subscriptionInfo = {};
+      
+      if (nextRegistrationNumber <= 100) {
+        subscriptionInfo = {
+          tier: 'trial',
+          message: `You'll be user #${nextRegistrationNumber} and get a 30-day free trial!`,
+          requiresPayment: false
+        };
+      } else if (nextRegistrationNumber <= 1000) {
+        subscriptionInfo = {
+          tier: 'founding_member',
+          message: `You'll be founding member #${nextRegistrationNumber - 100} with free lifetime access!`,
+          requiresPayment: false
+        };
+      } else {
+        subscriptionInfo = {
+          tier: 'paid',
+          message: 'Annual subscription required for new users',
+          requiresPayment: true,
+          amount: '9.99',
+          currency: 'USD'
+        };
+      }
+      
+      res.json({
+        userCount,
+        nextRegistrationNumber,
+        ...subscriptionInfo
+      });
+    } catch (error) {
+      console.error('Get registration info error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   });
