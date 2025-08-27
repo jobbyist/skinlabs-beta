@@ -12,6 +12,8 @@ import InstallPrompt from "@/components/mobile/install-prompt";
 import MobileNavigation from "@/components/mobile/mobile-navigation";
 import MobileHeader from "@/components/mobile/mobile-header";
 import OfflineIndicator from "@/components/mobile/offline-indicator";
+import LaunchPromotionPopup from "@/components/launch-promotion-popup";
+import LaunchBanner from "@/components/mobile/launch-banner";
 
 import Home from "@/pages/home";
 import Auth from "@/pages/auth";
@@ -50,12 +52,14 @@ function App() {
             <PWAProvider />
             <AdSenseScript />
             <Toaster />
+            <LaunchBanner />
             <MobileHeader />
             <Router />
             <AIChatbot />
             <InstallPrompt />
             <MobileNavigation />
             <OfflineIndicator />
+            <LaunchPromotionPopup />
           </TooltipProvider>
         </AuthProvider>
       </ThemeProvider>

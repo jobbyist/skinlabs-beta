@@ -326,6 +326,17 @@ export class DatabaseStorage implements IStorage {
     
     return false;
   }
+
+  async getFoundingMemberCount(): Promise<number> {
+    const foundingMembers = Array.from(this.users.values())
+      .filter(user => user.isFoundingMember === true);
+    
+    return foundingMembers.length;
+  }
+
+  async getUserCount(): Promise<number> {
+    return this.users.size;
+  }
 }
 
 export const storage = new DatabaseStorage();
