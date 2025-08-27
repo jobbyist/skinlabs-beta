@@ -6,8 +6,8 @@ import { Link, useLocation } from "wouter";
 import Header from "@/components/layout/header";
 import ArticleCard from "@/components/content/article-card";
 import DealCard from "@/components/content/deal-card";
-import OnboardingModal from "@/components/auth/onboarding-modal";
-import SubscriptionModal from "@/components/auth/subscription-modal";
+import { AuthModal } from "@/components/auth/auth-modal";
+import { ContentGuard } from "@/components/auth/content-guard";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,8 +22,7 @@ export default function Home() {
   const { user, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showSubscription, setShowSubscription] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -277,7 +276,7 @@ export default function Home() {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          onClick={() => setShowSubscription(true)}
+                          onClick={() => setShowAuthModal(true)}
                           data-testid="upgrade-subscription"
                         >
                           Upgrade to Premium
@@ -302,7 +301,7 @@ export default function Home() {
                 <Button 
                   variant="outline" 
                   className="w-full justify-start" 
-                  onClick={() => setShowOnboarding(true)}
+                  onClick={() => setShowAuthModal(true)}
                   data-testid="skynn-ai"
                 >
                   <WandSparkles className="w-4 h-4 mr-3" />
@@ -365,16 +364,13 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Modals */}
-      <OnboardingModal 
-        isOpen={showOnboarding} 
-        onClose={() => setShowOnboarding(false)} 
-      />
-      
-      <SubscriptionModal 
-        isOpen={showSubscription} 
-        onClose={() => setShowSubscription(false)} 
-      />
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <AuthModal 
+          isOpen={showAuthModal} 
+          onClose={() => setShowAuthModal(false)} 
+        />
+      )}
     </div>
   );
 }

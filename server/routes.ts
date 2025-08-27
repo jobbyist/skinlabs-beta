@@ -1,8 +1,10 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "./storage-db";
+import { setupAuth, requireAuth, optionalAuth, generateToken } from "./auth";
 import jwt from "jsonwebtoken";
-import { loginSchema, registerSchema, onboardingStepSchema } from "@shared/schema";
+import passport from "passport";
+import { loginSchema, registerSchema, resetPasswordSchema, changePasswordSchema, onboardingStepSchema } from "@shared/schema";
 import { z } from "zod";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-jwt-secret-change-in-production";
@@ -26,10 +28,13 @@ const authenticateToken = (req: Request, res: Response, next: any) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth routes
+  // Setup authentication middleware
+  setupAuth(app);
+
+  // Local registration
   app.post('/api/auth/register', async (req: Request, res: Response) => {
     try {
-      const { email, password } = registerSchema.parse(req.body);
+      const { email, password, acceptTerms } = registerSchema.parse(req.body);
       
       // Check if user already exists
       const existingUser = await storage.getUserByEmail(email);
@@ -98,6 +103,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Login error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
+  });
+
+  // Google OAuth routes
+  app.get('/api/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+  );
+
+  app.get('/api/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/?error=auth' }),
+    (req: Request, res: Response) => {
+      const user = req.user as any;
+      const token = generateToken(user);
+      
+      // Redirect to frontend with token
+      res.redirect(`/?token=${token}&auth=success`);
+    }
+  );
+
+  // Apple OAuth routes (when configured)
+  app.get('/api/auth/apple',
+    passport.authenticate('apple')
+  );
+
+  app.post('/api/auth/apple/callback',
+    passport.authenticate('apple', { failureRedirect: '/?error=auth' }),
+    (req: Request, res: Response) => {
+      const user = req.user as any;
+      const token = generateToken(user);
+      
+      // Redirect to frontend with token
+      res.redirect(`/?token=${token}&auth=success`);
+    }
+  );
+
+  // Logout
+  app.post('/api/auth/logout', (req: Request, res: Response) => {
+    req.logout(() => {
+      res.json({ message: 'Logged out successfully' });
+    });
   });
 
   app.get('/api/auth/me', authenticateToken, async (req: Request, res: Response) => {

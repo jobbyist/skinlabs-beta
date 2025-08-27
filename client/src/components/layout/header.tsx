@@ -1,274 +1,142 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useLocation } from "wouter";
-
+import { AuthModal } from "@/components/auth/auth-modal";
 import { Button } from "@/components/ui/button";
-import {
+import { Badge } from "@/components/ui/badge";
+import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
-
-import { 
-  Search, 
-  Bell, 
-  Menu, 
-  User, 
-  Heart, 
-  Crown, 
-  Settings, 
-  LogOut,
-  Home,
-  BookOpen,
-  Beaker,
-  Calendar,
-  Star,
-  ShoppingBag,
-  Building
-} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Crown, User, LogOut, Settings, Heart } from "lucide-react";
 
 export default function Header() {
   const { user, isAuthenticated, logout } = useAuth();
-  const [, setLocation] = useLocation();
-  const [notificationCount] = useState(3);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
 
-  const handleLogout = () => {
-    logout();
-    setLocation("/");
+  const handleAuthClick = (mode: 'login' | 'register') => {
+    setAuthMode(mode);
+    setShowAuthModal(true);
   };
 
   const getUserInitials = (email: string) => {
-    return email.split('@')[0].slice(0, 2).toUpperCase();
+    return email.charAt(0).toUpperCase();
   };
 
-  const navigationItems = [
-    { name: "Home", path: "/", icon: Home },
-    { name: "Guides", path: "/?category=guides", icon: BookOpen },
-    { name: "Ingredients", path: "/?category=ingredients", icon: Beaker },
-    { name: "Routines", path: "/?category=routines", icon: Calendar },
-    { name: "Reviews", path: "/?category=reviews", icon: Star },
-    { name: "Deals", path: "/?category=deals", icon: ShoppingBag },
-    { name: "Local Brands", path: "/?category=local_brands", icon: Building },
-  ];
-
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-nav border-b border-border">
-      <div className="max-w-skynn mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          {/* Brand */}
-          <button 
-            onClick={() => setLocation("/")} 
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-            data-testid="brand-logo"
-          >
-            <div className="brand-icon">🇿🇦</div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-lg tracking-wide">SKYNN</span>
-              <span className="text-xs text-muted-foreground font-medium">by SkinLabs®</span>
+    <>
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="max-w-skynn mx-auto flex h-16 items-center justify-between px-4">
+          {/* Logo */}
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-sm">S</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold tracking-tight">SKYNN</h1>
+                <p className="text-xs text-muted-foreground -mt-1">by SkinLabs</p>
+              </div>
             </div>
-          </button>
+          </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            {navigationItems.slice(1).map((item) => (
-              <button
-                key={item.name}
-                onClick={() => setLocation(item.path)}
-                className="text-sm font-medium hover:text-primary transition-colors"
-                data-testid={`nav-${item.name.toLowerCase().replace(' ', '-')}`}
-              >
-                {item.name}
-              </button>
-            ))}
-          </nav>
-
-          {/* User Area */}
-          <div className="flex items-center gap-3">
-            {/* Search */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="hidden sm:flex p-2 h-auto"
-              data-testid="search-toggle"
-            >
-              <Search className="w-4 h-4" />
-            </Button>
-            
-            {isAuthenticated && user ? (
+          {/* Navigation & Auth */}
+          <div className="flex items-center space-x-4">
+            {isAuthenticated ? (
               <>
-                {/* Notifications */}
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="relative p-2 h-auto"
-                  data-testid="notifications"
-                >
-                  <Bell className="w-4 h-4" />
-                  {notificationCount > 0 && (
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full" />
-                  )}
-                </Button>
-                
+                {/* User Badge for Founding Members */}
+                {user?.isFoundingMember && (
+                  <Badge variant="secondary" className="hidden sm:flex items-center space-x-1">
+                    <Crown className="w-3 h-3" />
+                    <span className="text-xs">Founding Member</span>
+                  </Badge>
+                )}
+
                 {/* User Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="flex items-center gap-2 p-2 h-auto"
-                      data-testid="user-menu"
-                    >
-                      <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-sm font-semibold">
-                          {getUserInitials(user.email)}
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full" data-testid="user-menu-trigger">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user?.profileImageUrl || undefined} alt="Profile" />
+                        <AvatarFallback className="text-xs">
+                          {user?.email ? getUserInitials(user.email) : 'U'}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
-                  
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuLabel>
-                      <div className="text-sm font-semibold">{user.email.split('@')[0]}</div>
-                      <div className="text-xs text-muted-foreground">{user.email}</div>
-                      <div className="mt-1">
-                        {user.subscriptionStatus === "free_lifetime" && (
-                          <Badge variant="secondary" className="text-xs">
-                            🎉 Founding Member
-                          </Badge>
-                        )}
-                        {user.subscriptionStatus === "trial" && (
-                          <Badge variant="outline" className="text-xs">
-                            Premium Trial
-                          </Badge>
-                        )}
-                        {user.subscriptionStatus === "active" && (
-                          <Badge variant="default" className="text-xs">
-                            Premium Member
-                          </Badge>
-                        )}
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <div className="flex items-center justify-start gap-2 p-2">
+                      <div className="flex flex-col space-y-1 leading-none">
+                        <p className="font-medium">{user?.email}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {user?.subscriptionStatus === 'founding_member' ? 'Founding Member' :
+                           user?.subscriptionStatus === 'premium' ? 'Premium Member' :
+                           user?.subscriptionStatus === 'trial' ? 'Free Trial' : 'Free Member'}
+                        </p>
                       </div>
-                    </DropdownMenuLabel>
-                    
+                    </div>
                     <DropdownMenuSeparator />
-                    
-                    <DropdownMenuItem onClick={() => setLocation("/dashboard")} data-testid="menu-dashboard">
-                      <User className="w-4 h-4 mr-2" />
-                      Dashboard
+                    <DropdownMenuItem data-testid="menu-profile">
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
                     </DropdownMenuItem>
-                    
-                    <DropdownMenuItem data-testid="menu-saved">
-                      <Heart className="w-4 h-4 mr-2" />
+                    <DropdownMenuItem data-testid="menu-favorites">
+                      <Heart className="mr-2 h-4 w-4" />
                       Saved Articles
                     </DropdownMenuItem>
-                    
-                    {user.subscriptionStatus === "trial" && (
-                      <DropdownMenuItem data-testid="menu-upgrade">
-                        <Crown className="w-4 h-4 mr-2" />
-                        Upgrade Plan
-                      </DropdownMenuItem>
-                    )}
-                    
                     <DropdownMenuItem data-testid="menu-settings">
-                      <Settings className="w-4 h-4 mr-2" />
+                      <Settings className="mr-2 h-4 w-4" />
                       Settings
                     </DropdownMenuItem>
-                    
                     <DropdownMenuSeparator />
-                    
                     <DropdownMenuItem 
-                      onClick={handleLogout} 
-                      className="text-muted-foreground"
+                      onClick={logout}
+                      className="text-red-600 focus:text-red-600"
                       data-testid="menu-logout"
                     >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Sign Out
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Log out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>
             ) : (
-              <>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setLocation("/auth")}
-                  data-testid="login-button"
+              /* Auth Buttons */
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleAuthClick('login')}
+                  data-testid="header-login-button"
                 >
                   Sign In
                 </Button>
-                <Button 
-                  size="sm" 
-                  onClick={() => setLocation("/auth")}
-                  data-testid="signup-button"
+                <Button
+                  size="sm"
+                  onClick={() => handleAuthClick('register')}
+                  data-testid="header-register-button"
                 >
-                  <Crown className="w-4 h-4 mr-2" />
-                  Join
+                  Join SKYNN
                 </Button>
-              </>
+              </div>
             )}
-
-            {/* Mobile Menu */}
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="md:hidden p-2 h-auto"
-                  data-testid="mobile-menu"
-                >
-                  <Menu className="w-4 h-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80">
-                <div className="py-4">
-                  <div className="space-y-2">
-                    {navigationItems.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <button
-                          key={item.name}
-                          onClick={() => setLocation(item.path)}
-                          className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-muted/10 text-left"
-                          data-testid={`mobile-nav-${item.name.toLowerCase().replace(' ', '-')}`}
-                        >
-                          <Icon className="w-4 h-4" />
-                          {item.name}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  
-                  {!isAuthenticated && (
-                    <div className="pt-4 border-t mt-4">
-                      <div className="space-y-2">
-                        <Button 
-                          variant="outline" 
-                          className="w-full" 
-                          onClick={() => setLocation("/auth")}
-                        >
-                          Sign In
-                        </Button>
-                        <Button 
-                          className="w-full" 
-                          onClick={() => setLocation("/auth")}
-                        >
-                          <Crown className="w-4 h-4 mr-2" />
-                          Join SKYNN
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode={authMode}
+        onAuthSuccess={() => {
+          setShowAuthModal(false);
+        }}
+      />
+    </>
   );
 }
