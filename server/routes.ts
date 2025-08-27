@@ -54,14 +54,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let requiresPayment = false;
       
       if (registrationNumber <= 100) {
-        // First 100 users get 30-day trial
+        // Users 1-100 are founding members with free lifetime access
+        subscriptionStatus = "free_lifetime";
+        isFoundingMember = true;
+      } else if (registrationNumber <= 1000) {
+        // Users 101-1000 get 30-day free trial
         subscriptionStatus = "trial";
         trialEndDate = new Date();
         trialEndDate.setDate(trialEndDate.getDate() + 30);
-      } else if (registrationNumber <= 1000) {
-        // Users 101-1000 get free lifetime access as founding members
-        subscriptionStatus = "free_lifetime";
-        isFoundingMember = true;
       } else {
         // Users 1001+ must pay before account creation
         requiresPayment = true;

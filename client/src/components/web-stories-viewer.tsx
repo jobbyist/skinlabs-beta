@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { X, ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 import { WebStory } from "@shared/schema";
+import TouchGestures from "@/components/mobile/touch-gestures";
+import { WebStoriesAd } from "@/components/google-adsense";
 
 interface WebStoriesViewerProps {
   stories: WebStory[];
@@ -155,11 +157,18 @@ export default function WebStoriesViewer({ stories, isOpen, onClose, initialStor
       </div>
 
       {/* Main content area */}
-      <div 
+      <TouchGestures
         className="flex-1 relative cursor-pointer"
-        onClick={handleScreenClick}
-        data-testid="web-stories-viewer-content"
+        onSwipeLeft={handleNextSlide}
+        onSwipeRight={handlePrevSlide}
+        onTap={() => setIsPlaying(!isPlaying)}
+        onDoubleTap={handleNextSlide}
       >
+        <div 
+          onClick={handleScreenClick}
+          data-testid="web-stories-viewer-content"
+          className="h-full w-full relative"
+        >
         {/* Background image/video */}
         {currentSlide.mediaUrl && (
           <div className="absolute inset-0">
@@ -237,7 +246,8 @@ export default function WebStoriesViewer({ stories, isOpen, onClose, initialStor
         >
           <ChevronRight className="h-6 w-6" />
         </Button>
-      </div>
+        </div>
+      </TouchGestures>
 
       {/* Story navigation dots */}
       {stories.length > 1 && (

@@ -7,6 +7,11 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/hooks/use-auth";
 import AIChatbot from "@/components/ai-chatbot";
 import { AdSenseScript } from "@/components/google-adsense";
+import PWAProvider from "@/components/pwa-provider";
+import InstallPrompt from "@/components/mobile/install-prompt";
+import MobileNavigation from "@/components/mobile/mobile-navigation";
+import MobileHeader from "@/components/mobile/mobile-header";
+import OfflineIndicator from "@/components/mobile/offline-indicator";
 
 import Home from "@/pages/home";
 import Auth from "@/pages/auth";
@@ -42,10 +47,15 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="skynn-theme">
         <AuthProvider>
           <TooltipProvider>
+            <PWAProvider />
             <AdSenseScript />
             <Toaster />
+            <MobileHeader />
             <Router />
             <AIChatbot />
+            <InstallPrompt />
+            <MobileNavigation />
+            <OfflineIndicator />
           </TooltipProvider>
         </AuthProvider>
       </ThemeProvider>
