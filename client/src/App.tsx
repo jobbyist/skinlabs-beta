@@ -25,6 +25,7 @@ import DiyRecipes from "@/pages/diy-recipes";
 import WebStories from "@/pages/web-stories";
 import CommunityForum from "@/pages/community-forum";
 import SponsoredOffers from "@/pages/sponsored-offers";
+import Streams from "@/pages/streams";
 import TermsOfService from "@/pages/terms-of-service";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import CookiePolicy from "@/pages/cookie-policy";
@@ -41,6 +42,7 @@ function Router() {
       <Route path="/web-stories" component={WebStories} />
       <Route path="/community-forum" component={CommunityForum} />
       <Route path="/sponsored-offers" component={SponsoredOffers} />
+      <Route path="/streams" component={Streams} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/cookie-policy" component={CookiePolicy} />

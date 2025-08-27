@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Home, BookOpen, ShoppingBag, User, Sparkles } from "lucide-react";
+import { Home, BookOpen, ShoppingBag, User, Sparkles, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -17,9 +17,9 @@ const navigationItems = [
     authRequired: false
   },
   {
-    name: "Stories",
-    href: "/web-stories",
-    icon: Sparkles,
+    name: "Streams",
+    href: "/streams",
+    icon: Headphones,
     authRequired: false
   },
   {
