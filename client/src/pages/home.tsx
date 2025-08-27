@@ -57,7 +57,7 @@ export default function Home() {
       <main className="max-w-skynn mx-auto px-4 py-6">
         {/* Hero Section */}
         <section className="mb-8">
-          <div className="glass-panel p-6 bg-[#333333b8]">
+          <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950/20 dark:via-background dark:to-purple-950/20 rounded-xl p-6">
             <div className="grid md:grid-cols-2 gap-6 items-center">
               <div>
                 <Badge variant="secondary" className="mb-4">
@@ -279,7 +279,7 @@ export default function Home() {
               <div className="bg-gradient-to-br from-teal-50 via-white to-cyan-50 dark:from-teal-950/20 dark:via-background dark:to-cyan-950/20 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold">Latest Curations</h2>
-                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                     <SelectTrigger className="w-40" data-testid="category-select">
                       <SelectValue placeholder="All Categories" />
