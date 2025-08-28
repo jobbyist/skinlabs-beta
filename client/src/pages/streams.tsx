@@ -9,8 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Headphones, TrendingUp, Clock, Sparkles } from "lucide-react";
 
 // Import attached assets
-import episode1Thumbnail from "@assets/IMG_3690_1756311502448.png";
-import episode1Audio from "@assets/SKYNNs_Digital_Blueprint_Unpacking_Africas_Booming_Beauty_Market_with_AI_and_Community_1756311223685.mp3";
+import digitalBlueprintThumbnail from "@assets/IMG_3690_1756311502448.png";
+import digitalBlueprintAudio from "@assets/SKYNNs_Digital_Blueprint_Unpacking_Africas_Booming_Beauty_Market_with_AI_and_Community_1756311223685.mp3";
+import episode1Thumbnail from "@assets/IMG_3749_1756347228949.png";
+import episode1Audio from "@assets/Ep 1 - Beef_Tallow_Skincare_Miracle_or_Major_Risk_Unpacking_the_TikTok_Trend_1756347209563.mp3";
 
 interface StreamEpisode {
   id: string;
@@ -33,21 +35,37 @@ const mockEpisodes: StreamEpisode[] = [
   {
     id: "1",
     episodeNumber: 1,
-    title: "Episode 1: Africa's Next-Generation Digital Skincare Platform Goes Live 🚀",
-    description: "Join us as we unpack Africa's booming beauty market with AI and community-driven insights. Discover how SKYNN is revolutionizing skincare for African consumers.",
+    title: "Episode 1: Beef Tallow & Salmon Sperm - When Skincare Gets Weird (But Works?)",
+    description: "Explore the unconventional world of bizarre skincare ingredients that are taking social media by storm. We dive deep into the science behind beef tallow, salmon sperm, and other unexpected ingredients that might just revolutionize your skincare routine.",
     audioUrl: episode1Audio,
     thumbnailUrl: episode1Thumbnail,
-    duration: "15:30",
+    duration: "18:45",
     publishDate: "Today",
-    category: "Platform Launch",
+    category: "Beauty Trends",
     isNew: true,
+    isTrending: true,
+    playCount: 2358,
+    likes: 156,
+    dislikes: 8
+  },
+  {
+    id: "2",
+    episodeNumber: 0,
+    title: "SKYNN's Digital Blueprint: Unpacking Africa's Booming Beauty Market with AI and Community",
+    description: "Join us as we unpack Africa's booming beauty market with AI and community-driven insights. Discover how SKYNN is revolutionizing skincare for African consumers.",
+    audioUrl: digitalBlueprintAudio,
+    thumbnailUrl: digitalBlueprintThumbnail,
+    duration: "15:30",
+    publishDate: "2 days ago",
+    category: "Platform Launch",
+    isNew: false,
     isTrending: true,
     playCount: 1247,
     likes: 89,
     dislikes: 2
   },
   {
-    id: "2",
+    id: "3",
     episodeNumber: 2,
     title: "Understanding Your Skin Type: A Deep Dive with Dr. Thandi Ndlovu",
     description: "Dermatologist Dr. Thandi Ndlovu explains the science behind different skin types and how to identify yours for better skincare choices.",
@@ -62,7 +80,7 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "3",
+    id: "4",
     episodeNumber: 3,
     title: "The Rise of K-Beauty in South Africa: Trends and Must-Haves",
     description: "Explore the Korean beauty phenomenon taking South Africa by storm. Learn about the 10-step routine and which products are worth the hype.",
@@ -76,7 +94,7 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "4",
+    id: "5",
     episodeNumber: 4,
     title: "Natural Ingredients: African Beauty Secrets Passed Down Generations",
     description: "Discover traditional African beauty ingredients like shea butter, marula oil, and rooibos that are making waves in modern skincare.",
@@ -90,7 +108,7 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "5",
+    id: "6",
     episodeNumber: 5,
     title: "Acne Solutions: Real Stories from the SKYNN Community",
     description: "Community members share their acne journey and the products that finally worked. Plus, expert tips on managing breakouts.",
