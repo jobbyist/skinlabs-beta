@@ -1,7 +1,7 @@
 import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle, type WebStory, type InsertWebStory, type DiyRecipe, type InsertDiyRecipe, type ForumPost, type InsertForumPost, type ForumReply, type InsertForumReply, type ProductRecommendation, type InsertProductRecommendation } from "@shared/schema";
 import bcrypt from "bcrypt";
 import { db } from "./db";
-import { users, userSkinProfiles, articles, deals, savedArticles, webStories, diyRecipes, forumPosts, forumReplies, productRecommendations, waitingList } from "../shared/schema";
+import { users, userSkinProfiles, articles, deals, savedArticles, webStories, diyRecipes, productRecommendations, waitingList } from "../shared/schema";
 import { eq, and, desc, like, inArray, count } from "drizzle-orm";
 
 export interface IStorage {
