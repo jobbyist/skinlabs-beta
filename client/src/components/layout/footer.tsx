@@ -152,6 +152,36 @@ export default function Footer() {
         </div>
 
         <Separator className="my-8" />
+        
+        {/* App Store Badges */}
+        <div className="flex justify-center gap-4 mb-6">
+          <a 
+            href="#" 
+            className="inline-block opacity-50 hover:opacity-70 transition-opacity"
+            data-testid="app-store-badge"
+          >
+            <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2">
+              <div className="text-2xl">🍎</div>
+              <div>
+                <div className="text-[10px] uppercase">Coming Soon on</div>
+                <div className="text-sm font-semibold">App Store</div>
+              </div>
+            </div>
+          </a>
+          <a 
+            href="#" 
+            className="inline-block opacity-50 hover:opacity-70 transition-opacity"
+            data-testid="google-play-badge"
+          >
+            <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2">
+              <div className="text-2xl">▶️</div>
+              <div>
+                <div className="text-[10px] uppercase">Coming Soon on</div>
+                <div className="text-sm font-semibold">Google Play</div>
+              </div>
+            </div>
+          </a>
+        </div>
 
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">

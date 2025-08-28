@@ -114,6 +114,15 @@ export const webStories = pgTable("web_stories", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const waitingList = pgTable("waiting_list", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  category: text("category").notNull().default("cashback_card"), // cashback_card, app_launch, etc.
+  joinedAt: timestamp("joined_at").notNull().default(sql`now()`),
+});
+
 export const diyRecipes = pgTable("diy_recipes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   title: text("title").notNull(),

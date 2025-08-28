@@ -8,6 +8,7 @@ import Footer from "@/components/layout/footer";
 import ArticleCard from "@/components/content/article-card";
 import DealCard from "@/components/content/deal-card";
 import { AuthModal } from "@/components/auth/auth-modal";
+import { WaitingListModal } from "@/components/waiting-list-modal";
 import { ContentGuard } from "@/components/auth/content-guard";
 import { AutoCarousel } from "@/components/ui/auto-carousel";
 import { BannerAd, DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
@@ -18,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 
 import { Search, Crown, WandSparkles, ShoppingBag, Star, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
+import cashbackVideo from "@assets/gemini_generated_video_A5F38BC6_1756339733830.mov";
 
 import type { Article, Deal } from "@shared/schema";
 
@@ -26,6 +28,7 @@ export default function Home() {
   const [, setLocation] = useLocation();
   
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showWaitingListModal, setShowWaitingListModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -491,7 +494,44 @@ export default function Home() {
             )}
           </div>
         </div>
+        {/* Cashback Rewards Card Section */}
+        <section className="mb-8">
+          <div className="bg-gradient-to-br from-yellow-50 via-white to-amber-50 dark:from-yellow-950/20 dark:via-background dark:to-amber-950/20 rounded-xl p-6">
+            <div className="text-center mb-4">
+              <Badge variant="secondary" className="mb-3">Coming Soon</Badge>
+              <h2 className="text-2xl font-bold mb-2">SKYNN Cashback Rewards Card</h2>
+              <p className="text-muted-foreground">Premium members exclusive - Launching December 2024</p>
+            </div>
+            
+            {/* Video Container */}
+            <div className="aspect-video w-full max-w-2xl mx-auto mb-6 rounded-lg overflow-hidden bg-black">
+              <video 
+                className="w-full h-full object-cover"
+                controls
+                poster="https://images.unsplash.com/photo-1556742111-a301076d9d18?w=800"
+              >
+                <source src={cashbackVideo} type="video/quicktime" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-yellow-600 to-amber-500 hover:from-yellow-700 hover:to-amber-600"
+                onClick={() => setShowWaitingListModal(true)}
+                data-testid="button-join-waiting-list"
+              >
+                <Star className="mr-2 h-5 w-5" />
+                Join The Waiting List
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2">Be the first to know when we launch</p>
+            </div>
+          </div>
+        </section>
       </main>
+      
       {/* Auth Modal */}
       {showAuthModal && (
         <AuthModal 
@@ -499,6 +539,15 @@ export default function Home() {
           onClose={() => setShowAuthModal(false)} 
         />
       )}
+      
+      {/* Waiting List Modal */}
+      {showWaitingListModal && (
+        <WaitingListModal 
+          isOpen={showWaitingListModal} 
+          onClose={() => setShowWaitingListModal(false)} 
+        />
+      )}
+      
       <Footer />
     </div>
   );

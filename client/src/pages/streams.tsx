@@ -194,11 +194,11 @@ export default function StreamsPage() {
         {/* Mid-page Ad */}
         <DisplayAd className="my-8" />
 
-        {/* All Episodes */}
+        {/* Suggested Content */}
         <section>
           <div className="flex items-center gap-2 mb-6">
             <Clock className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-xl font-bold">All Episodes</h2>
+            <h2 className="text-xl font-bold">Suggested Content...</h2>
             <Badge variant="outline">{filteredEpisodes.length} episodes</Badge>
           </div>
           
