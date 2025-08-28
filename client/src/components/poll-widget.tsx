@@ -1,146 +1,247 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import { useAuth } from "@/hooks/use-auth";
-import { TrendingUp, Vote } from "lucide-react";
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { BarChart3, Users, Clock, Check } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { apiRequest } from '@/lib/queryClient';
+import { useAuth } from '@/hooks/use-auth';
+import type { Poll, PollVote } from '@shared/schema';
 
 interface PollOption {
-  id: string;
   text: string;
   votes: number;
 }
 
-interface Poll {
-  id: string;
-  question: string;
+interface PollWithVotes extends Poll {
   options: PollOption[];
   totalVotes: number;
-  hasVoted: boolean;
-  userVote?: string;
+  userVote?: number;
 }
 
-export function PollWidget() {
-  const { isAuthenticated } = useAuth();
-  const [selectedOption, setSelectedOption] = useState<string>("");
+const mockPolls: PollWithVotes[] = [
+  {
+    id: '1',
+    title: 'What\'s your biggest skincare concern?',
+    description: 'Help us understand what the SKYNN community wants to focus on most.',
+    options: [
+      { text: 'Acne & breakouts', votes: 234 },
+      { text: 'Anti-aging & wrinkles', votes: 189 },
+      { text: 'Hyperpigmentation', votes: 156 },
+      { text: 'Dryness & dehydration', votes: 98 },
+      { text: 'Sensitivity & redness', votes: 67 },
+    ],
+    totalVotes: 744,
+    isActive: true,
+    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+    userVote: undefined,
+  },
+  {
+    id: '2', 
+    title: 'Which South African skincare brand deserves more recognition?',
+    description: 'Vote for your favorite local SA brand that needs more spotlight.',
+    options: [
+      { text: 'Esse Probiotic Skincare', votes: 78 },
+      { text: 'African Botanics', votes: 65 },
+      { text: 'Skin Functional', votes: 52 },
+      { text: 'Africology', votes: 43 },
+      { text: 'Okha', votes: 38 },
+    ],
+    totalVotes: 276,
+    isActive: true,
+    endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+    userVote: 0, // User voted for first option
+  },
+  {
+    id: '3',
+    title: 'Best time for skincare routine?',
+    description: 'When do you prefer to do your full skincare routine?',
+    options: [
+      { text: 'Morning only', votes: 89 },
+      { text: 'Evening only', votes: 234 },
+      { text: 'Both morning & evening', votes: 345 },
+      { text: 'Whenever I remember!', votes: 123 },
+    ],
+    totalVotes: 791,
+    isActive: false,
+    endDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // Ended 1 day ago
+    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+    userVote: 2, // User voted for third option
+  },
+];
 
-  // Fetch poll data
-  const { data: poll, refetch } = useQuery<Poll>({
-    queryKey: ['/api/poll/current'],
-    enabled: isAuthenticated,
+interface PollWidgetProps {
+  pollId?: string;
+  showTitle?: boolean;
+  compact?: boolean;
+}
+
+export function PollWidget({ pollId, showTitle = true, compact = false }: PollWidgetProps) {
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const { user, isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
+
+  // This would normally fetch from API
+  const { data: polls = mockPolls } = useQuery({
+    queryKey: ['/api/polls', pollId],
+    enabled: false, // Using mock data for now
   });
 
-  // Vote mutation
   const voteMutation = useMutation({
-    mutationFn: async (optionId: string) => {
-      return await apiRequest('POST', '/api/poll/vote', { optionId });
+    mutationFn: async ({ pollId, optionIndex }: { pollId: string; optionIndex: number }) => {
+      return apiRequest(`/api/polls/${pollId}/vote`, {
+        method: 'POST',
+        body: JSON.stringify({ optionIndex }),
+      });
     },
     onSuccess: () => {
-      refetch();
-    }
+      queryClient.invalidateQueries({ queryKey: ['/api/polls'] });
+    },
   });
 
-  const handleVote = () => {
-    if (selectedOption) {
-      voteMutation.mutate(selectedOption);
-    }
+  const handleVote = (poll: PollWithVotes, optionIndex: number) => {
+    if (!isAuthenticated || poll.userVote !== undefined || !poll.isActive) return;
+    
+    setSelectedOption(optionIndex);
+    voteMutation.mutate({ pollId: poll.id, optionIndex });
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="bg-gradient-to-br from-violet-50 via-white to-purple-50 dark:from-violet-950/20 dark:via-background dark:to-purple-950/20 rounded-xl p-6">
-        <div className="text-center">
-          <Vote className="h-12 w-12 mx-auto mb-3 text-primary" />
-          <h3 className="font-semibold mb-2">Poll of the Week</h3>
-          <p className="text-sm text-muted-foreground">Sign in to participate in our community polls</p>
-        </div>
-      </div>
-    );
+  const getPolls = () => {
+    if (pollId) {
+      return polls.filter(poll => poll.id === pollId);
+    }
+    return polls.slice(0, compact ? 1 : 3); // Show fewer polls in compact mode
+  };
+
+  if (getPolls().length === 0) {
+    return null;
   }
 
-  const mockPoll: Poll = poll || {
-    id: "poll-1",
-    question: "What's your favourite, must-have skincare product right now?",
-    options: [
-      { id: "1", text: "SKOON. Skincare", votes: 245 },
-      { id: "2", text: "Standard Beauty", votes: 189 },
-      { id: "3", text: "Lumi Glo", votes: 156 },
-      { id: "4", text: "Lelive", votes: 134 },
-      { id: "5", text: "African Botanics", votes: 98 }
-    ],
-    totalVotes: 822,
-    hasVoted: false
-  };
-
   return (
-    <div className="bg-gradient-to-br from-violet-50 via-white to-purple-50 dark:from-violet-950/20 dark:via-background dark:to-purple-950/20 rounded-xl p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-lg">Poll of the Week</h3>
-        <Badge variant="secondary">
-          <TrendingUp className="h-3 w-3 mr-1" />
-          {mockPoll.totalVotes} votes
-        </Badge>
-      </div>
-      
-      <p className="text-sm font-medium mb-4">{mockPoll.question}</p>
-
-      {!mockPoll.hasVoted ? (
-        <div className="space-y-4">
-          <RadioGroup value={selectedOption} onValueChange={setSelectedOption}>
-            {mockPoll.options.map((option) => (
-              <div key={option.id} className="flex items-center space-x-2 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                <RadioGroupItem value={option.id} id={option.id} />
-                <Label 
-                  htmlFor={option.id} 
-                  className="flex-1 cursor-pointer text-sm"
-                >
-                  {option.text}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
-          
-          <Button 
-            onClick={handleVote} 
-            disabled={!selectedOption || voteMutation.isPending}
-            className="w-full"
-            data-testid="poll-submit"
-          >
-            {voteMutation.isPending ? "Submitting..." : "Submit Vote"}
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {mockPoll.options.map((option) => {
-            const percentage = mockPoll.totalVotes > 0 
-              ? Math.round((option.votes / mockPoll.totalVotes) * 100) 
-              : 0;
-            const isUserVote = mockPoll.userVote === option.id;
-            
-            return (
-              <div key={option.id} className="space-y-1">
-                <div className="flex justify-between items-center text-sm">
-                  <span className={isUserVote ? "font-medium" : ""}>
-                    {option.text}
-                    {isUserVote && <span className="ml-2 text-primary">✓ Your vote</span>}
-                  </span>
-                  <span className="text-muted-foreground">{percentage}%</span>
-                </div>
-                <Progress value={percentage} className="h-2" />
-                <span className="text-xs text-muted-foreground">{option.votes} votes</span>
-              </div>
-            );
-          })}
-          
-          <p className="text-xs text-muted-foreground text-center mt-4">
-            Thank you for participating! New poll every week.
-          </p>
+    <div className={`space-y-${compact ? '4' : '6'}`}>
+      {showTitle && !compact && (
+        <div className="flex items-center gap-2 mb-4">
+          <BarChart3 className="h-5 w-5 text-pink-600" />
+          <h2 className="text-xl font-semibold text-gray-900">Community Polls</h2>
         </div>
       )}
+      
+      {getPolls().map((poll) => (
+        <Card key={poll.id} className={`${compact ? '' : 'hover:shadow-md'} transition-shadow`}>
+          <CardHeader className={compact ? 'pb-3' : ''}>
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <CardTitle className={`${compact ? 'text-lg' : 'text-xl'} mb-2`}>
+                  {poll.title}
+                </CardTitle>
+                {!compact && poll.description && (
+                  <p className="text-gray-600 text-sm mb-3">{poll.description}</p>
+                )}
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <span className="flex items-center gap-1">
+                    <Users className="h-4 w-4" />
+                    {poll.totalVotes} votes
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    {poll.isActive 
+                      ? `${formatDistanceToNow(poll.endDate!)} left`
+                      : 'Poll ended'
+                    }
+                  </span>
+                  {!poll.isActive && (
+                    <Badge variant="outline" className="text-xs bg-gray-100">
+                      Closed
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="space-y-3">
+              {poll.options.map((option, index) => {
+                const percentage = poll.totalVotes > 0 ? (option.votes / poll.totalVotes) * 100 : 0;
+                const isUserChoice = poll.userVote === index;
+                const isSelected = selectedOption === index;
+                const canVote = isAuthenticated && poll.userVote === undefined && poll.isActive;
+                
+                return (
+                  <div
+                    key={index}
+                    className={`relative p-3 rounded-lg border transition-colors ${
+                      canVote 
+                        ? 'cursor-pointer hover:bg-pink-50 hover:border-pink-200' 
+                        : 'cursor-default'
+                    } ${
+                      isUserChoice 
+                        ? 'bg-pink-100 border-pink-300' 
+                        : isSelected 
+                        ? 'bg-pink-50 border-pink-200' 
+                        : 'bg-gray-50 border-gray-200'
+                    }`}
+                    onClick={() => canVote && handleVote(poll, index)}
+                    data-testid={`poll-option-${poll.id}-${index}`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`font-medium ${isUserChoice ? 'text-pink-800' : 'text-gray-700'}`}>
+                        {option.text}
+                        {isUserChoice && (
+                          <Check className="inline-block h-4 w-4 ml-2 text-pink-600" />
+                        )}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        {option.votes} ({percentage.toFixed(1)}%)
+                      </span>
+                    </div>
+                    
+                    {/* Progress bar - only show if there are votes or user has voted */}
+                    {(poll.totalVotes > 0 || poll.userVote !== undefined) && (
+                      <Progress 
+                        value={percentage} 
+                        className="h-2"
+                        data-testid={`poll-progress-${poll.id}-${index}`}
+                      />
+                    )}
+                    
+                    {/* Loading state for current selection */}
+                    {isSelected && voteMutation.isPending && (
+                      <div className="absolute inset-0 bg-white/50 rounded-lg flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-pink-600 border-t-transparent"></div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Call to action for unauthenticated users */}
+            {!isAuthenticated && poll.isActive && (
+              <div className="mt-4 p-3 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200">
+                <p className="text-sm text-pink-800 text-center">
+                  <a href="/auth" className="font-medium hover:underline">
+                    Sign in to vote
+                  </a> and share your opinion with the community!
+                </p>
+              </div>
+            )}
+            
+            {/* Thank you message for users who voted */}
+            {isAuthenticated && poll.userVote !== undefined && (
+              <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                <p className="text-sm text-green-800 text-center font-medium">
+                  Thanks for voting! Results are updated in real-time.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }

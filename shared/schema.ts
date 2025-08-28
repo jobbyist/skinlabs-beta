@@ -123,6 +123,124 @@ export const waitingList = pgTable("waiting_list", {
   joinedAt: timestamp("joined_at").notNull().default(sql`now()`),
 });
 
+// Social Features Tables
+export const polls = pgTable("polls", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description"),
+  options: jsonb("options").notNull(), // Array of poll options
+  isActive: boolean("is_active").notNull().default(true),
+  endDate: timestamp("end_date"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const pollVotes = pgTable("poll_votes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  pollId: varchar("poll_id").notNull().references(() => polls.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  optionIndex: integer("option_index").notNull(),
+  votedAt: timestamp("voted_at").notNull().default(sql`now()`),
+});
+
+export const reviews = pgTable("reviews", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  productName: text("product_name").notNull(),
+  brand: text("brand").notNull(),
+  rating: integer("rating").notNull(), // 1-5 stars
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  skinType: text("skin_type"),
+  ageRange: text("age_range"),
+  purchaseVerified: boolean("purchase_verified").notNull().default(false),
+  wouldRecommend: boolean("would_recommend").notNull().default(true),
+  imageUrls: text("image_urls").array(),
+  helpful: integer("helpful").notNull().default(0),
+  reported: integer("reported").notNull().default(0),
+  isApproved: boolean("is_approved").notNull().default(false),
+  moderatorNotes: text("moderator_notes"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+  updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
+});
+
+export const reviewHelpful = pgTable("review_helpful", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  reviewId: varchar("review_id").notNull().references(() => reviews.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  helpful: boolean("helpful").notNull(), // true = helpful, false = not helpful
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const forumCategories = pgTable("forum_categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description"),
+  slug: varchar("slug", { length: 255 }).unique().notNull(),
+  color: text("color").notNull().default("#6366f1"),
+  icon: text("icon"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const forumTopics = pgTable("forum_topics", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  categoryId: varchar("category_id").notNull().references(() => forumCategories.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  isSticky: boolean("is_sticky").notNull().default(false),
+  isLocked: boolean("is_locked").notNull().default(false),
+  views: integer("views").notNull().default(0),
+  replies: integer("replies").notNull().default(0),
+  lastReplyAt: timestamp("last_reply_at"),
+  lastReplyUserId: varchar("last_reply_user_id").references(() => users.id),
+  tags: text("tags").array(),
+  imageUrls: text("image_urls").array(),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+  updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
+});
+
+export const forumReplies = pgTable("forum_replies", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  topicId: varchar("topic_id").notNull().references(() => forumTopics.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  parentReplyId: varchar("parent_reply_id").references(() => forumReplies.id),
+  isModeratorNote: boolean("is_moderator_note").notNull().default(false),
+  imageUrls: text("image_urls").array(),
+  likes: integer("likes").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+  updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
+});
+
+export const forumReplyLikes = pgTable("forum_reply_likes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  replyId: varchar("reply_id").notNull().references(() => forumReplies.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const userFollows = pgTable("user_follows", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  followerId: varchar("follower_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  followingId: varchar("following_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const notifications = pgTable("notifications", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  type: text("type").notNull(), // review_reply, forum_reply, new_follower, etc.
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  actionUrl: text("action_url"),
+  isRead: boolean("is_read").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+
+
 export const diyRecipes = pgTable("diy_recipes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   title: text("title").notNull(),
@@ -138,34 +256,6 @@ export const diyRecipes = pgTable("diy_recipes", {
   author: text("author"),
   isPublished: boolean("is_published").default(false),
   publishedAt: timestamp("published_at"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-export const forumPosts = pgTable("forum_posts", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  userId: varchar("user_id").references(() => users.id),
-  category: text("category"),
-  tags: text("tags").array(),
-  images: text("images").array(),
-  isLocked: boolean("is_locked").default(false),
-  isPinned: boolean("is_pinned").default(false),
-  viewCount: integer("view_count").default(0),
-  replyCount: integer("reply_count").default(0),
-  lastReplyAt: timestamp("last_reply_at"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-export const forumReplies = pgTable("forum_replies", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  postId: varchar("post_id").notNull().references(() => forumPosts.id),
-  userId: varchar("user_id").references(() => users.id),
-  content: text("content").notNull(),
-  images: text("images").array(),
-  parentReplyId: varchar("parent_reply_id"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -238,7 +328,7 @@ export const insertForumPostSchema = createInsertSchema(forumPosts).omit({
   replyCount: true,
 });
 
-export const insertForumReplySchema = createInsertSchema(forumReplies).omit({
+export const insertForumReplyLegacySchema = createInsertSchema(forumReplies).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
@@ -304,7 +394,33 @@ export type InsertDiyRecipe = z.infer<typeof insertDiyRecipeSchema>;
 export type ForumPost = typeof forumPosts.$inferSelect;
 export type InsertForumPost = z.infer<typeof insertForumPostSchema>;
 export type ForumReply = typeof forumReplies.$inferSelect;
-export type InsertForumReply = z.infer<typeof insertForumReplySchema>;
+export type InsertForumReply = z.infer<typeof insertForumReplyLegacySchema>;
+
+// Create insert schemas for social features
+export const insertPollSchema = createInsertSchema(polls);
+export const insertPollVoteSchema = createInsertSchema(pollVotes);
+export const insertReviewSchema = createInsertSchema(reviews);
+export const insertForumCategorySchema = createInsertSchema(forumCategories);
+export const insertForumTopicSchema = createInsertSchema(forumTopics);
+export const insertForumReplySchema = createInsertSchema(forumReplies);
+export const insertUserFollowSchema = createInsertSchema(userFollows);
+export const insertNotificationSchema = createInsertSchema(notifications);
+
+// Type definitions for social features
+export type Poll = typeof polls.$inferSelect;
+export type InsertPoll = z.infer<typeof insertPollSchema>;
+export type PollVote = typeof pollVotes.$inferSelect;
+export type InsertPollVote = z.infer<typeof insertPollVoteSchema>;
+export type Review = typeof reviews.$inferSelect;
+export type InsertReview = z.infer<typeof insertReviewSchema>;
+export type ForumCategory = typeof forumCategories.$inferSelect;
+export type InsertForumCategory = z.infer<typeof insertForumCategorySchema>;
+export type ForumTopic = typeof forumTopics.$inferSelect;
+export type InsertForumTopic = z.infer<typeof insertForumTopicSchema>;
+export type UserFollow = typeof userFollows.$inferSelect;
+export type InsertUserFollow = z.infer<typeof insertUserFollowSchema>;
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = z.infer<typeof insertNotificationSchema>;
 export type ProductRecommendation = typeof productRecommendations.$inferSelect;
 export type InsertProductRecommendation = z.infer<typeof insertProductRecommendationSchema>;
 
