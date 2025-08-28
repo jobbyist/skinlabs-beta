@@ -13,6 +13,8 @@ import digitalBlueprintThumbnail from "@assets/IMG_3690_1756311502448.png";
 import digitalBlueprintAudio from "@assets/SKYNNs_Digital_Blueprint_Unpacking_Africas_Booming_Beauty_Market_with_AI_and_Community_1756311223685.mp3";
 import episode1Thumbnail from "@assets/IMG_3749_1756347228949.png";
 import episode1Audio from "@assets/Ep 1 - Beef_Tallow_Skincare_Miracle_or_Major_Risk_Unpacking_the_TikTok_Trend_1756347209563.mp3";
+import episode2Thumbnail from "@assets/IMG_3750_1756347603789.png";
+import episode2Audio from "@assets/Ep 2 - Skincare Fails_Hall_of_Fame_Dodgy_Brands_User_Errors_and_How_to_Protect_Your_Skin_1756347510939.mp3";
 
 interface StreamEpisode {
   id: string;
@@ -67,6 +69,22 @@ const mockEpisodes: StreamEpisode[] = [
   {
     id: "3",
     episodeNumber: 2,
+    title: "Episode 2: Skincare Fails Hall of Fame - Products That Made Us Question Everything",
+    description: "We're spilling the tea on the most notorious skincare disasters, dodgy brands, and user errors that left us questioning everything. Learn how to protect your skin from products that promise miracles but deliver mayhem.",
+    audioUrl: episode2Audio,
+    thumbnailUrl: episode2Thumbnail,
+    duration: "21:15",
+    publishDate: "1 day ago",
+    category: "Beauty Fails",
+    isNew: true,
+    isTrending: false,
+    playCount: 892,
+    likes: 67,
+    dislikes: 3
+  },
+  {
+    id: "4",
+    episodeNumber: 3,
     title: "Understanding Your Skin Type: A Deep Dive with Dr. Thandi Ndlovu",
     description: "Dermatologist Dr. Thandi Ndlovu explains the science behind different skin types and how to identify yours for better skincare choices.",
     audioUrl: "", // Placeholder for future episodes
@@ -80,8 +98,8 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "4",
-    episodeNumber: 3,
+    id: "5",
+    episodeNumber: 4,
     title: "The Rise of K-Beauty in South Africa: Trends and Must-Haves",
     description: "Explore the Korean beauty phenomenon taking South Africa by storm. Learn about the 10-step routine and which products are worth the hype.",
     audioUrl: "",
@@ -94,8 +112,8 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "5",
-    episodeNumber: 4,
+    id: "6",
+    episodeNumber: 5,
     title: "Natural Ingredients: African Beauty Secrets Passed Down Generations",
     description: "Discover traditional African beauty ingredients like shea butter, marula oil, and rooibos that are making waves in modern skincare.",
     audioUrl: "",
@@ -108,8 +126,8 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "6",
-    episodeNumber: 5,
+    id: "7",
+    episodeNumber: 6,
     title: "Acne Solutions: Real Stories from the SKYNN Community",
     description: "Community members share their acne journey and the products that finally worked. Plus, expert tips on managing breakouts.",
     audioUrl: "",
@@ -127,7 +145,7 @@ export default function StreamsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const categories = ["all", "Platform Launch", "Expert Talks", "Beauty Trends", "Natural Beauty", "Community Stories"];
+  const categories = ["all", "Platform Launch", "Expert Talks", "Beauty Trends", "Beauty Fails", "Natural Beauty", "Community Stories"];
 
   const filteredEpisodes = mockEpisodes.filter(episode => {
     const matchesSearch = episode.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
