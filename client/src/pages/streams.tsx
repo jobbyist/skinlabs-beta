@@ -19,6 +19,8 @@ import episode3Thumbnail from "@assets/IMG_3751_1756347699113.png";
 import episode3Audio from "@assets/Ep. 3 Glass Skin vs Grass Skin - The Truth About Viral Skincare Trends_1756347653324.mp3";
 import episode4Thumbnail from "@assets/IMG_3752_1756347764521.jpeg";
 import episode4Audio from "@assets/Ep 4 - Skincare_Chemistry_Class_Layering_Secrets_for_Glowing_Healthy_Skin_1756347772452.mp3";
+import episode5Thumbnail from "@assets/IMG_3765_1756347863214.jpeg";
+import episode5Audio from "@assets/Ep 5 Skincare_Showdown_Are_Luxury_Dupes_Actually_Better_1756348009784.mp3";
 
 interface StreamEpisode {
   id: string;
@@ -121,6 +123,22 @@ const mockEpisodes: StreamEpisode[] = [
   {
     id: "episode-6",
     episodeNumber: 5,
+    title: "Episode 5: The $500 Moisturizer vs. Drugstore Dupe Showdown",
+    description: "We're putting luxury skincare to the ultimate test! Watch us compare high-end products with their budget-friendly dupes to see if expensive really means better. Spoiler alert: the results might surprise you.",
+    audioUrl: episode5Audio,
+    thumbnailUrl: episode5Thumbnail,
+    duration: "26:45",
+    publishDate: "15 minutes ago",
+    category: "Product Reviews",
+    isNew: true,
+    isTrending: true,
+    playCount: 89,
+    likes: 12,
+    dislikes: 0
+  },
+  {
+    id: "episode-understanding-skin",
+    episodeNumber: 6,
     title: "Understanding Your Skin Type: A Deep Dive with Dr. Thandi Ndlovu",
     description: "Dermatologist Dr. Thandi Ndlovu explains the science behind different skin types and how to identify yours for better skincare choices.",
     audioUrl: "", // Placeholder for future episodes
@@ -134,8 +152,8 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "episode-7",
-    episodeNumber: 6,
+    id: "episode-kbeauty",
+    episodeNumber: 7,
     title: "The Rise of K-Beauty in South Africa: Trends and Must-Haves",
     description: "Explore the Korean beauty phenomenon taking South Africa by storm. Learn about the 10-step routine and which products are worth the hype.",
     audioUrl: "",
@@ -148,8 +166,8 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "episode-8",
-    episodeNumber: 7,
+    id: "episode-natural-ingredients",
+    episodeNumber: 8,
     title: "Natural Ingredients: African Beauty Secrets Passed Down Generations",
     description: "Discover traditional African beauty ingredients like shea butter, marula oil, and rooibos that are making waves in modern skincare.",
     audioUrl: "",
@@ -162,8 +180,8 @@ const mockEpisodes: StreamEpisode[] = [
     dislikes: 0
   },
   {
-    id: "episode-9",
-    episodeNumber: 8,
+    id: "episode-acne-community",
+    episodeNumber: 9,
     title: "Acne Solutions: Real Stories from the SKYNN Community",
     description: "Community members share their acne journey and the products that finally worked. Plus, expert tips on managing breakouts.",
     audioUrl: "",
@@ -181,7 +199,7 @@ export default function StreamsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const categories = ["all", "Platform Launch", "Expert Talks", "Beauty Trends", "Beauty Fails", "Skincare Science", "Natural Beauty", "Community Stories"];
+  const categories = ["all", "Platform Launch", "Expert Talks", "Beauty Trends", "Beauty Fails", "Skincare Science", "Product Reviews", "Natural Beauty", "Community Stories"];
 
   const filteredEpisodes = mockEpisodes.filter(episode => {
     const matchesSearch = episode.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
