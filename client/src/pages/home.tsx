@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { Search, Crown, WandSparkles, ShoppingBag, Star, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
 import cashbackVideo from "@assets/gemini_generated_video_A5F38BC6_1756339733830.mov";
+import { PollWidget } from "@/components/poll-widget";
 
 import type { Article, Deal } from "@shared/schema";
 
@@ -326,54 +327,9 @@ export default function Home() {
             {/* In-feed Advertisement */}
             <InArticleAd className="my-6" />
 
-            {/* Latest Articles */}
+            {/* Poll of the Week */}
             <section className="mb-8">
-              <div className="bg-gradient-to-br from-teal-50 via-white to-cyan-50 dark:from-teal-950/20 dark:via-background dark:to-cyan-950/20 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold">Latest Curations</h2>
-                  <div className="flex items-center gap-2">
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-40" data-testid="category-select">
-                      <SelectValue placeholder="All Categories" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      <SelectItem value="guides">Guides</SelectItem>
-                      <SelectItem value="ingredients">Ingredients</SelectItem>
-                      <SelectItem value="routines">Routines</SelectItem>
-                      <SelectItem value="reviews">Reviews</SelectItem>
-                      <SelectItem value="deals">Deals</SelectItem>
-                      <SelectItem value="local_brands">Local Brands</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              {articlesLoading ? (
-                <div className="grid md:grid-cols-2 gap-4">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="glass-panel p-4 animate-pulse">
-                      <div className="w-full h-32 bg-muted rounded-lg mb-3" />
-                      <div className="h-4 bg-muted rounded w-3/4 mb-2" />
-                      <div className="h-3 bg-muted rounded w-1/2" />
-                    </div>
-                  ))}
-                </div>
-              ) : filteredArticles.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredArticles.map((article) => (
-                    <ArticleCard key={article.id} article={article} />
-                  ))}
-                </div>
-              ) : (
-                <div className="glass-panel p-8 text-center">
-                  <div className="text-muted-foreground mb-2">No articles found</div>
-                  <p className="text-sm text-muted-foreground">
-                    {searchQuery ? "Try adjusting your search terms" : "No articles available in this category"}
-                  </p>
-                </div>
-              )}
-              </div>
+              <PollWidget />
             </section>
           </div>
 
@@ -461,37 +417,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Member Deals */}
-            {deals.length > 0 && (
-              <div className="bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-rose-950/20 dark:via-background dark:to-pink-950/20 rounded-xl p-4 lg:p-6">
-                <h3 className="font-bold mb-4">Member Deals</h3>
-                <div className="space-y-3">
-                  {deals.slice(0, 3).map((deal) => (
-                    <div key={deal.id} className="deal-card p-3 rounded-lg">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-semibold">{deal.brand}</span>
-                        {deal.discountPercentage && (
-                          <Badge variant="default" className="text-xs">
-                            {deal.discountPercentage}% OFF
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="text-xs text-muted-foreground mb-2">{deal.description}</div>
-                      <div className="flex items-center justify-between">
-                        {deal.code && (
-                          <span className="text-xs text-primary font-medium">Code: {deal.code}</span>
-                        )}
-                        <Button size="sm" variant="ghost" className="text-xs p-1 h-auto" asChild>
-                          <a href={deal.url} target="_blank" rel="noopener" data-testid={`deal-shop-${deal.id}`}>
-                            Shop →
-                          </a>
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+
           </div>
         </div>
         {/* Cashback Rewards Card Section */}
