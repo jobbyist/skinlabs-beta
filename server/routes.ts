@@ -32,6 +32,36 @@ const authenticateToken = (req: Request, res: Response, next: any) => {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication middleware
   setupAuth(app);
+  
+  // Waiting List API
+  app.post('/api/waiting-list', async (req: Request, res: Response) => {
+    try {
+      const { name, email, phone, category } = req.body;
+      
+      if (!name || !email) {
+        return res.status(400).json({ 
+          message: "Name and email are required" 
+        });
+      }
+      
+      const entry = await storage.addToWaitingList({
+        name,
+        email,
+        phone,
+        category: category || 'cashback_card'
+      });
+      
+      res.json({ 
+        message: "Successfully added to waiting list",
+        id: entry.id 
+      });
+    } catch (error) {
+      console.error("Error adding to waiting list:", error);
+      res.status(500).json({ 
+        message: "Failed to add to waiting list" 
+      });
+    }
+  });
 
   // Local registration with user count-based subscription logic
   app.post('/api/auth/register', async (req: Request, res: Response) => {

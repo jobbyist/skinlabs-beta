@@ -194,7 +194,7 @@ export function AudioPlayer({
       <div className="flex flex-col md:flex-row">
         {/* Thumbnail */}
         {thumbnailUrl && (
-          <div className="md:w-48 h-48 md:h-auto bg-muted flex-shrink-0">
+          <div className="md:w-64 lg:w-80 h-48 md:h-auto bg-muted flex-shrink-0">
             <img
               src={thumbnailUrl}
               alt={title}

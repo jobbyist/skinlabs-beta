@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle } from "@shared/schema";
+import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle, waitingList } from "@shared/schema";
 import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
 import { db } from "./db";
@@ -35,6 +35,9 @@ export interface IStorage {
   
   // Founding member tracking
   getFoundingMemberCount(): Promise<number>;
+  
+  // Waiting list
+  addToWaitingList(data: { name: string; email: string; phone?: string | null; category: string }): Promise<{ id: string }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -336,6 +339,24 @@ export class DatabaseStorage implements IStorage {
 
   async getUserCount(): Promise<number> {
     return this.users.size;
+  }
+  
+  async addToWaitingList(data: { name: string; email: string; phone?: string | null; category: string }): Promise<{ id: string }> {
+    const id = randomUUID();
+    const entry = {
+      id,
+      name: data.name,
+      email: data.email,
+      phone: data.phone || null,
+      category: data.category,
+      joinedAt: new Date()
+    };
+    
+    // In a real implementation, this would save to the database
+    // For now, just returning the ID
+    await db.insert(waitingList).values(entry);
+    
+    return { id };
   }
 }
 
