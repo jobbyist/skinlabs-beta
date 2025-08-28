@@ -320,12 +320,12 @@ export const insertDiyRecipeSchema = createInsertSchema(diyRecipes).omit({
   updatedAt: true,
 });
 
-export const insertForumPostSchema = createInsertSchema(forumPosts).omit({
+export const insertForumTopicSchema = createInsertSchema(forumTopics).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
-  viewCount: true,
-  replyCount: true,
+  views: true,
+  replies: true,
 });
 
 export const insertForumReplyLegacySchema = createInsertSchema(forumReplies).omit({
@@ -391,8 +391,8 @@ export type WebStory = typeof webStories.$inferSelect;
 export type InsertWebStory = z.infer<typeof insertWebStorySchema>;
 export type DiyRecipe = typeof diyRecipes.$inferSelect;
 export type InsertDiyRecipe = z.infer<typeof insertDiyRecipeSchema>;
-export type ForumPost = typeof forumPosts.$inferSelect;
-export type InsertForumPost = z.infer<typeof insertForumPostSchema>;
+export type ForumPost = typeof forumTopics.$inferSelect;
+export type InsertForumPost = z.infer<typeof insertForumTopicSchema>;
 export type ForumReply = typeof forumReplies.$inferSelect;
 export type InsertForumReply = z.infer<typeof insertForumReplyLegacySchema>;
 
@@ -401,7 +401,7 @@ export const insertPollSchema = createInsertSchema(polls);
 export const insertPollVoteSchema = createInsertSchema(pollVotes);
 export const insertReviewSchema = createInsertSchema(reviews);
 export const insertForumCategorySchema = createInsertSchema(forumCategories);
-export const insertForumTopicSchema = createInsertSchema(forumTopics);
+// Forum topic schema already defined above
 export const insertForumReplySchema = createInsertSchema(forumReplies);
 export const insertUserFollowSchema = createInsertSchema(userFollows);
 export const insertNotificationSchema = createInsertSchema(notifications);

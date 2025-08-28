@@ -26,7 +26,7 @@ export function AutoCarousel({
     tablet: 2,
     desktop: 3
   },
-  showDots = true,
+  showDots = false,
   showArrows = true,
   gap = "16px"
 }: AutoCarouselProps) {
@@ -34,18 +34,52 @@ export function AutoCarousel({
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [screenSize, setScreenSize] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
   const carouselRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const totalSlides = children.length;
+  const currentItemsPerView = itemsPerView[screenSize];
+
+  // Detect screen size
+  useEffect(() => {
+    const updateScreenSize = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setScreenSize('mobile');
+      } else if (width < 1024) {
+        setScreenSize('tablet');
+      } else {
+        setScreenSize('desktop');
+      }
+    };
+
+    updateScreenSize();
+    window.addEventListener('resize', updateScreenSize);
+    return () => window.removeEventListener('resize', updateScreenSize);
+  }, []);
+
+  // Reset currentIndex when screen size changes to prevent out-of-bounds
+  useEffect(() => {
+    const maxIndex = Math.max(0, totalSlides - currentItemsPerView);
+    if (currentIndex > maxIndex) {
+      setCurrentIndex(0);
+    }
+  }, [screenSize, currentItemsPerView, totalSlides, currentIndex]);
 
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-  }, [totalSlides]);
+    setCurrentIndex((prevIndex) => {
+      const maxIndex = Math.max(0, totalSlides - currentItemsPerView);
+      return prevIndex >= maxIndex ? 0 : prevIndex + 1;
+    });
+  }, [totalSlides, currentItemsPerView]);
 
   const prevSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + totalSlides) % totalSlides);
-  }, [totalSlides]);
+    setCurrentIndex((prevIndex) => {
+      const maxIndex = Math.max(0, totalSlides - currentItemsPerView);
+      return prevIndex <= 0 ? maxIndex : prevIndex - 1;
+    });
+  }, [totalSlides, currentItemsPerView]);
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
@@ -93,7 +127,7 @@ export function AutoCarousel({
 
   return (
     <div 
-      className={cn("relative w-full overflow-hidden", className)}
+      className={cn("relative w-full overflow-hidden rounded-lg", className)}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
@@ -106,7 +140,7 @@ export function AutoCarousel({
         <div 
           className="flex transition-transform duration-500 ease-in-out"
           style={{
-            transform: `translateX(-${currentIndex * (100 / itemsPerView.mobile)}%)`,
+            transform: `translateX(-${currentIndex * (100 / currentItemsPerView)}%)`,
             gap: gap
           }}
         >
@@ -115,19 +149,24 @@ export function AutoCarousel({
               key={index}
               className={cn(
                 "flex-shrink-0",
-                itemsPerView.mobile === 1 && "w-full",
-                itemsPerView.mobile === 2 && "w-1/2",
-                itemsPerView.mobile === 3 && "w-1/3",
-                itemsPerView.tablet === 1 && "md:w-full",
-                itemsPerView.tablet === 2 && "md:w-1/2",
-                itemsPerView.tablet === 3 && "md:w-1/3",
-                itemsPerView.desktop === 1 && "lg:w-full",
-                itemsPerView.desktop === 2 && "lg:w-1/2",
-                itemsPerView.desktop === 3 && "lg:w-1/3",
-                itemsPerView.desktop === 4 && "lg:w-1/4"
+                // Mobile spacing
+                itemsPerView.mobile === 1 && "w-full px-1",
+                itemsPerView.mobile === 2 && "w-1/2 px-1",
+                itemsPerView.mobile === 3 && "w-1/3 px-1",
+                // Tablet spacing
+                itemsPerView.tablet === 1 && "md:w-full md:px-2",
+                itemsPerView.tablet === 2 && "md:w-1/2 md:px-2",
+                itemsPerView.tablet === 3 && "md:w-1/3 md:px-2",
+                // Desktop spacing
+                itemsPerView.desktop === 1 && "lg:w-full lg:px-2",
+                itemsPerView.desktop === 2 && "lg:w-1/2 lg:px-2",
+                itemsPerView.desktop === 3 && "lg:w-1/3 lg:px-2",
+                itemsPerView.desktop === 4 && "lg:w-1/4 lg:px-2"
               )}
             >
-              {child}
+              <div className="w-full h-full min-w-0">
+                {child}
+              </div>
             </div>
           ))}
         </div>
@@ -158,17 +197,17 @@ export function AutoCarousel({
       )}
 
       {/* Dots Indicator */}
-      {showDots && totalSlides > 1 && (
+      {showDots && totalSlides > currentItemsPerView && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-          {Array.from({ length: totalSlides }, (_, index) => (
+          {Array.from({ length: Math.max(1, totalSlides - currentItemsPerView + 1) }, (_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
               className={cn(
                 "h-2 w-2 rounded-full transition-all duration-300",
                 currentIndex === index 
-                  ? "w-6 bg-primary" 
-                  : "bg-primary/30 hover:bg-primary/50"
+                  ? "w-6 bg-white dark:bg-gray-300" 
+                  : "bg-white/50 dark:bg-gray-300/50 hover:bg-white/70 dark:hover:bg-gray-300/70"
               )}
               aria-label={`Go to slide ${index + 1}`}
             />
