@@ -1,7 +1,7 @@
 import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle, type WebStory, type InsertWebStory, type DiyRecipe, type InsertDiyRecipe, type ForumPost, type InsertForumPost, type ForumReply, type InsertForumReply, type ProductRecommendation, type InsertProductRecommendation } from "@shared/schema";
 import bcrypt from "bcrypt";
 import { db } from "./db";
-import { users, userSkinProfiles, articles, deals, savedArticles, webStories, diyRecipes, forumPosts, forumReplies, productRecommendations } from "../shared/schema";
+import { users, userSkinProfiles, articles, deals, savedArticles, webStories, diyRecipes, forumPosts, forumReplies, productRecommendations, waitingList } from "../shared/schema";
 import { eq, and, desc, like, inArray, count } from "drizzle-orm";
 
 export interface IStorage {
@@ -35,6 +35,9 @@ export interface IStorage {
   // Founding member tracking
   getFoundingMemberCount(): Promise<number>;
   getUserCount(): Promise<number>;
+  
+  // Waiting list
+  addToWaitingList(data: { name: string; email: string; phone?: string | null; category: string }): Promise<{ id: string }>;
 
   // Content Management for Automation
   // Articles
@@ -615,6 +618,23 @@ export class DatabaseStorage implements IStorage {
       return product;
     } catch (error) {
       console.error("Error creating product recommendation:", error);
+      throw error;
+    }
+  }
+
+  // Waiting list
+  async addToWaitingList(data: { name: string; email: string; phone?: string | null; category: string }): Promise<{ id: string }> {
+    try {
+      const [entry] = await db.insert(waitingList).values({
+        name: data.name,
+        email: data.email,
+        phone: data.phone || null,
+        category: data.category,
+        createdAt: new Date()
+      }).returning();
+      return { id: entry.id };
+    } catch (error) {
+      console.error("Error adding to waiting list:", error);
       throw error;
     }
   }

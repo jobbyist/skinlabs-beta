@@ -8,6 +8,7 @@ import { loginSchema, registerSchema, resetPasswordSchema, changePasswordSchema,
 import { z } from "zod";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import { sendTrialExpirationNotification } from "./sendgrid";
+import { chatWithSKYNN } from "./openai";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-jwt-secret-change-in-production";
 
@@ -24,7 +25,7 @@ const authenticateToken = (req: Request, res: Response, next: any) => {
     if (err) {
       return res.status(403).json({ message: 'Invalid or expired token' });
     }
-    req.user = decoded;
+    (req as any).user = decoded;
     next();
   });
 };
@@ -60,6 +61,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         message: "Failed to add to waiting list" 
       });
+    }
+  });
+  
+  // Poll API
+  app.get('/api/poll/current', authenticateToken, async (req: Request, res: Response) => {
+    // Mock poll data - in production, this would come from the database
+    const poll = {
+      id: "poll-1",
+      question: "What's your favourite, must-have skincare product right now?",
+      options: [
+        { id: "1", text: "SKOON. Skincare", votes: 245 },
+        { id: "2", text: "Standard Beauty", votes: 189 },
+        { id: "3", text: "Lumi Glo", votes: 156 },
+        { id: "4", text: "Lelive", votes: 134 },
+        { id: "5", text: "African Botanics", votes: 98 }
+      ],
+      totalVotes: 822,
+      hasVoted: false // Would check if user has voted
+    };
+    
+    res.json(poll);
+  });
+  
+  app.post('/api/poll/vote', authenticateToken, async (req: Request, res: Response) => {
+    const { optionId } = req.body;
+    
+    // In production, save the vote to database and prevent duplicate voting
+    res.json({ message: "Vote recorded successfully" });
+  });
+  
+  // AI Chat API
+  app.post('/api/chat/skynn', authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const { message } = req.body;
+      const userId = (req as any).user?.userId;
+      
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+      
+      const response = await chatWithSKYNN(message, userId);
+      res.json({ response });
+    } catch (error) {
+      console.error("Error in SKYNN chat:", error);
+      res.status(500).json({ message: "Failed to get response from SKYNN AI" });
     }
   });
 

@@ -421,23 +421,54 @@ export function AuthModal({ isOpen, onClose, initialMode = 'register', onAuthSuc
             <div className="space-y-6">
               {/* Subscription Tier Display */}
               {registrationInfo && (
-                <Alert className={`border-primary/20 ${
-                  registrationInfo.tier === 'founding_member' ? 'bg-amber-50 border-amber-200 dark:bg-amber-900/20' :
+                <div className={`p-4 rounded-lg border ${
+                  registrationInfo.nextRegistrationNumber <= 100 ? 'bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-300 dark:from-amber-900/20 dark:to-yellow-900/20' :
                   registrationInfo.tier === 'trial' ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20' :
-                  'bg-primary/5'
+                  'bg-primary/5 border-primary/20'
                 }`}>
-                  {registrationInfo.tier === 'founding_member' ? <Crown className="h-4 w-4 text-amber-600" /> :
-                   registrationInfo.tier === 'trial' ? <Zap className="h-4 w-4 text-blue-600" /> :
-                   <Users className="h-4 w-4 text-primary" />}
-                  <AlertDescription>
-                    <span className="font-medium">
-                      {registrationInfo.tier === 'founding_member' ? 'Founding Member' :
-                       registrationInfo.tier === 'trial' ? 'Free Trial' :
-                       'Premium Subscription'}:
-                    </span> 
-                    {registrationInfo.message}
-                  </AlertDescription>
-                </Alert>
+                  <div className="space-y-3">
+                    {registrationInfo.nextRegistrationNumber <= 100 ? (
+                      <>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Crown className="h-5 w-5 text-amber-600" />
+                          <Badge className="bg-gradient-to-r from-amber-600 to-yellow-600 text-white">
+                            Member #{registrationInfo.nextRegistrationNumber}
+                          </Badge>
+                        </div>
+                        <h4 className="font-bold text-base">Free Lifetime Access & Early Bird Perks For The First 100 Members</h4>
+                        <p className="text-sm text-muted-foreground">Join now to secure your lifetime premium access plus exclusive founding member benefits!</p>
+                        
+                        {/* Progress Counter */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Members joined</span>
+                            <span className="font-semibold">{registrationInfo.userCount} / 100</span>
+                          </div>
+                          <Progress value={(registrationInfo.userCount / 100) * 100} className="h-2" />
+                          <p className="text-xs text-center font-medium text-amber-600">
+                            Only {100 - registrationInfo.userCount} spots remaining!
+                          </p>
+                        </div>
+                      </>
+                    ) : registrationInfo.tier === 'trial' ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <Zap className="h-4 w-4 text-blue-600" />
+                          <span className="font-medium">30-Day Free Trial</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{registrationInfo.message}</p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <Users className="h-4 w-4 text-primary" />
+                          <span className="font-medium">Premium Subscription</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{registrationInfo.message}</p>
+                      </>
+                    )}
+                  </div>
+                </div>
               )}
 
               {/* OAuth Buttons */}
