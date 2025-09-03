@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import PayPalTipButton from "@/components/PayPalTipButton";
 
 interface AudioPlayerProps {
   title: string;
@@ -183,10 +184,6 @@ export function AudioPlayer({
 
   const handleTip = () => {
     setShowTipModal(true);
-    toast({
-      title: "Tipping coming soon!",
-      description: "We're setting up secure payment processing. Thank you for your support!",
-    });
   };
 
   return (
@@ -352,6 +349,14 @@ export function AudioPlayer({
       </div>
       
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
+      
+      {/* PayPal Tip Modal */}
+      <PayPalTipButton
+        episodeId={episodeNumber?.toString() || title}
+        episodeTitle={title}
+        open={showTipModal}
+        onOpenChange={setShowTipModal}
+      />
     </Card>
   );
 }
