@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { BarChart3, Users, Clock, Check } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { apiRequest } from '@/lib/queryClient';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@clerk/clerk-react';
 import type { Poll, PollVote } from '@shared/schema';
 
 interface PollOption {
@@ -82,7 +82,7 @@ interface PollWidgetProps {
 
 export function PollWidget({ pollId, showTitle = true, compact = false }: PollWidgetProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const { user, isAuthenticated } = useAuth();
+  const { user, isSignedIn: isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
   // This would normally fetch from API

@@ -4,7 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
-import { AuthProvider } from "@/hooks/use-auth";
+import { ClerkProvider } from "@clerk/clerk-react";
 import AIChatbot from "@/components/ai-chatbot";
 import PWAProvider from "@/components/pwa-provider";
 import InstallPrompt from "@/components/mobile/install-prompt";
@@ -53,9 +53,20 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="dark" storageKey="skynn-theme">
-        <AuthProvider>
+    <ClerkProvider
+      publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY!}
+      appearance={{
+        baseTheme: undefined,
+        variables: {
+          colorPrimary: "hsl(262.1 83.3% 57.8%)",
+          colorBackground: "hsl(224 71.4% 4.1%)",
+          colorInputBackground: "hsl(220 13% 9%)",
+          colorInputText: "hsl(210 40% 98%)",
+        },
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider defaultTheme="dark" storageKey="skynn-theme">
           <TooltipProvider>
             <PWAProvider />
             <Toaster />
@@ -69,9 +80,9 @@ function App() {
             <LaunchPromotionPopup />
             <CookieConsent />
           </TooltipProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 }
 

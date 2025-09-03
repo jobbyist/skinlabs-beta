@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { Home, BookOpen, ShoppingBag, User, Sparkles, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@clerk/clerk-react";
 
 const navigationItems = [
   {
@@ -38,7 +38,7 @@ const navigationItems = [
 
 export default function MobileNavigation() {
   const [location] = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isSignedIn: isAuthenticated } = useAuth();
 
   // Only show on mobile screens
   const isMobileScreen = window.innerWidth < 768;
