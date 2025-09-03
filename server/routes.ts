@@ -505,6 +505,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User Profile API
+  app.get('/api/user/profile', authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const user = await storage.getUserById(req.user.userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.put('/api/user/profile', authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const { firstName, lastName, username, phoneNumber, bio, dateOfBirth } = req.body;
+      
+      const updatedUser = await storage.updateUser(req.user.userId, {
+        firstName,
+        lastName,
+        username,
+        phoneNumber,
+        bio,
+        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
+        updatedAt: new Date()
+      });
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   // Subscription upgrade for trial users
   app.post('/api/subscription/upgrade', authenticateToken, async (req: Request, res: Response) => {
     try {

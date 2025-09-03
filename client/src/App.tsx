@@ -18,6 +18,7 @@ import CookieConsent from "@/components/cookie-consent";
 import Home from "@/pages/home";
 import Auth from "@/pages/auth";
 import Dashboard from "@/pages/dashboard";
+import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 import ProductRecommendations from "@/pages/product-recommendations";
 import SkincareGuides from "@/pages/skincare-guides";
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/auth" component={Auth} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/profile" component={Profile} />
       <Route path="/product-recommendations" component={ProductRecommendations} />
       <Route path="/skincare-guides" component={SkincareGuides} />
       <Route path="/diy-recipes" component={DiyRecipes} />

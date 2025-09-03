@@ -122,11 +122,11 @@ export function PollWidget({ pollId, showTitle = true, compact = false }: PollWi
   }
 
   return (
-    <div className={`space-y-${compact ? '4' : '6'}`}>
+    <div className={`max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-${compact ? '4' : '6'}`}>
       {showTitle && !compact && (
         <div className="flex items-center gap-2 mb-4">
           <BarChart3 className="h-5 w-5 text-pink-600" />
-          <h2 className="text-xl font-semibold text-gray-900">Community Polls</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Community Polls</h2>
         </div>
       )}
       

@@ -127,7 +127,7 @@ export function AutoCarousel({
 
   return (
     <div 
-      className={cn("relative w-full overflow-hidden rounded-lg", className)}
+      className={cn("relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", className)}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
@@ -136,7 +136,7 @@ export function AutoCarousel({
       ref={carouselRef}
     >
       {/* Carousel Container */}
-      <div className="relative">
+      <div className="relative overflow-hidden rounded-lg">
         <div 
           className="flex transition-transform duration-500 ease-in-out"
           style={{
@@ -149,19 +149,19 @@ export function AutoCarousel({
               key={index}
               className={cn(
                 "flex-shrink-0",
-                // Mobile spacing
-                itemsPerView.mobile === 1 && "w-full px-1",
-                itemsPerView.mobile === 2 && "w-1/2 px-1",
-                itemsPerView.mobile === 3 && "w-1/3 px-1",
+                // Mobile spacing - increased padding for better display
+                itemsPerView.mobile === 1 && "w-full px-2",
+                itemsPerView.mobile === 2 && "w-1/2 px-2",
+                itemsPerView.mobile === 3 && "w-1/3 px-2",
                 // Tablet spacing
-                itemsPerView.tablet === 1 && "md:w-full md:px-2",
-                itemsPerView.tablet === 2 && "md:w-1/2 md:px-2",
-                itemsPerView.tablet === 3 && "md:w-1/3 md:px-2",
+                itemsPerView.tablet === 1 && "md:w-full md:px-3",
+                itemsPerView.tablet === 2 && "md:w-1/2 md:px-3",
+                itemsPerView.tablet === 3 && "md:w-1/3 md:px-3",
                 // Desktop spacing
-                itemsPerView.desktop === 1 && "lg:w-full lg:px-2",
-                itemsPerView.desktop === 2 && "lg:w-1/2 lg:px-2",
-                itemsPerView.desktop === 3 && "lg:w-1/3 lg:px-2",
-                itemsPerView.desktop === 4 && "lg:w-1/4 lg:px-2"
+                itemsPerView.desktop === 1 && "lg:w-full lg:px-4",
+                itemsPerView.desktop === 2 && "lg:w-1/2 lg:px-4",
+                itemsPerView.desktop === 3 && "lg:w-1/3 lg:px-4",
+                itemsPerView.desktop === 4 && "lg:w-1/4 lg:px-4"
               )}
             >
               <div className="w-full h-full min-w-0">

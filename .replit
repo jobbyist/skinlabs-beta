@@ -39,4 +39,7 @@ args = "npm run dev"
 waitForPort = 5000
 
 [agent]
-integrations = ["javascript_paypal==1.0.0", "javascript_database==1.0.0"]
+integrations = ["javascript_database==1.0.0", "javascript_paypal==1.0.0"]
+
+[objectStorage]
+defaultBucketID = "replit-objstore-7458fdca-6918-46cf-bf68-78f1f37feda2"
