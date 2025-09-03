@@ -4,8 +4,12 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+<<<<<<< HEAD
+import { AuthProvider } from "@/hooks/use-auth";
+=======
 import { ClerkProvider } from "@clerk/clerk-react";
 import AIChatbot from "@/components/ai-chatbot";
+>>>>>>> 1976a5a3ba3e88223d15646a99b28f4bf05caa2c
 import PWAProvider from "@/components/pwa-provider";
 import InstallPrompt from "@/components/mobile/install-prompt";
 import MobileNavigation from "@/components/mobile/mobile-navigation";
@@ -14,6 +18,8 @@ import OfflineIndicator from "@/components/mobile/offline-indicator";
 import LaunchPromotionPopup from "@/components/launch-promotion-popup";
 import LaunchBanner from "@/components/mobile/launch-banner";
 import CookieConsent from "@/components/cookie-consent";
+import { useAdInjection } from "@/hooks/use-ad-injection";
+import { useScrollToTop } from "@/hooks/use-scroll-to-top";
 
 import Home from "@/pages/home";
 import Auth from "@/pages/auth";
@@ -30,8 +36,29 @@ import Streams from "@/pages/streams";
 import TermsOfService from "@/pages/terms-of-service";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import CookiePolicy from "@/pages/cookie-policy";
+import Advertise from "@/pages/advertise";
+import Chatbot from "@/pages/chatbot";
+import SkinQuiz from "@/pages/skin-quiz";
+
+// Brand Pages
+import TerresDAfrique from "@/pages/brands/terres-dafrique";
+import Smooch from "@/pages/brands/smooch";
+import Enough from "@/pages/brands/enough";
+import Lelive from "@/pages/brands/lelive";
+import Sundae from "@/pages/brands/sundae";
+import Gloei from "@/pages/brands/gloei";
+import YearnSkin from "@/pages/brands/yearnskin";
+import Silki from "@/pages/brands/silki";
+import Standard from "@/pages/brands/standard";
+import Skoon from "@/pages/brands/skoon";
 
 function Router() {
+  // Auto-inject ads between sections
+  useAdInjection();
+  
+  // Scroll to top on route changes
+  useScrollToTop();
+  
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -48,6 +75,22 @@ function Router() {
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/cookie-policy" component={CookiePolicy} />
+      <Route path="/advertise" component={Advertise} />
+      <Route path="/chatbot" component={Chatbot} />
+      <Route path="/skin-quiz" component={SkinQuiz} />
+      
+      {/* Brand Pages */}
+      <Route path="/brands/terres-dafrique" component={TerresDAfrique} />
+      <Route path="/brands/smooch" component={Smooch} />
+      <Route path="/brands/enough" component={Enough} />
+      <Route path="/brands/lelive" component={Lelive} />
+      <Route path="/brands/sundae" component={Sundae} />
+      <Route path="/brands/gloei" component={Gloei} />
+      <Route path="/brands/yearnskin" component={YearnSkin} />
+      <Route path="/brands/silki" component={Silki} />
+      <Route path="/brands/standard" component={Standard} />
+      <Route path="/brands/skoon" component={Skoon} />
+      
       <Route component={NotFound} />
     </Switch>
   );
@@ -75,7 +118,6 @@ function App() {
             <LaunchBanner />
             <MobileHeader />
             <Router />
-            <AIChatbot />
             <InstallPrompt />
             <MobileNavigation />
             <OfflineIndicator />
