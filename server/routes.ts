@@ -1,34 +1,15 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage-db";
-import { setupAuth, requireAuth, optionalAuth, generateToken } from "./auth";
-import jwt from "jsonwebtoken";
-import passport from "passport";
+import { setupAuth, requireAuth, optionalAuth, syncClerkUser } from "./auth";
 import { loginSchema, registerSchema, resetPasswordSchema, changePasswordSchema, onboardingStepSchema } from "@shared/schema";
 import { z } from "zod";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import { sendTrialExpirationNotification } from "./sendgrid";
 import { chatWithSKYNN } from "./openai";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-jwt-secret-change-in-production";
-
-// Middleware to verify JWT token
-const authenticateToken = (req: Request, res: Response, next: any) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ message: 'Access token required' });
-  }
-
-  jwt.verify(token, JWT_SECRET, (err: any, decoded: any) => {
-    if (err) {
-      return res.status(403).json({ message: 'Invalid or expired token' });
-    }
-    (req as any).user = decoded;
-    next();
-  });
-};
+// Use the Clerk-based auth middleware
+const authenticateToken = requireAuth;
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication middleware
@@ -109,7 +90,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Local registration with user count-based subscription logic
+  // Clerk webhook to handle user creation and updates
+  app.post('/api/webhooks/clerk', async (req: Request, res: Response) => {
+    try {
+      const { type, data } = req.body;
+      
+      if (type === 'user.created' || type === 'user.updated') {
+        const clerkUser = data;
+        
+        // Sync user with local database
+        await syncClerkUser(clerkUser.id);
+        
+        console.log(`User ${type}: ${clerkUser.email_addresses[0]?.email_address}`);
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Clerk webhook error:', error);
+      res.status(500).json({ message: 'Webhook processing failed' });
+    }
+  });
+
+  // Legacy: Local registration with user count-based subscription logic (DEPRECATED - using Clerk now)
+  /*
   app.post('/api/auth/register', async (req: Request, res: Response) => {
     try {
       const { email, password, acceptTerms } = registerSchema.parse(req.body);
@@ -191,7 +194,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+  */
 
+  // Legacy: Login route (DEPRECATED - using Clerk now)
+  /*
   app.post('/api/auth/login', async (req: Request, res: Response) => {
     try {
       const { email, password } = loginSchema.parse(req.body);
@@ -224,8 +230,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+  */
 
-  // Google OAuth routes
+  // Legacy: Google OAuth routes (DEPRECATED - using Clerk now)
+  /*
   app.get('/api/auth/google',
     passport.authenticate('google', { scope: ['profile', 'email'] })
   );
@@ -257,16 +265,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   );
 
-  // Logout
-  app.post('/api/auth/logout', (req: Request, res: Response) => {
-    req.logout(() => {
-      res.json({ message: 'Logged out successfully' });
-    });
-  });
+  */
+  
+  // Updated /api/auth/me route for Clerk integration
 
   app.get('/api/auth/me', authenticateToken, async (req: Request, res: Response) => {
     try {
-      const user = await storage.getUser(req.user.userId);
+      const user = await storage.getUser(req.user.id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
@@ -274,6 +279,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         id: user.id,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
         subscriptionStatus: user.subscriptionStatus,
         isFoundingMember: user.isFoundingMember,
         trialEndDate: user.trialEndDate,

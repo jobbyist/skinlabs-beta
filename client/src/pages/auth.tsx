@@ -1,101 +1,40 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { useAuth } from "@/hooks/use-auth";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth, SignIn, SignUp } from "@clerk/clerk-react";
+import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
-import { apiRequest } from "@/lib/queryClient";
-import { loginSchema, registerSchema, type LoginRequest, type RegisterRequest, type AuthResponse } from "@shared/schema";
-
-import { Crown, Mail, Lock } from "lucide-react";
+import { Crown } from "lucide-react";
 
 export default function Auth() {
   const [, setLocation] = useLocation();
-  const { login } = useAuth();
-  const { toast } = useToast();
+  const { isSignedIn, isLoaded } = useAuth();
   const [activeTab, setActiveTab] = useState("login");
 
-  // Login form
-  const loginForm = useForm<LoginRequest>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  // Register form
-  const registerForm = useForm<RegisterRequest>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  // Login mutation
-  const loginMutation = useMutation({
-    mutationFn: async (data: LoginRequest) => {
-      const response = await apiRequest("POST", "/api/auth/login", data);
-      return response.json() as Promise<AuthResponse>;
-    },
-    onSuccess: (data) => {
-      login(data.user, data.token);
-      toast({
-        title: "Welcome back!",
-        description: "You've been successfully logged in.",
-      });
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
       setLocation("/dashboard");
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Login failed",
-        description: error.message || "Invalid credentials. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
+    }
+  }, [isSignedIn, isLoaded, setLocation]);
 
-  // Register mutation
-  const registerMutation = useMutation({
-    mutationFn: async (data: RegisterRequest) => {
-      const response = await apiRequest("POST", "/api/auth/register", data);
-      return response.json() as Promise<AuthResponse>;
-    },
-    onSuccess: (data) => {
-      login(data.user, data.token);
-      toast({
-        title: "Welcome to SKYNN!",
-        description: data.user.isFoundingMember 
-          ? "🎉 You're a founding member! Enjoy free lifetime access." 
-          : "Your account has been created successfully.",
-      });
-      setLocation("/dashboard");
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Registration failed",
-        description: error.message || "Unable to create account. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const onLogin = (data: LoginRequest) => {
-    loginMutation.mutate(data);
-  };
-
-  const onRegister = (data: RegisterRequest) => {
-    registerMutation.mutate(data);
-  };
+  if (isSignedIn) {
+    return null; // Will redirect via useEffect
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -136,56 +75,23 @@ export default function Auth() {
               </TabsList>
               
               <TabsContent value="login" className="space-y-4">
-                <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input
-                        id="login-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        className="pl-10"
-                        {...loginForm.register("email")}
-                        data-testid="login-email"
-                      />
-                    </div>
-                    {loginForm.formState.errors.email && (
-                      <p className="text-sm text-destructive">
-                        {loginForm.formState.errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="login-password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input
-                        id="login-password"
-                        type="password"
-                        placeholder="••••••••"
-                        className="pl-10"
-                        {...loginForm.register("password")}
-                        data-testid="login-password"
-                      />
-                    </div>
-                    {loginForm.formState.errors.password && (
-                      <p className="text-sm text-destructive">
-                        {loginForm.formState.errors.password.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={loginMutation.isPending}
-                    data-testid="login-button"
-                  >
-                    {loginMutation.isPending ? "Signing in..." : "Sign In"}
-                  </Button>
-                </form>
+                <div className="flex justify-center">
+                  <SignIn 
+                    appearance={{
+                      elements: {
+                        formButtonPrimary: "bg-primary hover:bg-primary/90",
+                        card: "shadow-none border-0 bg-transparent",
+                        headerTitle: "hidden",
+                        headerSubtitle: "hidden",
+                        socialButtonsBlockButton: "border-border hover:bg-accent",
+                        formFieldInput: "border-border bg-background",
+                        footerActionLink: "text-primary hover:text-primary/90",
+                      },
+                    }}
+                    redirectUrl="/dashboard"
+                    signUpUrl="?tab=register"
+                  />
+                </div>
               </TabsContent>
               
               <TabsContent value="register" className="space-y-4">
@@ -196,56 +102,23 @@ export default function Auth() {
                   </div>
                 </div>
                 
-                <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="register-email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input
-                        id="register-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        className="pl-10"
-                        {...registerForm.register("email")}
-                        data-testid="register-email"
-                      />
-                    </div>
-                    {registerForm.formState.errors.email && (
-                      <p className="text-sm text-destructive">
-                        {registerForm.formState.errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="register-password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input
-                        id="register-password"
-                        type="password"
-                        placeholder="••••••••"
-                        className="pl-10"
-                        {...registerForm.register("password")}
-                        data-testid="register-password"
-                      />
-                    </div>
-                    {registerForm.formState.errors.password && (
-                      <p className="text-sm text-destructive">
-                        {registerForm.formState.errors.password.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={registerMutation.isPending}
-                    data-testid="register-button"
-                  >
-                    {registerMutation.isPending ? "Creating Account..." : "Create Account"}
-                  </Button>
-                </form>
+                <div className="flex justify-center">
+                  <SignUp 
+                    appearance={{
+                      elements: {
+                        formButtonPrimary: "bg-primary hover:bg-primary/90",
+                        card: "shadow-none border-0 bg-transparent",
+                        headerTitle: "hidden",
+                        headerSubtitle: "hidden",
+                        socialButtonsBlockButton: "border-border hover:bg-accent",
+                        formFieldInput: "border-border bg-background",
+                        footerActionLink: "text-primary hover:text-primary/90",
+                      },
+                    }}
+                    redirectUrl="/dashboard"
+                    signInUrl="?tab=login"
+                  />
+                </div>
               </TabsContent>
             </Tabs>
             
