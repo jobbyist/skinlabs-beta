@@ -8,6 +8,7 @@ import ArticleCard from "@/components/content/article-card";
 import OnboardingModal from "@/components/auth/onboarding-modal";
 import SubscriptionModal from "@/components/auth/subscription-modal";
 import { DisplayAd } from "@/components/ads/adsense-block";
+import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -147,6 +148,9 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Strategic ad placement between sections */}
+        <AdSlot variant="between-sections" className="mb-6" />
+
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Dashboard Content */}
           <div className="lg:col-span-2">
@@ -227,6 +231,9 @@ export default function Dashboard() {
                     </div>
                   )}
                 </div>
+                
+                {/* Affiliate banner in saved tab */}
+                <ShopifyAffiliateBanner className="mt-6" />
               </TabsContent>
 
               <TabsContent value="profile" className="space-y-6">

@@ -5,6 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Play, Clock } from "lucide-react";
 import { WebStory } from "@shared/schema";
 import WebStoriesViewer from "@/components/web-stories-viewer";
+import { BannerAd, DisplayAd } from "@/components/ads/adsense-block";
+import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
+
+// Import attached story assets
+import morningEveningStory1 from "@assets/F7BF1DDE-498C-49A2-AEBB-71F6DB1E489A_1756414317148.png";
+import sensitiveSkinsStory from "@assets/E4C38E4D-CED8-41FF-ABA0-02515E6CFDC0_1756414317149.png";
+import diyMasksStory from "@assets/899F2B40-25C2-4848-8A1B-5E4306C8AC5B_1756414317149.png";
+import morningEveningStory2 from "@assets/60E2AA08-8007-4297-9614-58ECED5D03F5_1756414317149.png";
 
 // Sample stories data for demonstration
 const sampleStories: WebStory[] = [
@@ -177,12 +185,12 @@ const sampleStories: WebStory[] = [
     ]
   },
   {
-    id: "story-4", 
-    title: "Anti-Aging Routine After 30",
-    description: "Prevent and treat signs of aging",
-    category: "anti-aging",
-    thumbnailUrl: "https://images.unsplash.com/photo-1594824191513-fa71d965ecf0?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600",
-    duration: 35,
+    id: "story-4",
+    title: "Perfect Skincare Routine Timing",
+    description: "Morning vs Evening: When to apply your products",
+    category: "routines",
+    thumbnailUrl: morningEveningStory1,
+    duration: 20,
     isPublished: true,
     publishedAt: new Date(),
     createdAt: new Date(),
@@ -190,62 +198,46 @@ const sampleStories: WebStory[] = [
     pages: [
       {
         id: "page-16",
-        title: "Anti-Aging After 30",
-        content: "Prevention is better than cure. Start your anti-aging journey now!",
-        mediaUrl: "https://images.unsplash.com/photo-1594824191513-fa71d965ecf0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        title: "Morning vs Evening Routines",
+        content: "Timing matters! Learn when to use your skincare products for maximum effectiveness.",
+        mediaUrl: morningEveningStory1,
         mediaType: "image",
         duration: 5
       },
       {
         id: "page-17",
-        title: "Retinoids: The Gold Standard",
-        content: "Start with retinol 2-3x per week. Build tolerance slowly.",
-        mediaUrl: "https://images.unsplash.com/photo-1612817288484-6f916006741a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        title: "Morning: Protection Mode",
+        content: "Focus on antioxidants (Vitamin C), hydration, and SPF to protect your skin throughout the day.",
+        mediaUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
         mediaType: "image",
         duration: 5
       },
       {
         id: "page-18",
-        title: "Vitamin C for Brightness",
-        content: "Morning vitamin C serum helps with dark spots and dullness.",
-        mediaUrl: "https://images.unsplash.com/photo-1617611548714-7a9da5f8c8b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        title: "Evening: Repair Time",
+        content: "Night is for repair. Use retinoids, acids, and rich moisturizers while you sleep.",
+        mediaUrl: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
         mediaType: "image",
         duration: 5
       },
       {
         id: "page-19",
-        title: "Hyaluronic Acid Hydration",
-        content: "Plump skin with hyaluronic acid. Apply to damp skin for best results.",
-        mediaUrl: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
-        mediaType: "image",
-        duration: 5
-      },
-      {
-        id: "page-20",
-        title: "Don't Forget Your Neck",
-        content: "Extend all products down to your neck and décolletage area.",
-        mediaUrl: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
-        mediaType: "image",
-        duration: 5
-      },
-      {
-        id: "page-21",
-        title: "Consistency Wins",
-        content: "Results take 12+ weeks. Stay consistent and patient!",
-        mediaUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        title: "Pro Tips for Timing",
+        content: "Wait 15-20 minutes between active ingredients. Your skin needs time to absorb each layer properly.",
+        mediaUrl: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
         mediaType: "image",
         duration: 5,
-        ctaText: "Anti-Aging Products",
-        ctaUrl: "/product-recommendations"
+        ctaText: "Get Routine Guide",
+        ctaUrl: "/skincare-guides"
       }
     ]
   },
   {
     id: "story-5",
     title: "Sensitive Skin Solutions",
-    description: "Gentle care for reactive skin",
+    description: "Gentle care for reactive skin types",
     category: "sensitive",
-    thumbnailUrl: "https://images.unsplash.com/photo-1617611548714-7a9da5f8c8b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=600",
+    thumbnailUrl: sensitiveSkinsStory,
     duration: 25,
     isPublished: true,
     publishedAt: new Date(),
@@ -253,45 +245,157 @@ const sampleStories: WebStory[] = [
     updatedAt: new Date(),
     pages: [
       {
-        id: "page-22",
+        id: "page-20",
         title: "Sensitive Skin Care",
-        content: "Gentle doesn't mean ineffective. Here's how to care for reactive skin.",
-        mediaUrl: "https://images.unsplash.com/photo-1617611548714-7a9da5f8c8b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        content: "If your skin is easily irritated, these gentle solutions will help you achieve healthy, calm skin.",
+        mediaUrl: sensitiveSkinsStory,
         mediaType: "image",
         duration: 5
       },
       {
-        id: "page-23",
-        title: "Patch Test Everything",
-        content: "Always test new products on your inner arm before applying to face.",
+        id: "page-21",
+        title: "Gentle Cleansing First",
+        content: "Use a fragrance-free, pH-balanced cleanser. Avoid sulfates and harsh scrubs.",
         mediaUrl: "https://images.unsplash.com/photo-1556909114-4f6e9d7c1e95?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
         mediaType: "image",
         duration: 5
       },
       {
-        id: "page-24",
-        title: "Fragrance-Free Zone",
-        content: "Avoid products with fragrances, essential oils, and strong actives.",
-        mediaUrl: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        id: "page-22",
+        title: "Soothing Ingredients",
+        content: "Look for niacinamide, ceramides, hyaluronic acid, and centella asiatica to calm inflammation.",
+        mediaUrl: "https://images.unsplash.com/photo-1612817288484-6f916006741a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
         mediaType: "image",
         duration: 5
       },
       {
-        id: "page-25",
-        title: "Ceramides & Niacinamide",
-        content: "Look for gentle ingredients that strengthen your skin barrier.",
+        id: "page-23",
+        title: "What to Avoid",
+        content: "Skip alcohol, essential oils, fragrances, and strong acids until your skin barrier is restored.",
         mediaUrl: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
         mediaType: "image",
         duration: 5
       },
       {
-        id: "page-26",
-        title: "Less is More",
-        content: "Keep routines simple. 3-4 products max until skin calms down.",
-        mediaUrl: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        id: "page-24",
+        title: "Patch Test Everything",
+        content: "Always test new products on a small area first. Your sensitive skin will thank you!",
+        mediaUrl: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
         mediaType: "image",
         duration: 5,
         ctaText: "Sensitive Skin Guide",
+        ctaUrl: "/skincare-guides"
+      }
+    ]
+  },
+  {
+    id: "story-6",
+    title: "DIY Skincare Masks",
+    description: "10 recipes for glowing skin at home",
+    category: "diy",
+    thumbnailUrl: diyMasksStory,
+    duration: 30,
+    isPublished: true,
+    publishedAt: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    pages: [
+      {
+        id: "page-25",
+        title: "DIY Skincare Magic",
+        content: "Transform your skin with these 10 easy DIY mask recipes using kitchen ingredients!",
+        mediaUrl: diyMasksStory,
+        mediaType: "image",
+        duration: 5
+      },
+      {
+        id: "page-26",
+        title: "Oatmeal Soothing Mask",
+        content: "Blend oats + honey + yogurt for sensitive, irritated skin. Apply for 15 minutes.",
+        mediaUrl: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        mediaType: "image",
+        duration: 5
+      },
+      {
+        id: "page-27",
+        title: "Brightening Turmeric Mask",
+        content: "Mix turmeric + milk + honey for glowing, even-toned skin. Use 2-3 times per week.",
+        mediaUrl: "https://images.unsplash.com/photo-1587735243615-c03f25aaff15?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        mediaType: "image",
+        duration: 5
+      },
+      {
+        id: "page-28",
+        title: "Hydrating Avocado Mask",
+        content: "Mash avocado + honey + olive oil for dry skin. Rich in vitamins and healthy fats.",
+        mediaUrl: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        mediaType: "image",
+        duration: 5
+      },
+      {
+        id: "page-29",
+        title: "Clay Purifying Mask",
+        content: "Bentonite clay + apple cider vinegar for oily, acne-prone skin. Use weekly.",
+        mediaUrl: "https://images.unsplash.com/photo-1594824191513-fa71d965ecf0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        mediaType: "image",
+        duration: 5
+      },
+      {
+        id: "page-30",
+        title: "Get All 10 Recipes!",
+        content: "Download our complete DIY mask guide with step-by-step instructions for glowing skin.",
+        mediaUrl: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        mediaType: "image",
+        duration: 5,
+        ctaText: "Download Recipe Guide",
+        ctaUrl: "/diy-recipes"
+      }
+    ]
+  },
+  {
+    id: "story-7",
+    title: "Morning vs Evening Skincare",
+    description: "Perfect your routine timing for maximum results",
+    category: "routines",
+    thumbnailUrl: morningEveningStory2,
+    duration: 22,
+    isPublished: true,
+    publishedAt: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    pages: [
+      {
+        id: "page-31",
+        title: "Skincare Timing Mastery",
+        content: "Master the art of morning vs evening skincare for optimal skin health and glow.",
+        mediaUrl: morningEveningStory2,
+        mediaType: "image",
+        duration: 5
+      },
+      {
+        id: "page-32",
+        title: "Morning: Light & Protective",
+        content: "Keep it simple: cleanser, antioxidant serum, moisturizer, and SPF. Protection is key!",
+        mediaUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        mediaType: "image",
+        duration: 5
+      },
+      {
+        id: "page-33",
+        title: "Evening: Deep & Restorative",
+        content: "Double cleanse, treatments (retinol/acids), serums, and rich moisturizer for overnight repair.",
+        mediaUrl: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        mediaType: "image",
+        duration: 5
+      },
+      {
+        id: "page-34",
+        title: "Common Timing Mistakes",
+        content: "Don't use retinol in the morning or Vitamin C at night. Timing these actives wrong can cause irritation!",
+        mediaUrl: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800",
+        mediaType: "image",
+        duration: 5,
+        ctaText: "Perfect Your Routine",
         ctaUrl: "/skincare-guides"
       }
     ]
@@ -329,12 +433,18 @@ export default function WebStoriesPage() {
   return (
     <>
       <div className="container mx-auto px-4 py-8">
+        {/* Top Banner Ad */}
+        <BannerAd className="mb-6" />
+        
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Web Stories</h1>
           <p className="text-muted-foreground">
             Quick, visual skincare tips and tutorials in story format
           </p>
         </div>
+        
+        {/* Display Ad before content */}
+        <DisplayAd className="mb-6" />
 
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {stories.map((story, index) => (
@@ -392,6 +502,9 @@ export default function WebStoriesPage() {
             </p>
           </div>
         )}
+        
+        {/* Strategic ad placement */}
+        <AdSlot variant="between-sections" className="mt-8" />
       </div>
 
       <WebStoriesViewer

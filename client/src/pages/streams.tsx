@@ -3,6 +3,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { AudioPlayer, AudioPlayerSkeleton } from "@/components/audio/audio-player";
 import { DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
+import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";

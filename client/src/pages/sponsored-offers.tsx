@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink, Clock, Percent } from "lucide-react";
 import { Deal } from "@shared/schema";
 import { BannerAd, DisplayAd } from "@/components/ads/adsense-block";
+import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
 
 export default function SponsoredOffersPage() {
   const { data: offers, isLoading } = useQuery<Deal[]>({
@@ -50,6 +51,9 @@ export default function SponsoredOffersPage() {
           Exclusive deals on skincare products from trusted South African brands
         </p>
       </div>
+
+      {/* Featured section ad */}
+      <AdSlot variant="between-sections" className="mb-6" />
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {offers?.map((offer) => (
