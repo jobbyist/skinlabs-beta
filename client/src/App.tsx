@@ -14,6 +14,7 @@ import OfflineIndicator from "@/components/mobile/offline-indicator";
 import LaunchPromotionPopup from "@/components/launch-promotion-popup";
 import LaunchBanner from "@/components/mobile/launch-banner";
 import CookieConsent from "@/components/cookie-consent";
+// Removed ad injection and scroll hooks for clean setup
 
 import Home from "@/pages/home";
 import Auth from "@/pages/auth";
@@ -30,8 +31,14 @@ import Streams from "@/pages/streams";
 import TermsOfService from "@/pages/terms-of-service";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import CookiePolicy from "@/pages/cookie-policy";
+import Advertise from "@/pages/advertise";
+import Chatbot from "@/pages/chatbot";
+import SkinQuiz from "@/pages/skin-quiz";
+
+// Brand pages will be added as needed
 
 function Router() {
+  
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -48,6 +55,10 @@ function Router() {
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/cookie-policy" component={CookiePolicy} />
+      <Route path="/advertise" component={Advertise} />
+      <Route path="/chatbot" component={Chatbot} />
+      <Route path="/skin-quiz" component={SkinQuiz} />
+      
       <Route component={NotFound} />
     </Switch>
   );
@@ -75,7 +86,6 @@ function App() {
             <LaunchBanner />
             <MobileHeader />
             <Router />
-            <AIChatbot />
             <InstallPrompt />
             <MobileNavigation />
             <OfflineIndicator />

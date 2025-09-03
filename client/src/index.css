@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* Font already loaded in HTML with display=swap for better performance */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -66,6 +66,16 @@
     body {
       padding-bottom: env(safe-area-inset-bottom);
     }
+  }
+  
+  /* Performance optimizations */
+  img {
+    content-visibility: auto;
+  }
+  
+  /* Prevent layout shifts from images */
+  img[width][height] {
+    height: auto;
   }
 }
 

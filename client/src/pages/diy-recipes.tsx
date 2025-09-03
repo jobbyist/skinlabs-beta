@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Clock, ChefHat, Users, Bookmark } from "lucide-react";
 import { Link } from "wouter";
 import { DiyRecipe } from "@shared/schema";
+import { BannerAd, DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
 export default function DiyRecipesPage() {
   const { data: recipes, isLoading } = useQuery<DiyRecipe[]>({
@@ -37,12 +39,18 @@ export default function DiyRecipesPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Top Banner Ad */}
+      <BannerAd className="mb-6" />
+      
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">DIY Skincare Recipes</h1>
         <p className="text-muted-foreground">
           Natural, homemade skincare recipes using ingredients available in South Africa
         </p>
       </div>
+
+      {/* Display Ad before recipes */}
+      {/* AdSlot placeholder */}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {recipes?.map((recipe) => (
@@ -138,6 +146,9 @@ export default function DiyRecipesPage() {
           </p>
         </div>
       ) : null}
+      
+      {/* Bottom In-Article Ad */}
+      <InArticleAd className="mt-8" />
     </div>
   );
 }

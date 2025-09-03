@@ -12,6 +12,8 @@ import { WaitingListModal } from "@/components/waiting-list-modal";
 import { ContentGuard } from "@/components/auth/content-guard";
 import { AutoCarousel } from "@/components/ui/auto-carousel";
 import { BannerAd, DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
+import { LazySection } from "@/components/lazy-section";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,13 +21,38 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 
 import { Search, Crown, WandSparkles, ShoppingBag, Star, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
-import cashbackVideo from "@assets/gemini_generated_video_A5F38BC6_1756339733830.mov";
+// import "/placeholder-image.jpg" from "@assets/IMG_3791_1756353075473.jpeg";
 import { PollWidget } from "@/components/poll-widget";
+import { WebStory } from "@/components/web-story";
+
+// Brand Images
+// import undefined from "@assets/thumbnailsquare - 10_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 9_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 8_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 5_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 7_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 6_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 4_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 3_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 2_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 5_1756402547109.png";
+
+// Hero Image
+// import undefined from "@assets/skynnhero_1756403170171.png";
+
+// Web Story Images
+// import undefined from "@assets/037EA6CA-675D-4F71-8669-2B058DF323F1_1756413442879.png";
+// import undefined from "@assets/EB26ADF9-4E9B-45DC-9A5F-56C3AB913189_1756413442880.png";
+// import undefined from "@assets/DAE27A1E-7390-4271-B19C-C1F3C955D29B_1756413442880.png";
+// import undefined from "@assets/533E83A4-FA45-44F2-A1CB-3F3733439C5F_1756413442880.png";
+// import undefined from "@assets/C2201DB5-9BD6-4C81-AD9A-4CBAE147D3E2_1756413442880.png";
+// import undefined from "@assets/E702A928-40DF-4601-BCB0-77CE612A4245_1756413878813.png";
+// import undefined from "@assets/E4E1A636-4DD3-4275-8B34-76CBA5D07679_1756413878813.png";
 
 import type { Article, Deal } from "@shared/schema";
 
 export default function Home() {
-  const { user, isSignedIn: isAuthenticated } = useAuth();
+  const { isSignedIn: isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -56,11 +83,11 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 dark:from-background dark:via-blue-950/10 dark:to-purple-950/10">
       <Header />
-      <main className="max-w-skynn mx-auto px-4 py-6">
+      <main className="max-w-skynn mx-auto px-4 py-4">
         {/* Hero Section */}
-        <section className="mb-8">
+        <section className="mb-6">
           <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950/20 dark:via-background dark:to-purple-950/20 rounded-xl p-6">
             <div className="grid md:grid-cols-2 gap-6 items-center">
               <div>
@@ -89,7 +116,16 @@ export default function Home() {
                       data-testid="search-input"
                     />
                   </div>
-                  <Button size="lg" data-testid="search-button">
+                  <Button 
+                    size="lg" 
+                    data-testid="search-button"
+                    onClick={() => {
+                      if (searchQuery.trim()) {
+                        const element = document.getElementById('filtered-results');
+                        element?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                  >
                     <Search className="w-4 h-4" />
                   </Button>
                 </div>
@@ -117,6 +153,16 @@ export default function Home() {
                         <Crown className="w-4 h-4 mr-2" />
                         Go to Dashboard
                       </Button>
+                      <Button 
+                        onClick={() => setLocation("/skin-quiz")} 
+                        size="lg" 
+                        variant="outline"
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
+                        data-testid="skin-quiz-button"
+                      >
+                        <WandSparkles className="w-4 h-4 mr-2" />
+                        Take AI Skin Quiz
+                      </Button>
                       {user?.subscriptionStatus === "trial" && (
                         <Button variant="outline" onClick={() => setShowAuthModal(true)} size="lg" data-testid="upgrade-button">
                           Upgrade to Premium
@@ -129,9 +175,15 @@ export default function Home() {
                         <Crown className="w-4 h-4 mr-2" />
                         Join Now
                       </Button>
-                      <Button variant="outline" onClick={() => setShowAuthModal(true)} size="lg" data-testid="profile-button">
+                      <Button 
+                        onClick={() => setLocation("/skin-quiz")} 
+                        size="lg" 
+                        variant="outline"
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
+                        data-testid="skin-quiz-button"
+                      >
                         <WandSparkles className="w-4 h-4 mr-2" />
-                        Complete Skin Profile
+                        Take AI Skin Quiz
                       </Button>
                     </>
                   )}
@@ -142,8 +194,11 @@ export default function Home() {
                 {/* Hero Image - High-quality skincare visual */}
                 <div className="relative rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-                    alt="Beautiful woman applying skincare products with glowing healthy skin"
+                    src={undefined}
+                    alt="Diverse group of women with beautiful skin representing inclusive skincare"
+                    width={1920}
+                    height={320}
+                    loading="eager"
                     className="w-full h-80 object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -170,10 +225,10 @@ export default function Home() {
         </section>
 
         {/* Top Banner Advertisement */}
-        <BannerAd className="mb-8" />
+        <BannerAd className="mb-6" />
 
         {/* Sponsored Offers */}
-        <section className="mb-8">
+        <section className="mb-6">
           <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-purple-950/20 dark:via-background dark:to-pink-950/20 rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">Sponsored Offers</h2>
@@ -223,7 +278,7 @@ export default function Home() {
         </section>
 
         {/* Brand Spotlight */}
-        <section className="mb-8">
+        <section className="mb-6">
           <div className="bg-gradient-to-br from-amber-50 via-white to-yellow-50 dark:from-amber-950/20 dark:via-background dark:to-yellow-950/20 rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">Brand Spotlight</h2>
@@ -240,97 +295,199 @@ export default function Home() {
               className="w-full"
             >
               {[
-                { id: "brand-1", name: "SKOON Skincare", tagline: "Clean beauty, conscious living", image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=400", description: "Award-winning sustainable skincare from Cape Town" },
-                { id: "brand-2", name: "Standard Beauty", tagline: "Setting new standards", image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400", description: "Premium African botanicals for modern skincare" },
-                { id: "brand-3", name: "Lumi Glo", tagline: "Your glow, amplified", image: "https://images.unsplash.com/photo-1620756235108-7d8d27d7ca43?w=400", description: "Science-backed formulations for melanin-rich skin" },
-                { id: "brand-4", name: "Beauty on TApp", tagline: "Beauty at your fingertips", image: "https://images.unsplash.com/photo-1556228852-80b2b6411f08?w=400", description: "Digital-first beauty brand revolutionizing access" },
-                { id: "brand-5", name: "Lelive", tagline: "Live beautifully", image: "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=400", description: "Natural African ingredients meet modern science" },
-                { id: "brand-6", name: "African Botanics", tagline: "Luxury from Africa", image: "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=400", description: "Ultra-luxury skincare with African heritage" },
-                { id: "brand-7", name: "Africology", tagline: "Naturally African", image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400", description: "Spa-quality products inspired by African wellness" },
-                { id: "brand-8", name: "Kuro", tagline: "Bold beauty", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400", description: "Innovative formulas for the modern African woman" },
-                { id: "brand-9", name: "Suki Suki Naturals", tagline: "Nature's touch", image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400", description: "100% natural ingredients sourced locally" },
-                { id: "brand-10", name: "Zuri", tagline: "Beautiful in every shade", image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400", description: "Inclusive beauty celebrating African diversity" }
+                { id: "terres-dafrique", name: "TERRES D'AFRIQUE", tagline: "African heritage meets luxury", image: "/placeholder.jpg", description: "Premium African-inspired skincare celebrating natural beauty", url: "https://terresdafrique.com" },
+                { id: "smooch", name: "SMOOCH", tagline: "Beauty that makes you smile", image: "/placeholder.jpg", description: "Award-winning radiance serums and glow-inducing skincare", url: "https://smoochbeauty.com" },
+                { id: "enough", name: "ENOUGH.", tagline: "Sustainable beauty redefined", image: "/placeholder.jpg", description: "Zero-waste skincare from upcycled coffee grounds", url: "https://enough.beauty" },
+                { id: "lelive", name: "Lelive Africa", tagline: "Live beautifully", image: "/placeholder.jpg", description: "Natural African ingredients meet modern science", url: "https://leliveafrica.com" },
+                { id: "sundae", name: "Sundae Skin Co.", tagline: "Sweet treats for your skin", image: "/placeholder.jpg", description: "Playful, effective skincare that feels like dessert", url: "https://sundaeskin.com" },
+                { id: "gloei", name: "Gloei", tagline: "Glow from within", image: "/placeholder.jpg", description: "Clean beauty formulations for radiant skin", url: "https://gloei.co.za" },
+                { id: "yearnskin", name: "Yearn Skin", tagline: "Your skin's deepest desires", image: "/placeholder.jpg", description: "Luxurious treatments for skin that yearns to glow", url: "https://yearnskin.com" },
+                { id: "silki", name: "Silki", tagline: "Smooth as silk", image: "/placeholder.jpg", description: "Silk-infused skincare for ultimate smoothness", url: "https://silki.co.za" },
+                { id: "standard", name: "Standard Beauty", tagline: "Affordable skincare that works™", image: "/placeholder.jpg", description: "Setting the standard for effective, accessible beauty", url: "https://standardbeauty.co.za" },
+                { id: "skoon", name: "SKOON. Skincare", tagline: "Clean beauty, conscious living", image: "/placeholder.jpg", description: "Award-winning sustainable skincare from Cape Town", url: "https://skoonskincare.com" }
               ].map((brand) => (
-                <div key={brand.id} className="bg-white dark:bg-card rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                  <img
-                    src={brand.image}
-                    alt={brand.name}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                  <div className="p-4">
-                    <h3 className="font-semibold text-sm mb-1">{brand.name}</h3>
-                    <p className="text-xs text-primary mb-2">{brand.tagline}</p>
-                    <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">{brand.description}</p>
-                    <Button variant="ghost" size="sm" className="mt-3 w-full">
-                      Explore Brand →
-                    </Button>
+                <Link key={brand.id} href={`/brands/${brand.id}`}>
+                  <div className="bg-white dark:bg-card rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <img
+                      src={brand.image}
+                      alt={brand.name}
+                      className="w-full h-48 object-cover rounded-t-lg"
+                    />
+                    <div className="p-4">
+                      <h3 className="font-semibold text-sm mb-1">{brand.name}</h3>
+                      <p className="text-xs text-primary mb-2">{brand.tagline}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">{brand.description}</p>
+                      <Button variant="ghost" size="sm" className="mt-3 w-full">
+                        Explore Brand →
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </AutoCarousel>
           </div>
         </section>
 
         {/* Mid-page Display Ad */}
-        <DisplayAd className="my-8" />
+        <DisplayAd className="my-6" />
+
+        {/* Search Results */}
+        {searchQuery.trim() && (
+          <section id="filtered-results" className="mb-6">
+            <div className="bg-white dark:bg-card rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+              <h2 className="text-xl font-bold mb-4">
+                Search Results for "{searchQuery}" ({filteredArticles.length} found)
+              </h2>
+              {filteredArticles.length > 0 ? (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredArticles.slice(0, 6).map((article) => (
+                    <ArticleCard key={article.id} article={article} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No articles found matching your search.</p>
+                  <Button variant="outline" onClick={() => setSearchQuery("")} className="mt-4">
+                    Clear Search
+                  </Button>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Featured Content */}
-            <section className="mb-8">
-              <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/20 dark:via-background dark:to-indigo-950/20 rounded-xl p-6">
+            {/* Featured Stories */}
+            <section className="mb-6">
+              <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-purple-950/20 dark:via-background dark:to-pink-950/20 rounded-xl p-4 sm:p-6 mx-2 sm:mx-0">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold">Recommended for You</h2>
-                  <Button variant="ghost" size="sm">View All</Button>
+                  <h2 className="text-lg sm:text-xl font-bold">Featured Stories</h2>
+                  <Badge variant="secondary">New Episodes</Badge>
                 </div>
                 
-                <div className="text-sm text-muted-foreground mb-4">
-                  {isAuthenticated ? "Based on your skin profile and reading history" : "Popular content from our community"}
+                <div className="text-xs sm:text-sm text-muted-foreground mb-4">
+                  Watch quick skincare tips and tutorials in our Instagram-style stories
                 </div>
                 
                 <AutoCarousel 
-                  autoPlayInterval={5000}
-                  itemsPerView={{ mobile: 1, tablet: 2, desktop: 3 }}
+                  autoPlayInterval={7000}
+                  itemsPerView={{ mobile: 2, tablet: 3, desktop: 5 }}
                   className="w-full"
                 >
                   {[
-                    { id: "rec-1", title: "Morning Skincare Routine", category: "Guides", image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400", description: "Start your day with the perfect morning routine" },
-                    { id: "rec-2", title: "Understanding Retinol", category: "Ingredients", image: "https://images.unsplash.com/photo-1570194065650-d99fb4b38e39?w=400", description: "Everything you need to know about retinol usage" },
-                    { id: "rec-3", title: "Best SPF for Dark Skin", category: "Reviews", image: "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400", description: "Top sunscreens that don't leave white cast" },
-                    { id: "rec-4", title: "Acne Treatment Guide", category: "Guides", image: "https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=400", description: "Complete guide to treating different types of acne" },
-                    { id: "rec-5", title: "Vitamin C Benefits", category: "Ingredients", image: "https://images.unsplash.com/photo-1609097162027-cd6dba5accef?w=400", description: "How Vitamin C brightens and protects your skin" },
-                    { id: "rec-6", title: "Winter Skin Care", category: "Seasonal", image: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=400", description: "Keep your skin hydrated during cold months" },
-                    { id: "rec-7", title: "K-Beauty Essentials", category: "Trends", image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400", description: "Must-have products from Korean skincare" },
-                    { id: "rec-8", title: "Natural Ingredients", category: "Natural", image: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=400", description: "Powerful natural ingredients for your skin" }
-                  ].map((item) => (
-                    <div key={item.id} className="bg-white dark:bg-card rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-48 object-cover rounded-t-lg"
-                      />
-                      <div className="p-4">
-                        <Badge variant="outline" className="mb-2 text-xs">{item.category}</Badge>
-                        <h3 className="font-semibold text-sm mb-2 line-clamp-2 min-h-[2.5rem]">{item.title}</h3>
-                        <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">{item.description}</p>
-                        <Button variant="ghost" size="sm" className="mt-3 w-full">
-                          Read More →
-                        </Button>
-                      </div>
-                    </div>
+                    { 
+                      id: "story-1", 
+                      title: "The Ultimate Playbook", 
+                      subtitle: "Everything you need to build your skincare brand from scratch in 2025",
+                      image: "/placeholder.jpg",
+                      views: 15234,
+                      category: "Playbook",
+                      ctaText: "Get the Playbook",
+                      ctaLink: "https://gumroad.com/l/skynn-playbook",
+                      keywords: ["skincare brand", "business guide", "2025 skincare", "startup"]
+                    },
+                    { 
+                      id: "story-2", 
+                      title: "The SKINDEEP Podcast Series", 
+                      subtitle: "A deep dive into everything skincare",
+                      image: "/placeholder.jpg",
+                      views: 8756,
+                      category: "Podcast",
+                      ctaText: "Listen Now",
+                      ctaLink: "https://spotify.com/show/skindeep-podcast",
+                      keywords: ["skincare podcast", "beauty podcast", "skin health", "expert advice"]
+                    },
+                    { 
+                      id: "story-3", 
+                      title: "Summer to Fall", 
+                      subtitle: "Your skin's seasonal transition survival guide",
+                      image: "/placeholder.jpg",
+                      views: 12890,
+                      category: "Seasonal",
+                      ctaText: "Read Full Guide",
+                      ctaLink: "/articles/seasonal-skincare-guide",
+                      keywords: ["seasonal skincare", "fall skincare", "skin transition", "weather change"]
+                    },
+                    { 
+                      id: "story-4", 
+                      title: "Acne SOS", 
+                      subtitle: "Your 30-day clear skin action plan",
+                      image: "/placeholder.jpg",
+                      views: 25678,
+                      category: "30-Day Plan",
+                      ctaText: "Start Your Journey",
+                      ctaLink: "/programs/30-day-acne-plan",
+                      keywords: ["acne treatment", "clear skin", "30 day challenge", "acne plan"]
+                    },
+                    { 
+                      id: "story-5", 
+                      title: "The Busy Professional's 3-Step Glow Routine", 
+                      subtitle: "Get glowing skin in just 3 simple steps",
+                      image: "/placeholder.jpg",
+                      views: 9345,
+                      category: "3-Step Routine",
+                      ctaText: "Shop Products",
+                      ctaLink: "https://amzn.to/3-step-glow-kit",
+                      keywords: ["quick skincare", "professional routine", "glow routine", "3 steps"]
+                    },
+                    { 
+                      id: "story-6", 
+                      title: "Anti-Aging Secrets", 
+                      subtitle: "Skincare tips for women over 30",
+                      image: "/placeholder.jpg",
+                      views: 18923,
+                      category: "For Women Over 30",
+                      ctaText: "Discover Secrets",
+                      ctaLink: "/articles/anti-aging-over-30",
+                      keywords: ["anti aging", "over 30 skincare", "wrinkle prevention", "mature skin"]
+                    },
+                    { 
+                      id: "story-7", 
+                      title: "Natural vs Chemical", 
+                      subtitle: "The great skincare ingredient debate",
+                      image: "/placeholder.jpg",
+                      views: 14567,
+                      category: "The Great Skincare",
+                      ctaText: "Join the Debate",
+                      ctaLink: "/community/natural-vs-chemical",
+                      keywords: ["natural skincare", "chemical ingredients", "ingredient analysis", "skincare debate"]
+                    }
+                  ].map((story) => (
+                    <WebStory
+                      key={story.id}
+                      id={story.id}
+                      title={story.title}
+                      subtitle={story.subtitle}
+                      image={story.image}
+                      views={story.views}
+                      category={story.category}
+                      duration={15}
+                      ctaText={story.ctaText}
+                      ctaLink={story.ctaLink}
+                      keywords={story.keywords}
+                      publisher="SKYNN"
+                      datePublished={new Date().toISOString()}
+                    />
                   ))}
                 </AutoCarousel>
               </div>
             </section>
 
             {/* In-feed Advertisement */}
-            <InArticleAd className="my-6" />
+            {/* AdSlot placeholder */}
 
             {/* Poll of the Week */}
-            <section className="mb-8">
-              <PollWidget />
+            <section className="mb-6 px-4 sm:px-6 lg:px-8">
+              <div className="max-w-lg mx-auto">
+                <PollWidget />
+              </div>
             </section>
+            
+            {/* Shopify Affiliate Banner */}
+            {/* ShopifyAffiliateBanner placeholder */}
           </div>
 
           {/* Sidebar */}
@@ -383,7 +540,7 @@ export default function Home() {
             )}
 
             {/* Quick Actions */}
-            <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-green-950/20 dark:via-background dark:to-emerald-950/20 rounded-xl p-3 mx-2 lg:mx-0 lg:p-6">
+            <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-green-950/20 dark:via-background dark:to-emerald-950/20 rounded-xl p-3 mx-3 sm:mx-2 lg:mx-0 lg:p-6 max-w-sm lg:max-w-none">
               <h3 className="font-bold mb-3 text-center lg:text-left text-sm lg:text-base">Quick Actions</h3>
               <div className="grid grid-cols-1 gap-2 lg:gap-3">
                 <Button 
@@ -430,15 +587,12 @@ export default function Home() {
             </div>
             
             {/* Video Container */}
-            <div className="aspect-video w-full max-w-2xl mx-auto mb-6 rounded-lg overflow-hidden bg-black">
-              <video 
+            <div className="aspect-video w-full max-w-2xl mx-auto mb-6 rounded-lg overflow-hidden bg-gradient-to-br from-orange-100 to-pink-100 dark:from-orange-900/20 dark:to-pink-900/20">
+              <img 
+                src="/placeholder-image.jpg"
+                alt="SKYNN Cashback Rewards Card - Save on skincare purchases"
                 className="w-full h-full object-cover"
-                controls
-                poster="https://images.unsplash.com/photo-1556742111-a301076d9d18?w=800"
-              >
-                <source src={cashbackVideo} type="video/quicktime" />
-                Your browser does not support the video tag.
-              </video>
+              />
             </div>
             
             {/* CTA Button */}

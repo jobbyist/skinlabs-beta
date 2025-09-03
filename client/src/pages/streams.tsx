@@ -3,24 +3,25 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { AudioPlayer, AudioPlayerSkeleton } from "@/components/audio/audio-player";
 import { DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, Headphones, TrendingUp, Clock, Sparkles } from "lucide-react";
 
 // Import attached assets
-import digitalBlueprintThumbnail from "@assets/IMG_3690_1756311502448.png";
-import digitalBlueprintAudio from "@assets/SKYNNs_Digital_Blueprint_Unpacking_Africas_Booming_Beauty_Market_with_AI_and_Community_1756311223685.mp3";
-import episode1Thumbnail from "@assets/IMG_3749_1756347228949.png";
-import episode1Audio from "@assets/Ep 1 - Beef_Tallow_Skincare_Miracle_or_Major_Risk_Unpacking_the_TikTok_Trend_1756347209563.mp3";
-import episode2Thumbnail from "@assets/IMG_3750_1756347603789.png";
-import episode2Audio from "@assets/Ep 2 - Skincare Fails_Hall_of_Fame_Dodgy_Brands_User_Errors_and_How_to_Protect_Your_Skin_1756347510939.mp3";
-import episode3Thumbnail from "@assets/IMG_3751_1756347699113.png";
-import episode3Audio from "@assets/Ep. 3 Glass Skin vs Grass Skin - The Truth About Viral Skincare Trends_1756347653324.mp3";
-import episode4Thumbnail from "@assets/IMG_3752_1756347764521.jpeg";
-import episode4Audio from "@assets/Ep 4 - Skincare_Chemistry_Class_Layering_Secrets_for_Glowing_Healthy_Skin_1756347772452.mp3";
-import episode5Thumbnail from "@assets/IMG_3765_1756347863214.jpeg";
-import episode5Audio from "@assets/Ep 5 Skincare_Showdown_Are_Luxury_Dupes_Actually_Better_1756348009784.mp3";
+// import "/placeholder-thumbnail.jpg" from "@assets/IMG_3690_1756311502448.png";
+// import "/placeholder-audio.mp3" from "@assets/SKYNNs_Digital_Blueprint_Unpacking_Africas_Booming_Beauty_Market_with_AI_and_Community_1756311223685.mp3";
+// import "/placeholder-thumbnail.jpg" from "@assets/IMG_3749_1756347228949.png";
+// import "/placeholder-audio.mp3" from "@assets/Ep 1 - Beef_Tallow_Skincare_Miracle_or_Major_Risk_Unpacking_the_TikTok_Trend_1756347209563.mp3";
+// import "/placeholder-thumbnail.jpg" from "@assets/IMG_3750_1756347603789.png";
+// import "/placeholder-audio.mp3" from "@assets/Ep 2 - Skincare Fails_Hall_of_Fame_Dodgy_Brands_User_Errors_and_How_to_Protect_Your_Skin_1756347510939.mp3";
+// import "/placeholder-thumbnail.jpg" from "@assets/IMG_3751_1756347699113.png";
+// import "/placeholder-audio.mp3" from "@assets/Ep. 3 Glass Skin vs Grass Skin - The Truth About Viral Skincare Trends_1756347653324.mp3";
+// import "/placeholder-thumbnail.jpg" from "@assets/IMG_3752_1756347764521.jpeg";
+// import "/placeholder-audio.mp3" from "@assets/Ep 4 - Skincare_Chemistry_Class_Layering_Secrets_for_Glowing_Healthy_Skin_1756347772452.mp3";
+// import "/placeholder-thumbnail.jpg" from "@assets/IMG_3765_1756347863214.jpeg";
+// import "/placeholder-audio.mp3" from "@assets/Ep 5 Skincare_Showdown_Are_Luxury_Dupes_Actually_Better_1756348009784.mp3";
 
 interface StreamEpisode {
   id: string;
@@ -45,8 +46,8 @@ const mockEpisodes: StreamEpisode[] = [
     episodeNumber: 1,
     title: "Episode 1: Beef Tallow & Salmon Sperm - When Skincare Gets Weird (But Works?)",
     description: "Explore the unconventional world of bizarre skincare ingredients that are taking social media by storm. We dive deep into the science behind beef tallow, salmon sperm, and other unexpected ingredients that might just revolutionize your skincare routine.",
-    audioUrl: episode1Audio,
-    thumbnailUrl: episode1Thumbnail,
+    audioUrl: "/placeholder-audio.mp3",
+    thumbnailUrl: "/placeholder-thumbnail.jpg",
     duration: "18:45",
     publishDate: "Today",
     category: "Beauty Trends",
@@ -61,8 +62,8 @@ const mockEpisodes: StreamEpisode[] = [
     episodeNumber: 0,
     title: "SKYNN's Digital Blueprint: Unpacking Africa's Booming Beauty Market with AI and Community",
     description: "Join us as we unpack Africa's booming beauty market with AI and community-driven insights. Discover how SKYNN is revolutionizing skincare for African consumers.",
-    audioUrl: digitalBlueprintAudio,
-    thumbnailUrl: digitalBlueprintThumbnail,
+    audioUrl: "/placeholder-audio.mp3",
+    thumbnailUrl: "/placeholder-thumbnail.jpg",
     duration: "15:30",
     publishDate: "2 days ago",
     category: "Platform Launch",
@@ -77,8 +78,8 @@ const mockEpisodes: StreamEpisode[] = [
     episodeNumber: 2,
     title: "Episode 2: Skincare Fails Hall of Fame - Products That Made Us Question Everything",
     description: "We're spilling the tea on the most notorious skincare disasters, dodgy brands, and user errors that left us questioning everything. Learn how to protect your skin from products that promise miracles but deliver mayhem.",
-    audioUrl: episode2Audio,
-    thumbnailUrl: episode2Thumbnail,
+    audioUrl: "/placeholder-audio.mp3",
+    thumbnailUrl: "/placeholder-thumbnail.jpg",
     duration: "21:15",
     publishDate: "1 day ago",
     category: "Beauty Fails",
@@ -93,8 +94,8 @@ const mockEpisodes: StreamEpisode[] = [
     episodeNumber: 3,
     title: "Episode 3: Glass Skin or Grass Skin? Decoding Viral Skincare Goals",
     description: "We're breaking down the viral skincare trends dominating social media. From the coveted glass skin look to the controversial grass skin movement, we explore what these beauty goals really mean and whether they're achievable for all skin types.",
-    audioUrl: episode3Audio,
-    thumbnailUrl: episode3Thumbnail,
+    audioUrl: "/placeholder-audio.mp3",
+    thumbnailUrl: "/placeholder-thumbnail.jpg",
     duration: "19:30",
     publishDate: "2 hours ago",
     category: "Beauty Trends",
@@ -109,8 +110,8 @@ const mockEpisodes: StreamEpisode[] = [
     episodeNumber: 4,
     title: "Episode 4: Ingredient Drama - When Skincare Products Fight Each Other",
     description: "Chemistry class is in session! We're diving deep into the science of skincare layering, revealing which ingredients play nicely together and which combinations can turn your routine into a skin disaster. Master the art of layering for glowing, healthy skin.",
-    audioUrl: episode4Audio,
-    thumbnailUrl: episode4Thumbnail,
+    audioUrl: "/placeholder-audio.mp3",
+    thumbnailUrl: "/placeholder-thumbnail.jpg",
     duration: "23:12",
     publishDate: "30 minutes ago",
     category: "Skincare Science",
@@ -125,8 +126,8 @@ const mockEpisodes: StreamEpisode[] = [
     episodeNumber: 5,
     title: "Episode 5: The $500 Moisturizer vs. Drugstore Dupe Showdown",
     description: "We're putting luxury skincare to the ultimate test! Watch us compare high-end products with their budget-friendly dupes to see if expensive really means better. Spoiler alert: the results might surprise you.",
-    audioUrl: episode5Audio,
-    thumbnailUrl: episode5Thumbnail,
+    audioUrl: "/placeholder-audio.mp3",
+    thumbnailUrl: "/placeholder-thumbnail.jpg",
     duration: "26:45",
     publishDate: "15 minutes ago",
     category: "Product Reviews",

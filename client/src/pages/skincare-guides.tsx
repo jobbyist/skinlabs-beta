@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Clock, Eye, Bookmark, User } from "lucide-react";
 import { Link } from "wouter";
 import { Article } from "@shared/schema";
+import { BannerAd, InArticleAd, DisplayAd } from "@/components/ads/adsense-block";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
 export default function SkincareGuidesPage() {
   const { data: guides, isLoading } = useQuery<Article[]>({
@@ -29,6 +31,9 @@ export default function SkincareGuidesPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Top Banner Ad */}
+      <BannerAd className="mb-6" />
+      
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Skincare Guides</h1>
         <p className="text-muted-foreground">
@@ -36,6 +41,9 @@ export default function SkincareGuidesPage() {
         </p>
       </div>
 
+      {/* Display Ad before content */}
+      {/* AdSlot placeholder */}
+      
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {guides?.map((guide) => (
           <Card key={guide.id} className="overflow-hidden hover:shadow-lg transition-shadow group">
@@ -123,6 +131,9 @@ export default function SkincareGuidesPage() {
           </p>
         </div>
       ) : null}
+      
+      {/* Bottom In-Article Ad */}
+      <InArticleAd className="mt-8" />
     </div>
   );
 }

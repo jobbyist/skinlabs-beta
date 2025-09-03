@@ -28,9 +28,11 @@ import {
   Users
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@clerk/clerk-react';
 import { formatDistanceToNow } from 'date-fns';
 import type { ForumTopic, ForumCategory, InsertForumTopic } from '@shared/schema';
+import { BannerAd, DisplayAd, InArticleAd } from '@/components/ads/adsense-block';
+// import { AdSlot, ShopifyAffiliateBanner } from '@/components/ads/ad-slot'; // Temporarily disabled
 
 interface ForumTopicWithUser extends ForumTopic {
   author: {
@@ -248,6 +250,9 @@ export default function CommunityForumPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 p-4">
       <div className="max-w-7xl mx-auto">
+        {/* Top Banner Ad */}
+        <BannerAd className="mb-6" />
+        
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
@@ -420,6 +425,9 @@ export default function CommunityForumPage() {
 
           {/* Main Content - Topics List */}
           <div className="lg:col-span-3">
+            {/* Display Ad before topics */}
+            {/* AdSlot placeholder */}
+            
             <div className="space-y-4">
               {filteredTopics.map((topic) => (
                 <Card key={topic.id} className="hover:shadow-md transition-shadow">
@@ -510,6 +518,9 @@ export default function CommunityForumPage() {
                   </CardContent>
                 </Card>
               )}
+              
+              {/* Bottom In-Article Ad */}
+              <InArticleAd className="mt-6" />
             </div>
           </div>
         </div>

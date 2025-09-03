@@ -7,6 +7,7 @@ import { z } from "zod";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import { sendTrialExpirationNotification } from "./sendgrid";
 import { chatWithSKYNN } from "./openai";
+import { analyzeSkinQuiz, generateSkincareAdvice } from "./ai";
 
 // Use the Clerk-based auth middleware
 const authenticateToken = requireAuth;
@@ -72,11 +73,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ message: "Vote recorded successfully" });
   });
   
+  // Advertising consultation booking
+  app.post('/api/advertising/consultation', async (req: Request, res: Response) => {
+    try {
+      const { name, email, company, phone, serviceType, budget, campaignDetails, preferredDate, agreeToTerms } = req.body;
+      
+      // Basic validation
+      if (!name || !email || !company || !serviceType || !budget || !campaignDetails || !preferredDate || !agreeToTerms) {
+        return res.status(400).json({ message: "All required fields must be provided" });
+      }
+      
+      // In production, save to database and send email notification
+      console.log('New advertising consultation request:', {
+        name, email, company, phone, serviceType, budget, campaignDetails, preferredDate
+      });
+      
+      res.json({ message: "Consultation request submitted successfully", id: Date.now().toString() });
+    } catch (error) {
+      console.error("Error submitting consultation request:", error);
+      res.status(500).json({ message: "Failed to submit consultation request" });
+    }
+  });
+
   // AI Chat API
-  app.post('/api/chat/skynn', authenticateToken, async (req: Request, res: Response) => {
+  app.post('/api/chat/skynn', optionalAuth, async (req: Request, res: Response) => {
     try {
       const { message } = req.body;
-      const userId = (req as any).user?.userId;
+      const userId = (req as any).user?.userId || null;
       
       if (!message) {
         return res.status(400).json({ message: "Message is required" });
@@ -390,6 +413,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Deal like/dislike endpoints
+  app.post('/api/deals/:dealId/like', authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const { dealId } = req.params;
+      const userId = (req as any).user.userId;
+      
+      await storage.likeDeal(dealId, userId, true);
+      res.json({ message: 'Deal liked successfully' });
+    } catch (error) {
+      console.error('Like deal error:', error);
+      res.status(500).json({ message: 'Failed to like deal' });
+    }
+  });
+
+  app.post('/api/deals/:dealId/dislike', authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const { dealId } = req.params;
+      const userId = (req as any).user.userId;
+      
+      await storage.likeDeal(dealId, userId, false);
+      res.json({ message: 'Deal disliked successfully' });
+    } catch (error) {
+      console.error('Dislike deal error:', error);
+      res.status(500).json({ message: 'Failed to dislike deal' });
+    }
+  });
+
+  app.delete('/api/deals/:dealId/like', authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const { dealId } = req.params;
+      const userId = (req as any).user.userId;
+      
+      await storage.removeDealLike(dealId, userId);
+      res.json({ message: 'Deal reaction removed successfully' });
+    } catch (error) {
+      console.error('Remove deal like error:', error);
+      res.status(500).json({ message: 'Failed to remove reaction' });
+    }
+  });
+
   // Saved articles routes
   app.get('/api/user/saved-articles', authenticateToken, async (req: Request, res: Response) => {
     try {
@@ -501,41 +564,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error('Registration with payment error:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-
-  // User Profile API
-  app.get('/api/user/profile', authenticateToken, async (req: Request, res: Response) => {
-    try {
-      const user = await storage.getUserById(req.user.userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-
-  app.put('/api/user/profile', authenticateToken, async (req: Request, res: Response) => {
-    try {
-      const { firstName, lastName, username, phoneNumber, bio, dateOfBirth } = req.body;
-      
-      const updatedUser = await storage.updateUser(req.user.userId, {
-        firstName,
-        lastName,
-        username,
-        phoneNumber,
-        bio,
-        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
-        updatedAt: new Date()
-      });
-      
-      res.json(updatedUser);
-    } catch (error) {
-      console.error("Error updating user profile:", error);
       res.status(500).json({ message: 'Internal server error' });
     }
   });
@@ -808,6 +836,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ====================
+  // AI ENDPOINTS
+  // ====================
+  
+  // Analyze skin quiz
+  app.post('/api/ai/skin-quiz', async (req: Request, res: Response) => {
+    try {
+      const { answers } = req.body;
+      const recommendations = await analyzeSkinQuiz(answers);
+      res.json(recommendations);
+    } catch (error) {
+      console.error('Error analyzing skin quiz:', error);
+      res.status(500).json({ message: 'Failed to analyze quiz' });
+    }
+  });
+
+  // Generate skincare advice
+  app.post('/api/ai/skincare-advice', async (req: Request, res: Response) => {
+    try {
+      const { query, context } = req.body;
+      const advice = await generateSkincareAdvice(query, context);
+      res.json({ advice });
+    } catch (error) {
+      console.error('Error generating advice:', error);
+      res.status(500).json({ message: 'Failed to generate advice' });
+    }
+  });
+  
   // ====================
   // PRODUCT RECOMMENDATIONS ENDPOINTS
   // ====================

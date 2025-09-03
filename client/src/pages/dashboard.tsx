@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@clerk/clerk-react";
 import { useLocation } from "wouter";
 
 import Header from "@/components/layout/header";
@@ -8,6 +8,7 @@ import ArticleCard from "@/components/content/article-card";
 import OnboardingModal from "@/components/auth/onboarding-modal";
 import SubscriptionModal from "@/components/auth/subscription-modal";
 import { DisplayAd } from "@/components/ads/adsense-block";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -147,6 +148,9 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Strategic ad placement between sections */}
+        {/* AdSlot placeholder */}
+
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Dashboard Content */}
           <div className="lg:col-span-2">
@@ -227,6 +231,9 @@ export default function Dashboard() {
                     </div>
                   )}
                 </div>
+                
+                {/* Affiliate banner in saved tab */}
+                {/* ShopifyAffiliateBanner placeholder */}
               </TabsContent>
 
               <TabsContent value="profile" className="space-y-6">

@@ -28,7 +28,10 @@ export function AIChat() {
 
   const chatMutation = useMutation({
     mutationFn: async (message: string) => {
-      return await apiRequest('POST', '/api/chat/skynn', { message });
+      return await apiRequest('/api/chat/skynn', {
+        method: 'POST',
+        body: JSON.stringify({ message }),
+      });
     },
     onSuccess: (data: any) => {
       const aiMessage: Message = {
