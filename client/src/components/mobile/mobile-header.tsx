@@ -3,11 +3,11 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Search, User, Bell } from "lucide-react";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useClerk } from "@clerk/clerk-react";
 
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isSignedIn: isAuthenticated, user } = useAuth();
+  const { isSignedIn: isAuthenticated } = useAuth();
 
   const menuItems = [
     { name: "Home", href: "/" },
@@ -33,12 +33,11 @@ export default function MobileHeader() {
       <div className="container flex h-14 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/">
-          <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-sm font-bold text-primary-foreground">S</span>
-            </div>
-            <span className="font-bold text-lg">SKYNN</span>
-          </div>
+          <img 
+            src="/src/assets/skinlabs-logo.png" 
+            alt="SkinLabs" 
+            className="h-7 w-auto"
+          />
         </Link>
 
         {/* Actions */}
@@ -66,27 +65,17 @@ export default function MobileHeader() {
             <SheetContent side="right" className="w-80">
               <div className="flex flex-col h-full">
                 {/* User section */}
-                {isAuthenticated && user && (
+                {isAuthenticated && (
                   <div className="flex items-center space-x-3 p-4 border-b">
                     <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      {user.profileImageUrl ? (
-                        <img
-                          src={user.profileImageUrl}
-                          alt={user.firstName || user.email}
-                          className="h-12 w-12 rounded-full object-cover"
-                        />
-                      ) : (
-                        <User className="h-6 w-6 text-primary" />
-                      )}
+                      <User className="h-6 w-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm truncate">
-                        {user.firstName || user.email}
+                        User
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {user.subscriptionStatus === "free_lifetime" ? "Founding Member" :
-                         user.subscriptionStatus === "trial" ? "Premium Trial" :
-                         user.subscriptionStatus === "active" ? "Premium" : "Free"}
+                        Member
                       </p>
                     </div>
                   </div>

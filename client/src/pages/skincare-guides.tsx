@@ -6,7 +6,7 @@ import { Clock, Eye, Bookmark, User } from "lucide-react";
 import { Link } from "wouter";
 import { Article } from "@shared/schema";
 import { BannerAd, InArticleAd, DisplayAd } from "@/components/ads/adsense-block";
-import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
 export default function SkincareGuidesPage() {
   const { data: guides, isLoading } = useQuery<Article[]>({
@@ -42,7 +42,7 @@ export default function SkincareGuidesPage() {
       </div>
 
       {/* Display Ad before content */}
-      <AdSlot variant="between-sections" className="mb-6" />
+      {/* AdSlot placeholder */}
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {guides?.map((guide) => (

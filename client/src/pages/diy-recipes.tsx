@@ -6,7 +6,7 @@ import { Clock, ChefHat, Users, Bookmark } from "lucide-react";
 import { Link } from "wouter";
 import { DiyRecipe } from "@shared/schema";
 import { BannerAd, DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
-import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
 export default function DiyRecipesPage() {
   const { data: recipes, isLoading } = useQuery<DiyRecipe[]>({
@@ -50,7 +50,7 @@ export default function DiyRecipesPage() {
       </div>
 
       {/* Display Ad before recipes */}
-      <AdSlot variant="between-sections" className="mb-6" />
+      {/* AdSlot placeholder */}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {recipes?.map((recipe) => (

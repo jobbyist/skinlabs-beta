@@ -16,8 +16,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Link } from "wouter";
 
 export default function Header() {
-  const { user, isSignedIn: isAuthenticated } = useAuth();
-  const { signOut } = useClerk();
+  const { isSignedIn: isAuthenticated } = useAuth();
+  const { user, signOut } = useClerk();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
 
@@ -27,7 +27,7 @@ export default function Header() {
   };
 
   const getUserInitials = (email: string) => {
-    return email.charAt(0).toUpperCase();
+    return email?.charAt(0)?.toUpperCase() || 'U';
   };
 
   return (
@@ -36,15 +36,13 @@ export default function Header() {
         <div className="max-w-skynn mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">S</span>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold tracking-tight">SKYNN</h1>
-                <p className="text-xs text-muted-foreground -mt-1">by SkinLabs</p>
-              </div>
-            </div>
+            <Link to="/" className="flex items-center space-x-2">
+              <img 
+                src="/src/assets/skinlabs-logo.png" 
+                alt="SkinLabs" 
+                className="h-8 w-auto"
+              />
+            </Link>
           </div>
 
           {/* Navigation Links */}
@@ -72,20 +70,14 @@ export default function Header() {
             <ThemeToggle />
             {isAuthenticated ? (
               <>
-                {/* User Badge for Founding Members */}
-                {user?.isFoundingMember && (
-                  <Badge variant="secondary" className="hidden sm:flex items-center space-x-1">
-                    <Crown className="w-3 h-3" />
-                    <span className="text-xs">Founding Member</span>
-                  </Badge>
-                )}
+                {/* User Badge for Founding Members - will be implemented with backend data */}
 
                 {/* User Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full" data-testid="user-menu-trigger">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user?.profileImageUrl || undefined} alt="Profile" />
+                        <AvatarImage src={user?.imageUrl || undefined} alt="Profile" />
                         <AvatarFallback className="text-xs">
                           {user?.email ? getUserInitials(user.email) : 'U'}
                         </AvatarFallback>
@@ -95,11 +87,9 @@ export default function Header() {
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
-                        <p className="font-medium">{user?.email}</p>
+                        <p className="font-medium">{user?.emailAddresses?.[0]?.emailAddress}</p>
                         <p className="text-xs text-muted-foreground">
-                          {user?.subscriptionStatus === 'founding_member' ? 'Founding Member' :
-                           user?.subscriptionStatus === 'premium' ? 'Premium Member' :
-                           user?.subscriptionStatus === 'trial' ? 'Free Trial' : 'Free Member'}
+                          Member
                         </p>
                       </div>
                     </div>
@@ -118,7 +108,7 @@ export default function Header() {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
-                      onClick={logout}
+                      onClick={() => signOut()}
                       className="text-red-600 focus:text-red-600"
                       data-testid="menu-logout"
                     >

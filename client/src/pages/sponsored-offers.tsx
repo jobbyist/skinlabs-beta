@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink, Clock, Percent } from "lucide-react";
 import { Deal } from "@shared/schema";
 import { BannerAd, DisplayAd } from "@/components/ads/adsense-block";
-import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
 export default function SponsoredOffersPage() {
   const { data: offers, isLoading } = useQuery<Deal[]>({
@@ -53,7 +53,7 @@ export default function SponsoredOffersPage() {
       </div>
 
       {/* Featured section ad */}
-      <AdSlot variant="between-sections" className="mb-6" />
+      {/* AdSlot placeholder */}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {offers?.map((offer) => (

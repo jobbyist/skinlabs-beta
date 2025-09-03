@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { BannerAd, DisplayAd } from "@/components/ads/adsense-block";
-import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
 interface Message {
   id: string;

@@ -12,8 +12,11 @@ export default function Footer() {
           <div className="lg:col-span-1 px-2 md:px-0">
             <Link to="/" data-testid="footer-logo">
               <div className="flex items-center space-x-2 mb-4">
-                <div className="brand-icon">🇿🇦</div>
-                <span className="text-lg font-bold">SKYNN</span>
+                <img 
+                  src="/src/assets/skinlabs-logo.png" 
+                  alt="SkinLabs" 
+                  className="h-6 w-auto"
+                />
               </div>
             </Link>
             <p className="text-muted-foreground text-sm mb-4 leading-relaxed">

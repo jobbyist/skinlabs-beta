@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Star, ExternalLink, Heart } from "lucide-react";
 import { ProductRecommendation } from "@shared/schema";
 import { DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
-import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
 export default function ProductRecommendationsPage() {
   const { data: recommendations, isLoading } = useQuery<ProductRecommendation[]>({
@@ -37,7 +37,7 @@ export default function ProductRecommendationsPage() {
       </div>
 
       {/* Top Display Ad */}
-      <AdSlot variant="between-sections" className="mb-6" />
+      {/* AdSlot placeholder */}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {recommendations?.map((product) => (

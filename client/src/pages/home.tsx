@@ -12,7 +12,7 @@ import { WaitingListModal } from "@/components/waiting-list-modal";
 import { ContentGuard } from "@/components/auth/content-guard";
 import { AutoCarousel } from "@/components/ui/auto-carousel";
 import { BannerAd, DisplayAd, InArticleAd } from "@/components/ads/adsense-block";
-import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 import { LazySection } from "@/components/lazy-section";
 
 import { Button } from "@/components/ui/button";
@@ -21,38 +21,38 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 
 import { Search, Crown, WandSparkles, ShoppingBag, Star, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
-import cashbackImage from "@assets/IMG_3791_1756353075473.jpeg";
+// import "/placeholder-image.jpg" from "@assets/IMG_3791_1756353075473.jpeg";
 import { PollWidget } from "@/components/poll-widget";
 import { WebStory } from "@/components/web-story";
 
 // Brand Images
-import terresImage from "@assets/thumbnailsquare - 10_1756402415500.png";
-import smoochImage from "@assets/thumbnailsquare - 9_1756402415500.png";
-import enoughImage from "@assets/thumbnailsquare - 8_1756402415500.png";
-import leliveImage from "@assets/thumbnailsquare - 5_1756402415500.png";
-import sundaeImage from "@assets/thumbnailsquare - 7_1756402415500.png";
-import gloeiImage from "@assets/thumbnailsquare - 6_1756402415500.png";
-import yearnskinImage from "@assets/thumbnailsquare - 4_1756402415500.png";
-import silkiImage from "@assets/thumbnailsquare - 3_1756402415500.png";
-import standardImage from "@assets/thumbnailsquare - 2_1756402415500.png";
-import skoonImage from "@assets/thumbnailsquare - 5_1756402547109.png";
+// import undefined from "@assets/thumbnailsquare - 10_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 9_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 8_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 5_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 7_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 6_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 4_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 3_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 2_1756402415500.png";
+// import undefined from "@assets/thumbnailsquare - 5_1756402547109.png";
 
 // Hero Image
-import heroImage from "@assets/skynnhero_1756403170171.png";
+// import undefined from "@assets/skynnhero_1756403170171.png";
 
 // Web Story Images
-import storyImage1 from "@assets/037EA6CA-675D-4F71-8669-2B058DF323F1_1756413442879.png";
-import storyImage2 from "@assets/EB26ADF9-4E9B-45DC-9A5F-56C3AB913189_1756413442880.png";
-import storyImage3 from "@assets/DAE27A1E-7390-4271-B19C-C1F3C955D29B_1756413442880.png";
-import storyImage4 from "@assets/533E83A4-FA45-44F2-A1CB-3F3733439C5F_1756413442880.png";
-import storyImage5 from "@assets/C2201DB5-9BD6-4C81-AD9A-4CBAE147D3E2_1756413442880.png";
-import storyImage6 from "@assets/E702A928-40DF-4601-BCB0-77CE612A4245_1756413878813.png";
-import storyImage7 from "@assets/E4E1A636-4DD3-4275-8B34-76CBA5D07679_1756413878813.png";
+// import undefined from "@assets/037EA6CA-675D-4F71-8669-2B058DF323F1_1756413442879.png";
+// import undefined from "@assets/EB26ADF9-4E9B-45DC-9A5F-56C3AB913189_1756413442880.png";
+// import undefined from "@assets/DAE27A1E-7390-4271-B19C-C1F3C955D29B_1756413442880.png";
+// import undefined from "@assets/533E83A4-FA45-44F2-A1CB-3F3733439C5F_1756413442880.png";
+// import undefined from "@assets/C2201DB5-9BD6-4C81-AD9A-4CBAE147D3E2_1756413442880.png";
+// import undefined from "@assets/E702A928-40DF-4601-BCB0-77CE612A4245_1756413878813.png";
+// import undefined from "@assets/E4E1A636-4DD3-4275-8B34-76CBA5D07679_1756413878813.png";
 
 import type { Article, Deal } from "@shared/schema";
 
 export default function Home() {
-  const { user, isSignedIn: isAuthenticated } = useAuth();
+  const { isSignedIn: isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -194,7 +194,7 @@ export default function Home() {
                 {/* Hero Image - High-quality skincare visual */}
                 <div className="relative rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src={heroImage}
+                    src={undefined}
                     alt="Diverse group of women with beautiful skin representing inclusive skincare"
                     width={1920}
                     height={320}
@@ -295,16 +295,16 @@ export default function Home() {
               className="w-full"
             >
               {[
-                { id: "terres-dafrique", name: "TERRES D'AFRIQUE", tagline: "African heritage meets luxury", image: terresImage, description: "Premium African-inspired skincare celebrating natural beauty", url: "https://terresdafrique.com" },
-                { id: "smooch", name: "SMOOCH", tagline: "Beauty that makes you smile", image: smoochImage, description: "Award-winning radiance serums and glow-inducing skincare", url: "https://smoochbeauty.com" },
-                { id: "enough", name: "ENOUGH.", tagline: "Sustainable beauty redefined", image: enoughImage, description: "Zero-waste skincare from upcycled coffee grounds", url: "https://enough.beauty" },
-                { id: "lelive", name: "Lelive Africa", tagline: "Live beautifully", image: leliveImage, description: "Natural African ingredients meet modern science", url: "https://leliveafrica.com" },
-                { id: "sundae", name: "Sundae Skin Co.", tagline: "Sweet treats for your skin", image: sundaeImage, description: "Playful, effective skincare that feels like dessert", url: "https://sundaeskin.com" },
-                { id: "gloei", name: "Gloei", tagline: "Glow from within", image: gloeiImage, description: "Clean beauty formulations for radiant skin", url: "https://gloei.co.za" },
-                { id: "yearnskin", name: "Yearn Skin", tagline: "Your skin's deepest desires", image: yearnskinImage, description: "Luxurious treatments for skin that yearns to glow", url: "https://yearnskin.com" },
-                { id: "silki", name: "Silki", tagline: "Smooth as silk", image: silkiImage, description: "Silk-infused skincare for ultimate smoothness", url: "https://silki.co.za" },
-                { id: "standard", name: "Standard Beauty", tagline: "Affordable skincare that works™", image: standardImage, description: "Setting the standard for effective, accessible beauty", url: "https://standardbeauty.co.za" },
-                { id: "skoon", name: "SKOON. Skincare", tagline: "Clean beauty, conscious living", image: skoonImage, description: "Award-winning sustainable skincare from Cape Town", url: "https://skoonskincare.com" }
+                { id: "terres-dafrique", name: "TERRES D'AFRIQUE", tagline: "African heritage meets luxury", image: "/placeholder.jpg", description: "Premium African-inspired skincare celebrating natural beauty", url: "https://terresdafrique.com" },
+                { id: "smooch", name: "SMOOCH", tagline: "Beauty that makes you smile", image: "/placeholder.jpg", description: "Award-winning radiance serums and glow-inducing skincare", url: "https://smoochbeauty.com" },
+                { id: "enough", name: "ENOUGH.", tagline: "Sustainable beauty redefined", image: "/placeholder.jpg", description: "Zero-waste skincare from upcycled coffee grounds", url: "https://enough.beauty" },
+                { id: "lelive", name: "Lelive Africa", tagline: "Live beautifully", image: "/placeholder.jpg", description: "Natural African ingredients meet modern science", url: "https://leliveafrica.com" },
+                { id: "sundae", name: "Sundae Skin Co.", tagline: "Sweet treats for your skin", image: "/placeholder.jpg", description: "Playful, effective skincare that feels like dessert", url: "https://sundaeskin.com" },
+                { id: "gloei", name: "Gloei", tagline: "Glow from within", image: "/placeholder.jpg", description: "Clean beauty formulations for radiant skin", url: "https://gloei.co.za" },
+                { id: "yearnskin", name: "Yearn Skin", tagline: "Your skin's deepest desires", image: "/placeholder.jpg", description: "Luxurious treatments for skin that yearns to glow", url: "https://yearnskin.com" },
+                { id: "silki", name: "Silki", tagline: "Smooth as silk", image: "/placeholder.jpg", description: "Silk-infused skincare for ultimate smoothness", url: "https://silki.co.za" },
+                { id: "standard", name: "Standard Beauty", tagline: "Affordable skincare that works™", image: "/placeholder.jpg", description: "Setting the standard for effective, accessible beauty", url: "https://standardbeauty.co.za" },
+                { id: "skoon", name: "SKOON. Skincare", tagline: "Clean beauty, conscious living", image: "/placeholder.jpg", description: "Award-winning sustainable skincare from Cape Town", url: "https://skoonskincare.com" }
               ].map((brand) => (
                 <Link key={brand.id} href={`/brands/${brand.id}`}>
                   <div className="bg-white dark:bg-card rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
@@ -382,7 +382,7 @@ export default function Home() {
                       id: "story-1", 
                       title: "The Ultimate Playbook", 
                       subtitle: "Everything you need to build your skincare brand from scratch in 2025",
-                      image: storyImage1,
+                      image: "/placeholder.jpg",
                       views: 15234,
                       category: "Playbook",
                       ctaText: "Get the Playbook",
@@ -393,7 +393,7 @@ export default function Home() {
                       id: "story-2", 
                       title: "The SKINDEEP Podcast Series", 
                       subtitle: "A deep dive into everything skincare",
-                      image: storyImage2,
+                      image: "/placeholder.jpg",
                       views: 8756,
                       category: "Podcast",
                       ctaText: "Listen Now",
@@ -404,7 +404,7 @@ export default function Home() {
                       id: "story-3", 
                       title: "Summer to Fall", 
                       subtitle: "Your skin's seasonal transition survival guide",
-                      image: storyImage3,
+                      image: "/placeholder.jpg",
                       views: 12890,
                       category: "Seasonal",
                       ctaText: "Read Full Guide",
@@ -415,7 +415,7 @@ export default function Home() {
                       id: "story-4", 
                       title: "Acne SOS", 
                       subtitle: "Your 30-day clear skin action plan",
-                      image: storyImage4,
+                      image: "/placeholder.jpg",
                       views: 25678,
                       category: "30-Day Plan",
                       ctaText: "Start Your Journey",
@@ -426,7 +426,7 @@ export default function Home() {
                       id: "story-5", 
                       title: "The Busy Professional's 3-Step Glow Routine", 
                       subtitle: "Get glowing skin in just 3 simple steps",
-                      image: storyImage5,
+                      image: "/placeholder.jpg",
                       views: 9345,
                       category: "3-Step Routine",
                       ctaText: "Shop Products",
@@ -437,7 +437,7 @@ export default function Home() {
                       id: "story-6", 
                       title: "Anti-Aging Secrets", 
                       subtitle: "Skincare tips for women over 30",
-                      image: storyImage6,
+                      image: "/placeholder.jpg",
                       views: 18923,
                       category: "For Women Over 30",
                       ctaText: "Discover Secrets",
@@ -448,7 +448,7 @@ export default function Home() {
                       id: "story-7", 
                       title: "Natural vs Chemical", 
                       subtitle: "The great skincare ingredient debate",
-                      image: storyImage7,
+                      image: "/placeholder.jpg",
                       views: 14567,
                       category: "The Great Skincare",
                       ctaText: "Join the Debate",
@@ -477,7 +477,7 @@ export default function Home() {
             </section>
 
             {/* In-feed Advertisement */}
-            <AdSlot variant="between-sections" className="my-6" />
+            {/* AdSlot placeholder */}
 
             {/* Poll of the Week */}
             <section className="mb-6 px-4 sm:px-6 lg:px-8">
@@ -487,7 +487,7 @@ export default function Home() {
             </section>
             
             {/* Shopify Affiliate Banner */}
-            <ShopifyAffiliateBanner className="my-6" />
+            {/* ShopifyAffiliateBanner placeholder */}
           </div>
 
           {/* Sidebar */}
@@ -589,7 +589,7 @@ export default function Home() {
             {/* Video Container */}
             <div className="aspect-video w-full max-w-2xl mx-auto mb-6 rounded-lg overflow-hidden bg-gradient-to-br from-orange-100 to-pink-100 dark:from-orange-900/20 dark:to-pink-900/20">
               <img 
-                src={cashbackImage}
+                src="/placeholder-image.jpg"
                 alt="SKYNN Cashback Rewards Card - Save on skincare purchases"
                 className="w-full h-full object-cover"
               />

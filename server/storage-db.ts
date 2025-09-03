@@ -1,13 +1,8 @@
 import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle, type WebStory, type InsertWebStory, type DiyRecipe, type InsertDiyRecipe, type ForumPost, type InsertForumPost, type ForumReply, type InsertForumReply, type ProductRecommendation, type InsertProductRecommendation } from "@shared/schema";
 import bcrypt from "bcrypt";
 import { db } from "./db";
-<<<<<<< HEAD
-import { users, userSkinProfiles, articles, deals, dealLikes, savedArticles, webStories, diyRecipes, productRecommendations, waitingList } from "../shared/schema";
-import { eq, and, desc, like, inArray, count, sql } from "drizzle-orm";
-=======
 import { users, userSkinProfiles, articles, deals, savedArticles, webStories, diyRecipes, productRecommendations, waitingList, forumTopics } from "../shared/schema";
-import { eq, and, desc, like, inArray, count } from "drizzle-orm";
->>>>>>> 1976a5a3ba3e88223d15646a99b28f4bf05caa2c
+import { eq, and, desc, like, inArray, count, sql } from "drizzle-orm";
 
 export interface IStorage {
   // User management

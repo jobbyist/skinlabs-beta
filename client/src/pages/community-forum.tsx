@@ -28,11 +28,11 @@ import {
   Users
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@clerk/clerk-react';
 import { formatDistanceToNow } from 'date-fns';
 import type { ForumTopic, ForumCategory, InsertForumTopic } from '@shared/schema';
 import { BannerAd, DisplayAd, InArticleAd } from '@/components/ads/adsense-block';
-import { AdSlot, ShopifyAffiliateBanner } from '@/components/ads/ad-slot';
+// import { AdSlot, ShopifyAffiliateBanner } from '@/components/ads/ad-slot'; // Temporarily disabled
 
 interface ForumTopicWithUser extends ForumTopic {
   author: {
@@ -426,7 +426,7 @@ export default function CommunityForumPage() {
           {/* Main Content - Topics List */}
           <div className="lg:col-span-3">
             {/* Display Ad before topics */}
-            <AdSlot variant="between-sections" className="mb-6" />
+            {/* AdSlot placeholder */}
             
             <div className="space-y-4">
               {filteredTopics.map((topic) => (

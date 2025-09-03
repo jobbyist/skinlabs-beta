@@ -6,13 +6,13 @@ import { Play, Clock } from "lucide-react";
 import { WebStory } from "@shared/schema";
 import WebStoriesViewer from "@/components/web-stories-viewer";
 import { BannerAd, DisplayAd } from "@/components/ads/adsense-block";
-import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot";
+// import { AdSlot, ShopifyAffiliateBanner } from "@/components/ads/ad-slot"; // Temporarily disabled
 
-// Import attached story assets
-import morningEveningStory1 from "@assets/F7BF1DDE-498C-49A2-AEBB-71F6DB1E489A_1756414317148.png";
-import sensitiveSkinsStory from "@assets/E4C38E4D-CED8-41FF-ABA0-02515E6CFDC0_1756414317149.png";
-import diyMasksStory from "@assets/899F2B40-25C2-4848-8A1B-5E4306C8AC5B_1756414317149.png";
-import morningEveningStory2 from "@assets/60E2AA08-8007-4297-9614-58ECED5D03F5_1756414317149.png";
+// Import attached story assets - temporarily using placeholder images
+// import undefined from "@assets/F7BF1DDE-498C-49A2-AEBB-71F6DB1E489A_1756414317148.png";
+// import undefined from "@assets/E4C38E4D-CED8-41FF-ABA0-02515E6CFDC0_1756414317149.png";
+// import undefined from "@assets/899F2B40-25C2-4848-8A1B-5E4306C8AC5B_1756414317149.png";
+// import undefined from "@assets/60E2AA08-8007-4297-9614-58ECED5D03F5_1756414317149.png";
 
 // Sample stories data for demonstration
 const sampleStories: WebStory[] = [
@@ -189,7 +189,7 @@ const sampleStories: WebStory[] = [
     title: "Perfect Skincare Routine Timing",
     description: "Morning vs Evening: When to apply your products",
     category: "routines",
-    thumbnailUrl: morningEveningStory1,
+    thumbnailUrl: "/placeholder.jpg",
     duration: 20,
     isPublished: true,
     publishedAt: new Date(),
@@ -200,7 +200,7 @@ const sampleStories: WebStory[] = [
         id: "page-16",
         title: "Morning vs Evening Routines",
         content: "Timing matters! Learn when to use your skincare products for maximum effectiveness.",
-        mediaUrl: morningEveningStory1,
+        mediaUrl: "/placeholder.jpg",
         mediaType: "image",
         duration: 5
       },
@@ -237,7 +237,7 @@ const sampleStories: WebStory[] = [
     title: "Sensitive Skin Solutions",
     description: "Gentle care for reactive skin types",
     category: "sensitive",
-    thumbnailUrl: sensitiveSkinsStory,
+    thumbnailUrl: "/placeholder.jpg",
     duration: 25,
     isPublished: true,
     publishedAt: new Date(),
@@ -248,7 +248,7 @@ const sampleStories: WebStory[] = [
         id: "page-20",
         title: "Sensitive Skin Care",
         content: "If your skin is easily irritated, these gentle solutions will help you achieve healthy, calm skin.",
-        mediaUrl: sensitiveSkinsStory,
+        mediaUrl: "/placeholder.jpg",
         mediaType: "image",
         duration: 5
       },
@@ -293,7 +293,7 @@ const sampleStories: WebStory[] = [
     title: "DIY Skincare Masks",
     description: "10 recipes for glowing skin at home",
     category: "diy",
-    thumbnailUrl: diyMasksStory,
+    thumbnailUrl: "/placeholder.jpg",
     duration: 30,
     isPublished: true,
     publishedAt: new Date(),
@@ -304,7 +304,7 @@ const sampleStories: WebStory[] = [
         id: "page-25",
         title: "DIY Skincare Magic",
         content: "Transform your skin with these 10 easy DIY mask recipes using kitchen ingredients!",
-        mediaUrl: diyMasksStory,
+        mediaUrl: "/placeholder.jpg",
         mediaType: "image",
         duration: 5
       },
@@ -357,7 +357,7 @@ const sampleStories: WebStory[] = [
     title: "Morning vs Evening Skincare",
     description: "Perfect your routine timing for maximum results",
     category: "routines",
-    thumbnailUrl: morningEveningStory2,
+    thumbnailUrl: "/placeholder.jpg",
     duration: 22,
     isPublished: true,
     publishedAt: new Date(),
@@ -368,7 +368,7 @@ const sampleStories: WebStory[] = [
         id: "page-31",
         title: "Skincare Timing Mastery",
         content: "Master the art of morning vs evening skincare for optimal skin health and glow.",
-        mediaUrl: morningEveningStory2,
+        mediaUrl: "/placeholder.jpg",
         mediaType: "image",
         duration: 5
       },
@@ -504,7 +504,7 @@ export default function WebStoriesPage() {
         )}
         
         {/* Strategic ad placement */}
-        <AdSlot variant="between-sections" className="mt-8" />
+        {/* AdSlot placeholder */}
       </div>
 
       <WebStoriesViewer
