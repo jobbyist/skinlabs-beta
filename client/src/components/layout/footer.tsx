@@ -7,9 +7,9 @@ export default function Footer() {
   return (
     <footer className="bg-card dark:bg-card border-t border-border mt-16">
       <div className="max-w-skynn mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {/* Brand Section */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 px-2 md:px-0">
             <Link to="/" data-testid="footer-logo">
               <div className="flex items-center space-x-2 mb-4">
                 <div className="brand-icon">🇿🇦</div>
@@ -45,9 +45,9 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="px-2 md:px-0">
             <h3 className="font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2 text-sm max-w-xs">
               <li>
                 <Link to="/articles" data-testid="footer-articles">
                   <button className="text-muted-foreground hover:text-foreground transition-colors">
