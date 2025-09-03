@@ -1,7 +1,7 @@
 import { type User, type InsertUser, type UserSkinProfile, type InsertUserSkinProfile, type Article, type Deal, type SavedArticle, type InsertSavedArticle, type WebStory, type InsertWebStory, type DiyRecipe, type InsertDiyRecipe, type ForumPost, type InsertForumPost, type ForumReply, type InsertForumReply, type ProductRecommendation, type InsertProductRecommendation } from "@shared/schema";
 import bcrypt from "bcrypt";
 import { db } from "./db";
-import { users, userSkinProfiles, articles, deals, savedArticles, webStories, diyRecipes, productRecommendations, waitingList } from "../shared/schema";
+import { users, userSkinProfiles, articles, deals, savedArticles, webStories, diyRecipes, productRecommendations, waitingList, forumTopics } from "../shared/schema";
 import { eq, and, desc, like, inArray, count } from "drizzle-orm";
 
 export interface IStorage {
@@ -574,8 +574,8 @@ export class DatabaseStorage implements IStorage {
   // Forum Posts
   async getAllForumPosts(): Promise<ForumPost[]> {
     try {
-      return await db.select().from(forumPosts)
-        .orderBy(desc(forumPosts.isPinned), desc(forumPosts.lastReplyAt), desc(forumPosts.createdAt));
+      return await db.select().from(forumTopics)
+        .orderBy(desc(forumTopics.isSticky), desc(forumTopics.lastReplyAt), desc(forumTopics.createdAt));
     } catch (error) {
       console.error("Error getting forum posts:", error);
       return [];
@@ -584,7 +584,7 @@ export class DatabaseStorage implements IStorage {
 
   async createForumPost(postData: any): Promise<ForumPost> {
     try {
-      const [post] = await db.insert(forumPosts).values({
+      const [post] = await db.insert(forumTopics).values({
         ...postData,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -629,8 +629,7 @@ export class DatabaseStorage implements IStorage {
         name: data.name,
         email: data.email,
         phone: data.phone || null,
-        category: data.category,
-        createdAt: new Date()
+        category: data.category
       }).returning();
       return { id: entry.id };
     } catch (error) {

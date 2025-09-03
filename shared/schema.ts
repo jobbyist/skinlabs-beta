@@ -206,7 +206,7 @@ export const forumReplies = pgTable("forum_replies", {
   topicId: varchar("topic_id").notNull().references(() => forumTopics.id, { onDelete: "cascade" }),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   content: text("content").notNull(),
-  parentReplyId: varchar("parent_reply_id").references(() => forumReplies.id),
+  parentReplyId: varchar("parent_reply_id"),
   isModeratorNote: boolean("is_moderator_note").notNull().default(false),
   imageUrls: text("image_urls").array(),
   likes: integer("likes").notNull().default(0),
