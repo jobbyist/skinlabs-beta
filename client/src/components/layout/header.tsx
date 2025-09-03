@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth, useClerk } from "@clerk/clerk-react";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +16,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Link } from "wouter";
 
 export default function Header() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isSignedIn: isAuthenticated } = useAuth();
+  const { signOut } = useClerk();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
 

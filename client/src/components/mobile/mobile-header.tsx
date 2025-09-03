@@ -3,11 +3,11 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Search, User, Bell } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@clerk/clerk-react";
 
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, user } = useAuth();
+  const { isSignedIn: isAuthenticated, user } = useAuth();
 
   const menuItems = [
     { name: "Home", href: "/" },

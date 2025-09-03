@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@clerk/clerk-react";
 import { Link, useLocation } from "wouter";
 
 import Header from "@/components/layout/header";
@@ -25,7 +25,7 @@ import { PollWidget } from "@/components/poll-widget";
 import type { Article, Deal } from "@shared/schema";
 
 export default function Home() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isSignedIn: isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   
   const [showAuthModal, setShowAuthModal] = useState(false);
