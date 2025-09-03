@@ -69,7 +69,7 @@ export async function getClientToken() {
 
 export async function createPaypalOrder(req: Request, res: Response) {
   try {
-    const { amount, currency, intent } = req.body;
+    const { amount, currency, intent, description } = req.body;
 
     if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
       return res
@@ -100,6 +100,7 @@ export async function createPaypalOrder(req: Request, res: Response) {
               currencyCode: currency,
               value: amount,
             },
+            description: description || undefined,
           },
         ],
       },
