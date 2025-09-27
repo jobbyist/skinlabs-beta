@@ -37,11 +37,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <Link to="/" className="flex items-center space-x-2">
-              <img 
-                src="/src/assets/skinlabs-logo.png" 
-                alt="SkinLabs" 
-                className="h-8 w-auto"
-              />
+              <span className="text-xl font-bold text-foreground">SKINLABS</span>
             </Link>
           </div>
 
