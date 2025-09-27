@@ -33,11 +33,7 @@ export default function MobileHeader() {
       <div className="container flex h-14 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/">
-          <img 
-            src="/src/assets/skinlabs-logo.png" 
-            alt="SkinLabs" 
-            className="h-7 w-auto"
-          />
+          <span className="text-lg font-bold text-foreground">SKINLABS</span>
         </Link>
 
         {/* Actions */}
