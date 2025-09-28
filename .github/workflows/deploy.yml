@@ -46,6 +46,8 @@ jobs:
           path: ./dist/public
 
   deploy:
+    # Only deploy when pushing to the replit-agent branch, not on pull requests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/replit-agent'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
