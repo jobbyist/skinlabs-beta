@@ -2,6 +2,57 @@
 
 A modern skincare guide application built with React, TypeScript, and Vite.
 
+## 🗄️ Database Setup
+
+This application uses PostgreSQL with Drizzle ORM for database management.
+
+### Environment Setup
+
+1. Copy the environment example file:
+```bash
+cp .env.example .env
+```
+
+2. Update `.env` with your actual database credentials and API keys.
+
+### Database Commands
+
+```bash
+# Generate a new migration from schema changes
+npm run db:generate
+
+# Apply migrations to the database
+npm run db:migrate  
+
+# Push schema changes directly (development only)
+npm run db:push
+
+# Reset database and rerun migrations
+npm run db:reset
+
+# Seed database with comprehensive content
+npm run db:seed
+```
+
+### Seed Data
+
+The application comes with comprehensive seed data:
+
+- **50+ Articles**: Skincare guides, ingredient explanations, routine guides, local brand spotlights
+- **100+ Product Recommendations**: Curated products from SA retailers with ratings and affiliate links  
+- **20+ Current Deals**: Live deals from Clicks, Dis-Chem, Takealot, and local brands
+
+Run `npm run db:seed` to populate your database with this content.
+
+### Migration System
+
+The database uses Drizzle Kit for migrations:
+
+- Migration files are stored in `/migrations`
+- Schema is defined in `/shared/schema.ts`
+- Seed data is in `/seeds` directory
+- Seeding script is in `/scripts/seed.ts`
+
 ## 🚀 GitHub Pages Deployment
 
 This repository is configured for automatic deployment to GitHub Pages with a custom domain `skinlabs.co.za`.
