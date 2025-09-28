@@ -12,7 +12,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:reset": "drizzle-kit drop && npm run db:generate && npm run db:migrate",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "generate-keys": "tsx scripts/generate-keys.ts"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.46.0",
@@ -72,6 +73,7 @@
     "cookie-parser": "^1.4.7",
     "crypto": "^1.0.1",
     "date-fns": "^3.6.0",
+    "dotenv": "^17.2.2",
     "drizzle-orm": "^0.39.1",
     "drizzle-zod": "^0.7.0",
     "embla-carousel-react": "^8.6.0",

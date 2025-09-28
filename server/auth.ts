@@ -2,6 +2,7 @@ import { clerkClient } from '@clerk/clerk-sdk-node';
 import { Express, Request, Response, NextFunction } from 'express';
 import cookieParser from 'cookie-parser';
 import { storage } from './storage-db';
+import { config } from './env-config';
 
 // Initialize Clerk client
 const clerk = clerkClient;
@@ -43,7 +44,7 @@ export async function syncClerkUser(clerkUserId: string) {
 export async function verifyClerkToken(token: string) {
   try {
     const sessionToken = await clerk.verifyToken(token, {
-      secretKey: process.env.CLERK_SECRET_KEY!,
+      secretKey: config.CLERK_SECRET_KEY,
     });
     return sessionToken;
   } catch (error) {
@@ -63,7 +64,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     }
 
     const session = await clerk.verifyToken(sessionToken, {
-      secretKey: process.env.CLERK_SECRET_KEY!,
+      secretKey: config.CLERK_SECRET_KEY,
     });
     
     if (!session) {
@@ -95,7 +96,7 @@ export async function optionalAuth(req: Request, res: Response, next: NextFuncti
     
     if (sessionToken) {
       const session = await clerk.verifyToken(sessionToken, {
-        secretKey: process.env.CLERK_SECRET_KEY!,
+        secretKey: config.CLERK_SECRET_KEY,
       });
       
       if (session) {

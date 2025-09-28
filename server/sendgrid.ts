@@ -1,11 +1,12 @@
 import { MailService } from '@sendgrid/mail';
+import { config } from './env-config';
 
-if (!process.env.SENDGRID_API_KEY) {
+if (!config.SENDGRID_API_KEY) {
   throw new Error("SENDGRID_API_KEY environment variable must be set");
 }
 
 const mailService = new MailService();
-mailService.setApiKey(process.env.SENDGRID_API_KEY);
+mailService.setApiKey(config.SENDGRID_API_KEY);
 
 interface EmailParams {
   to: string;
@@ -59,7 +60,7 @@ export async function sendTrialExpirationNotification(email: string, daysLeft: n
         </ul>
         
         <div style="text-align: center; margin: 40px 0;">
-          <a href="https://${process.env.REPLIT_DOMAINS?.split(',')[0] || 'your-domain.replit.app'}/subscription" 
+          <a href="https://${config.NODE_ENV === 'production' ? 'skinlabs.co.za' : 'localhost:5000'}/subscription" 
              style="background: linear-gradient(135deg, #ef4444, #f87171); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
             Subscribe to Premium - R149/year
           </a>
@@ -83,14 +84,14 @@ export async function sendTrialExpirationNotification(email: string, daysLeft: n
     
     Don't miss out on unlimited access to premium skincare guides, personalized routine recommendations, exclusive deals, and advanced ingredient analysis.
     
-    Subscribe to Premium for only R149/year: https://${process.env.REPLIT_DOMAINS?.split(',')[0] || 'your-domain.replit.app'}/subscription
+    Subscribe to Premium for only R149/year: https://${config.NODE_ENV === 'production' ? 'skinlabs.co.za' : 'localhost:5000'}/subscription
     
     Questions? Contact us at hello@skinlabs.co.za
   `;
 
   return await sendEmail({
     to: email,
-    from: 'hello@skinlabs.co.za',
+    from: config.SENDGRID_FROM_EMAIL,
     subject,
     text,
     html

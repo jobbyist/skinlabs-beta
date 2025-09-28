@@ -1,7 +1,8 @@
 import OpenAI from "openai";
+import { config } from "./env-config";
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: config.OPENAI_API_KEY });
 
 // System prompt for SKYNN AI chatbot
 const SKYNN_SYSTEM_PROMPT = `
