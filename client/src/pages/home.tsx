@@ -18,9 +18,10 @@ import { LazySection } from "@/components/lazy-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import { Search, Crown, WandSparkles, ShoppingBag, Star, Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Crown, WandSparkles, ShoppingBag, Star, Bookmark, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 // import "/placeholder-image.jpg" from "@assets/IMG_3791_1756353075473.jpeg";
 import { PollWidget } from "@/components/poll-widget";
 import { WebStory } from "@/components/web-story";
@@ -49,7 +50,7 @@ import { WebStory } from "@/components/web-story";
 // import undefined from "@assets/E702A928-40DF-4601-BCB0-77CE612A4245_1756413878813.png";
 // import undefined from "@assets/E4E1A636-4DD3-4275-8B34-76CBA5D07679_1756413878813.png";
 
-import type { Article, Deal } from "@shared/schema";
+import type { Article, Deal, ProductRecommendation } from "@shared/schema";
 
 export default function Home() {
   const { isSignedIn: isAuthenticated } = useAuth();
@@ -75,6 +76,11 @@ export default function Home() {
   // Fetch deals
   const { data: deals = [] } = useQuery<Deal[]>({
     queryKey: ["/api/deals"],
+  });
+  
+  // Fetch product recommendations
+  const { data: products = [] } = useQuery<ProductRecommendation[]>({
+    queryKey: ["/api/product-recommendations"],
   });
 
   const filteredArticles = articles.filter(article =>
@@ -353,6 +359,104 @@ export default function Home() {
                   </Button>
                 </div>
               )}
+            </div>
+          </section>
+        )}
+
+        {/* Featured Articles Section */}
+        {featuredArticles.length > 0 && (
+          <section className="mb-6">
+            <div className="bg-white dark:bg-card rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">Featured Articles</h2>
+                <Link href="/skincare-guides">
+                  <Button variant="outline" size="sm">View All</Button>
+                </Link>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {featuredArticles.slice(0, 3).map((article) => (
+                  <ArticleCard key={article.id} article={article} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Current Deals Section */}
+        {deals.length > 0 && (
+          <section className="mb-6">
+            <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-green-950/20 dark:via-background dark:to-emerald-950/20 rounded-xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">Current Deals</h2>
+                <Badge variant="secondary">Limited Time</Badge>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {deals.slice(0, 6).map((deal) => (
+                  <DealCard key={deal.id} deal={deal} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Product Recommendations Section */}
+        {products.length > 0 && (
+          <section className="mb-6">
+            <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/20 dark:via-background dark:to-indigo-950/20 rounded-xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">Recommended Products</h2>
+                <Link href="/product-recommendations">
+                  <Button variant="outline" size="sm">View All</Button>
+                </Link>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {products.slice(0, 6).map((product) => (
+                  <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow group">
+                    <div className="aspect-square bg-muted relative overflow-hidden">
+                      {product.featuredImage ? (
+                        <img
+                          src={product.featuredImage}
+                          alt={product.productName}
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
+                          <ShoppingBag className="w-12 h-12 text-muted-foreground" />
+                        </div>
+                      )}
+                      {product.rating && (
+                        <div className="absolute top-2 right-2 bg-white/90 dark:bg-black/90 rounded-full px-2 py-1 text-xs font-medium flex items-center gap-1">
+                          <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                          {product.rating}
+                        </div>
+                      )}
+                    </div>
+                    <CardContent className="p-4">
+                      <Badge variant="outline" className="mb-2 text-xs">{product.brand}</Badge>
+                      <h3 className="font-semibold text-sm mb-1 line-clamp-2">{product.productName}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{product.description}</p>
+                      <div className="flex items-center justify-between">
+                        {product.price ? (
+                          <span className="font-semibold text-primary">R{(product.price / 100).toFixed(2)}</span>
+                        ) : (
+                          <span className="text-sm text-muted-foreground">Price varies</span>
+                        )}
+                        {product.affiliateUrl && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => window.open(product.affiliateUrl!, '_blank')}
+                            className="text-xs"
+                          >
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            Shop
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           </section>
         )}

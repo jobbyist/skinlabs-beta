@@ -440,51 +440,42 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  // Initialize sample data
+  // Initialize sample data - NOTE: For comprehensive seeding, use the dedicated seed script
   private async initializeSampleData() {
     try {
       // Check if data already exists
       const existingArticles = await db.select().from(articles).limit(1);
-      if (existingArticles.length > 0) return;
+      if (existingArticles.length > 0) {
+        console.log("Sample data already exists. Use 'npm run db:seed' for comprehensive seeding.");
+        return;
+      }
 
-      // Sample articles
+      console.log("No existing data found. For comprehensive seeding with 50+ articles, 20+ deals, and 100+ products, run: npm run db:seed");
+      console.log("Initializing minimal sample data for immediate functionality...");
+
+      // Minimal sample data for basic functionality
       const sampleArticles = [
         {
-          title: "Vitamin C: How to layer with Niacinamide",
-          excerpt: "Complete guide to combining these powerhouse ingredients for maximum skin benefits.",
-          content: "Detailed content about layering vitamin C and niacinamide...",
+          title: "Getting Started with Skincare in South Africa",
+          excerpt: "Essential guide to building your first skincare routine in South African conditions.",
+          content: "South Africa's unique climate and UV levels require specific skincare approaches. This guide covers the basics of building an effective routine with locally available products...",
           category: "guides",
-          tags: ["brightening", "beginner", "layering"],
-          rating: 48,
+          tags: ["beginner", "south africa", "basics"],
+          rating: 85,
           readTime: 5,
-          imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-          authorId: null,
+          featuredImageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
           isPublished: true,
           isFeatured: true,
         },
         {
-          title: "Retinoids in SA: OTC vs Rx",
-          excerpt: "Understanding the difference between over-the-counter and prescription retinoids available in South Africa.",
-          content: "Comprehensive comparison of retinoid options...",
-          category: "ingredients",
-          tags: ["anti-aging", "night"],
-          rating: 46,
-          readTime: 8,
-          imageUrl: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-          authorId: null,
-          isPublished: true,
-          isFeatured: true,
-        },
-        {
-          title: "Winter-to-Spring Routine (Budget)",
-          excerpt: "Affordable skincare routine transition for changing seasons in South Africa.",
-          content: "Budget-friendly seasonal skincare routine...",
-          category: "routines",
-          tags: ["seasonal", "budget"],
-          rating: 45,
-          readTime: 6,
-          imageUrl: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-          authorId: null,
+          title: "Sun Protection Essentials for African Skin",
+          excerpt: "Why SPF is non-negotiable in South Africa and how to choose the right sunscreen.",
+          content: "With some of the highest UV levels globally, South Africa requires serious sun protection. Learn about SPF selection for all skin tones...",
+          category: "guides",
+          tags: ["sun protection", "spf", "african skin"],
+          rating: 92,
+          readTime: 7,
+          featuredImageUrl: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
           isPublished: true,
           isFeatured: true,
         }
@@ -492,15 +483,15 @@ export class DatabaseStorage implements IStorage {
 
       await db.insert(articles).values(sampleArticles);
 
-      // Sample deals
+      // Minimal sample deals
       const sampleDeals = [
         {
-          brand: "SMOOCH",
+          brand: "SMOOCH Beauty",
           title: "Honeymoon Glow Serum",
-          description: "Award-winning radiance serum with vitamin C and hyaluronic acid for that honeymoon glow.",
+          description: "Award-winning radiance serum with vitamin C and hyaluronic acid.",
           discountPercentage: 25,
-          originalPrice: 79500, // R795.00 in cents
-          discountedPrice: 59625, // R596.25 in cents
+          originalPrice: 79500,
+          discountedPrice: 59625,
           code: "GLOW25",
           url: "https://smoochbeauty.com",
           affiliateUrl: "https://smoochbeauty.com/products/honeymoon-glow-serum",
@@ -511,232 +502,27 @@ export class DatabaseStorage implements IStorage {
           validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         },
         {
-          brand: "AFARI",
-          title: "Priming Cleanser",
-          description: "2023 Beauty Awards Winner. Gentle yet effective cleanser that primes your skin for the rest of your routine.",
-          discountPercentage: 20,
-          originalPrice: 29500, // R295.00 in cents
-          discountedPrice: 23600, // R236.00 in cents
-          code: "PRIME20",
-          url: "https://afaribeauty.com",
-          affiliateUrl: "https://afaribeauty.com/products/priming-cleanser",
-          imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "local_brand",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "ENOUGH.",
-          title: "Caffeine & Essential Oil Body Scrub",
-          description: "Multi-award winning sustainable body scrub crafted from spent coffee grounds. Upcycling for a planet-first future.",
-          discountPercentage: 15,
-          originalPrice: 32500, // R325.00 in cents
-          discountedPrice: 27625, // R276.25 in cents
-          code: "SCRUB15",
-          url: "https://enough.beauty",
-          affiliateUrl: "https://enough.beauty/products/caffeine-body-scrub",
-          imageUrl: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "sustainable",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "SKOON.",
-          title: "Waterless Face Wash",
-          description: "Revolutionary waterless cleanser perfect for South African water scarcity. Gentle on skin, kind to the planet.",
-          discountPercentage: 30,
-          originalPrice: 24500, // R245.00 in cents
-          discountedPrice: 17150, // R171.50 in cents
-          code: "WATERLESS30",
-          url: "https://skoon.world",
-          affiliateUrl: "https://skoon.world/products/waterless-face-wash",
-          imageUrl: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "sustainable",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 35 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "Standard Beauty",
-          title: "The Niacinamide Serum",
-          description: "10% Niacinamide serum for enlarged pores and excess oil. Clean, effective, and affordable.",
-          discountPercentage: 25,
-          originalPrice: 18500, // R185.00 in cents
-          discountedPrice: 13875, // R138.75 in cents
-          code: "NIACIN25",
-          url: "https://standardbeauty.co.za",
-          affiliateUrl: "https://standardbeauty.co.za/products/niacinamide-serum",
-          imageUrl: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "clean_beauty",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "Lumi Glo",
-          title: "Vitamin C + E Brightening Cream",
-          description: "Potent antioxidant cream with vitamin C and E. Perfect for brightening and protecting South African skin.",
-          discountPercentage: 20,
-          originalPrice: 45000, // R450.00 in cents
-          discountedPrice: 36000, // R360.00 in cents
-          code: "BRIGHT20",
-          url: "https://lumiglo.co.za",
-          affiliateUrl: "https://lumiglo.co.za/products/vitamin-c-cream",
-          imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "local_brand",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 22 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "Lelive",
-          title: "Hyaluronic Acid Hydrating Serum",
-          description: "Intensive hydration with multiple molecular weights of hyaluronic acid. Essential for dry South African climate.",
-          discountPercentage: 15,
-          originalPrice: 29900, // R299.00 in cents
-          discountedPrice: 25415, // R254.15 in cents
-          code: "HYDRATE15",
-          url: "https://lelive.co.za",
-          affiliateUrl: "https://lelive.co.za/products/hyaluronic-serum",
-          imageUrl: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "clean_beauty",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "African Botanics",
-          title: "Marula Oil Pure Face Oil",
-          description: "Premium pure marula oil from South African marula trees. Ultimate luxury for skin nourishment.",
-          discountPercentage: 10,
-          originalPrice: 125000, // R1250.00 in cents
-          discountedPrice: 112500, // R1125.00 in cents
-          code: "MARULA10",
-          url: "https://africanbotanics.com",
-          affiliateUrl: "https://africanbotanics.com/products/marula-oil",
-          imageUrl: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "luxury",
-          isActive: true,
-          isPremium: true,
-          validUntil: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "Clere",
-          title: "Heritage Collection Body Cream",
-          description: "Celebrate local beauty with traditional-inspired formulas. Rich, nourishing body cream for all skin types.",
-          discountPercentage: 20,
-          originalPrice: 8500, // R85.00 in cents
-          discountedPrice: 6800, // R68.00 in cents
-          code: "HERITAGE20",
-          url: "https://clere.co.za",
-          affiliateUrl: "https://clere.co.za/products/heritage-body-cream",
-          imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "local_brand",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "The Ordinary",
-          title: "Retinol 0.5% in Squalane",
-          description: "Available at Clicks. Proven anti-aging retinol treatment in nourishing squalane base.",
-          discountPercentage: 0,
-          originalPrice: 22500, // R225.00 in cents
-          discountedPrice: null,
-          code: null,
+          brand: "Clicks",
+          title: "CeraVe Foaming Cleanser - 2 for 1",
+          description: "Gentle foaming cleanser for normal to oily skin. Developed with dermatologists.",
+          discountPercentage: 50,
+          originalPrice: 35000,
+          discountedPrice: 17500,
+          code: "CLICKS2FOR1",
           url: "https://clicks.co.za",
-          affiliateUrl: "https://clicks.co.za/the-ordinary-retinol",
-          imageUrl: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "pharmacy",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "Eucerin",
-          title: "Sun Care Range 30% Off",
-          description: "Essential sun protection for South African conditions. Buy 2 get 1 free on selected sunscreens.",
-          discountPercentage: 33,
-          originalPrice: 35000, // R350.00 in cents (average)
-          discountedPrice: 23450, // R234.50 in cents
-          code: "SUN3FOR2",
-          url: "https://clicks.co.za",
-          affiliateUrl: "https://clicks.co.za/eucerin-sun-care",
+          affiliateUrl: "https://clicks.co.za/cerave-foaming-cleanser",
           imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
           category: "pharmacy",
           isActive: true,
           isPremium: false,
           validUntil: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "Environ",
-          title: "Vitamin A+ Intensive Serum",
-          description: "South African developed vitamin A serum. Professional-grade skincare for advanced anti-aging.",
-          discountPercentage: 15,
-          originalPrice: 185000, // R1850.00 in cents
-          discountedPrice: 157250, // R1572.50 in cents
-          code: "VITAMINA15",
-          url: "https://environ.co.za",
-          affiliateUrl: "https://environ.co.za/products/vitamin-a-serum",
-          imageUrl: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "professional",
-          isActive: true,
-          isPremium: true,
-          validUntil: new Date(Date.now() + 40 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "Skin Ceuticals",
-          title: "CE Ferulic Antioxidant Serum",
-          description: "Gold standard vitamin C serum. Available at select South African stockists with professional consultation.",
-          discountPercentage: 10,
-          originalPrice: 295000, // R2950.00 in cents
-          discountedPrice: 265500, // R2655.00 in cents
-          code: "CEFER10",
-          url: "https://skinceuticals.co.za",
-          affiliateUrl: "https://skinceuticals.co.za/products/ce-ferulic",
-          imageUrl: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "professional",
-          isActive: true,
-          isPremium: true,
-          validUntil: new Date(Date.now() + 35 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "O'Keeffe's",
-          title: "Working Hands Hand Cream",
-          description: "Ultimate hand repair for South African working hands. Guaranteed relief for extremely dry, cracked hands.",
-          discountPercentage: 25,
-          originalPrice: 12500, // R125.00 in cents
-          discountedPrice: 9375, // R93.75 in cents
-          code: "HANDS25",
-          url: "https://clicks.co.za",
-          affiliateUrl: "https://clicks.co.za/okeeffes-working-hands",
-          imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "pharmacy",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000),
-        },
-        {
-          brand: "Protea",
-          title: "Indigenous Botanical Face Mask",
-          description: "Celebrating South African flora with protea extract and rooibos. Weekly treatment for radiant skin.",
-          discountPercentage: 30,
-          originalPrice: 15500, // R155.00 in cents
-          discountedPrice: 10850, // R108.50 in cents
-          code: "PROTEA30",
-          url: "https://proteabeauty.co.za",
-          affiliateUrl: "https://proteabeauty.co.za/products/botanical-face-mask",
-          imageUrl: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300",
-          category: "natural",
-          isActive: true,
-          isPremium: false,
-          validUntil: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000),
         }
       ];
 
       await db.insert(deals).values(sampleDeals);
+
+      console.log("✅ Minimal sample data initialized successfully!");
+      console.log("🌱 For complete seed data (50+ articles, 20+ deals, 100+ products), run: npm run db:seed");
 
     } catch (error) {
       console.error("Error initializing sample data:", error);
