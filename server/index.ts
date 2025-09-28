@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { validateEnvironmentConfig, config } from "./env-config";
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,16 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Validate environment configuration on startup
+  console.log('🔧 Validating environment configuration...');
+  try {
+    validateEnvironmentConfig(config.NODE_ENV === 'production');
+    console.log('✅ Environment configuration validated successfully');
+  } catch (error) {
+    console.error('❌ Environment configuration validation failed:', error);
+    process.exit(1);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -60,7 +71,7 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
+  const port = parseInt(config.PORT, 10);
   server.listen({
     port,
     host: "0.0.0.0",

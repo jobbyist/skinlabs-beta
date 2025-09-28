@@ -14,10 +14,11 @@ import {
   OrdersController,
 } from "@paypal/paypal-server-sdk";
 import { Request, Response } from "express";
+import { config } from "./env-config";
 
 /* PayPal Controllers Setup */
 
-const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
+const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = config;
 
 if (!PAYPAL_CLIENT_ID) {
   throw new Error("Missing PAYPAL_CLIENT_ID");
@@ -32,7 +33,7 @@ const client = new Client({
   },
   timeout: 0,
   environment:
-                process.env.NODE_ENV === "production"
+                config.NODE_ENV === "production"
                   ? Environment.Production
                   : Environment.Sandbox,
   logging: {

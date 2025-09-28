@@ -13,7 +13,14 @@ This application uses PostgreSQL with Drizzle ORM for database management.
 cp .env.example .env
 ```
 
-2. Update `.env` with your actual database credentials and API keys.
+2. Generate secure keys for your environment:
+```bash
+npm run generate-keys
+```
+
+3. Update `.env` with your actual database credentials and API keys.
+
+📖 **For detailed setup instructions, see [docs/ENVIRONMENT_SETUP.md](docs/ENVIRONMENT_SETUP.md)**
 
 ### Database Commands
 

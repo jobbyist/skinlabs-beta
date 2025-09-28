@@ -8,6 +8,7 @@ import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./payp
 import { sendTrialExpirationNotification } from "./sendgrid";
 import { chatWithSKYNN } from "./openai";
 import { analyzeSkinQuiz, generateSkincareAdvice } from "./ai";
+import { config } from "./env-config";
 
 // Use the Clerk-based auth middleware
 const authenticateToken = requireAuth;
@@ -660,7 +661,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API key middleware for content automation
   const requireApiKey = (req: Request, res: Response, next: any) => {
     const apiKey = req.headers['x-api-key'];
-    const validApiKey = process.env.CONTENT_API_KEY || 'your-secure-api-key-change-in-production';
+    const validApiKey = config.CONTENT_API_KEY;
     
     if (!apiKey || apiKey !== validApiKey) {
       return res.status(401).json({ message: 'Invalid or missing API key' });
