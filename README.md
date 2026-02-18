@@ -1,4 +1,4 @@
-# SkinLabs Beta
+# SKYNN by SkinLabs®
 
 A modern skincare guide application built with React, TypeScript, and Vite.
 
@@ -116,7 +116,7 @@ To complete the custom domain setup, configure DNS for `skinlabs.co.za`:
 #### Repository Settings:
 1. Go to Repository Settings → Pages
 2. Source: Deploy from a branch → `gh-pages`
-3. Custom domain: `skinlabs.co.za`
+3. Custom domain: `community.skinlabs.co.za`
 4. Enforce HTTPS: ✅
 
 ## 📁 Project Structure
